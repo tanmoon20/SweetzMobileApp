@@ -4,10 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Acer/Y2S1/Mobile Application Development/SweetzMobileApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.25" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/custom_styles.xml" value="0.25833333333333336" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/ic_play.xml" value="0.12864583333333332" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/ic_play_button.xml" value="0.14270833333333333" />
         <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/ic_search.xml" value="0.14375" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/round_button.xml" value="0.14270833333333333" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/rounded_corner.xml" value="0.14270833333333333" />
         <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/drawable/rounded_edge_all.xml" value="0.1328125" />
-        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/layout/activity_main.xml" value="0.3190104166666667" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/layout/activity_splash_screen.xml" value="0.1" />
+        <entry key="..\:/Users/USER/Documents/UTAR/bachelor/202306/UCCD3223_MOBILE_APPLICATIONS_DEVELOPMENT/sweetz/app/src/main/res/layout/quiz_question_card.xml" value="0.264" />
       </map>
     </option>
   </component>

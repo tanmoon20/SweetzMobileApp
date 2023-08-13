@@ -17,10 +17,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:paddingTop="20sp"
+        android:paddingTop="30sp"
         android:paddingBottom="20sp"
-        android:paddingLeft="50sp"
-        android:paddingRight="50sp">
+        >
 
         <EditText
             android:id="@+id/search_bar"
@@ -30,7 +29,10 @@
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
             android:hint="Search here"
-            android:paddingRight="15sp" />
+            android:paddingRight="15sp"
+            android:layout_marginBottom="20sp"
+            android:layout_marginLeft="60sp"
+            android:layout_marginRight="60sp"/>
 
         <TextView
             android:id="@+id/textView"
@@ -39,9 +41,8 @@
             android:text="🔥Trending Now🔥"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingTop = "20sp"
             android:paddingRight="15sp"/>
 
         <ScrollView
