@@ -24,12 +24,10 @@ public class activity_splash_screen extends AppCompatActivity {
     private final int SPLASH_DELAY = 3000;
     private ImageView imageView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
 
         logo = findViewById(R.id.iv_logo);
 
