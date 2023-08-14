@@ -15,7 +15,7 @@
         <activity
             android:name=".MainActivity"/>
         <activity
-            android:name=".activity_splash_screen"
+            android:name=".CreateRoomActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true">
             <intent-filter>

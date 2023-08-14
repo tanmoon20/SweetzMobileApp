@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/purple_to_blue_bg"
+    >
+
+    <include
+        android:id="@+id/include3"
+        layout="@layout/top_action_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include3"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/join_room_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_edge_all"
+                android:drawableEnd="@drawable/open_door"
+                android:fontFamily="@font/monomaniac_one"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="2dp"
+                android:text="Join with code"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="410dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rectangle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/join_room_btn"></View>
+
+            <TextView
+                android:id="@+id/create_room_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_edge_all"
+                android:drawableEnd="@drawable/open_door"
+                android:fontFamily="@font/monomaniac_one"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="2dp"
+                android:text="Create Room"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="@+id/join_room_textview"
+                app:layout_constraintHorizontal_bias="0.45"
+                app:layout_constraintStart_toStartOf="@+id/join_room_textview"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <TextView
+                android:id="@+id/room_title_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_edge_all"
+                android:fontFamily="@font/monomaniac_one"
+                android:text="Title"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_room_title"
+                app:layout_constraintEnd_toEndOf="@+id/room_desc_textview"
+                app:layout_constraintStart_toStartOf="@+id/room_desc_textview"
+                app:layout_constraintTop_toTopOf="@+id/edit_room_title" />
+
+            <EditText
+                android:id="@+id/edit_room_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_edge_all"
+                android:ems="10"
+                android:hint="Excellent?"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/room_title_textview"
+                app:layout_constraintTop_toBottomOf="@+id/create_room_textview" />
+
+            <TextView
+                android:id="@+id/room_desc_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/rounded_edge_all"
+                android:fontFamily="@font/monomaniac_one"
+                android:paddingHorizontal="22dp"
+                android:text="Description"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_room_desc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_room_desc" />
+
+            <EditText
+                android:id="@+id/edit_room_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_edge_all"
+                android:ems="10"
+                android:gravity="top|start"
+                android:hint="Give your room an explanation"
+                android:inputType="text"
+                android:lines="5"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@+id/edit_room_title"
+                app:layout_constraintStart_toStartOf="@+id/edit_room_title"
+                app:layout_constraintTop_toBottomOf="@+id/edit_room_title" />
+
+            <Button
+                android:id="@+id/create_room_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="68dp"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/green"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="10dp"
+                android:text="Create Room"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/edit_room_desc"
+                app:layout_constraintStart_toStartOf="@+id/room_desc_textview"
+                app:layout_constraintTop_toBottomOf="@+id/edit_room_desc" />
+
+            <EditText
+                android:id="@+id/edit_room_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_edge_all"
+                android:ems="10"
+                android:hint="enter code"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@+id/join_room_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/join_room_textview"
+                app:layout_constraintTop_toBottomOf="@+id/join_room_textview" />
+
+            <Button
+                android:id="@+id/join_room_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/green"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="10dp"
+                android:text="Join"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/edit_room_code"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="@+id/edit_room_code"
+                app:layout_constraintTop_toBottomOf="@+id/edit_room_code">
+
+            </Button>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/less_rounded_edge"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/join_room_btn">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Scan QR"
+                    android:textAlignment="center"></TextView>
+
+                <ImageButton
+                    android:id="@+id/QR_btn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/rounded_edge_all"
+                    android:backgroundTint="@color/green"
+                    android:elevation="10dp"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/baseline_qr_code_24"
+                    tools:layout_editor_absoluteX="326dp"
+                    tools:layout_editor_absoluteY="262dp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/bottom_navigation_menu"
+        tools:layout_editor_absoluteY="675dp"></include>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,25 +6,33 @@
         android:id="@+id/createQuiz"
         android:contentDescription="creating your quiz"
         android:icon="@drawable/edit_icon"
-        android:title="Create Quiz"
-        app:showAsAction="always"></item>
+        android:title="Create"
+        app:showAsAction="always"
+        android:enabled="true"
+        ></item>
     <item
         android:id="@+id/searchQuizPublic"
         android:contentDescription="search for quiz in public space"
         android:icon="@drawable/magnifying_glass_icon"
-        android:title="Search Quiz in public"
-        app:showAsAction="always"></item>
+        android:title="Search public"
+        app:showAsAction="always"
+        android:enabled="true"
+        ></item>
     <item
         android:id="@+id/searchQuizPrivate"
         android:contentDescription="search for quiz in private space"
         android:icon="@drawable/key_icon"
-        android:title="Search Quiz in private"
-        app:showAsAction="always"></item>
+        android:title="Search private"
+        app:showAsAction="always"
+        android:enabled="true"
+        ></item>
     <item
         android:id="@+id/settings"
         android:contentDescription="settings"
         android:icon="@drawable/setting_icon"
         android:title="Settings"
-        app:showAsAction="always"></item>
+        app:showAsAction="always"
+        android:enabled="true"
+        ></item>
 
 </menu>
