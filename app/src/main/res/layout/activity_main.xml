@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -25,23 +26,24 @@
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="60sp"
+            android:layout_marginRight="60sp"
+            android:layout_marginBottom="20sp"
             android:background="@drawable/rounded_edge_all"
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
             android:hint="Search here"
-            android:paddingRight="15sp"
-            android:layout_marginBottom="20sp"
-            android:layout_marginLeft="60sp"
-            android:layout_marginRight="60sp"/>
+            android:minHeight="48dp"
+            android:paddingRight="15sp" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🔥Trending Now🔥"
+            android:text="🔥 Trending Now 🔥"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="20dp"
             android:textStyle="bold"
             android:paddingRight="15sp"/>
 

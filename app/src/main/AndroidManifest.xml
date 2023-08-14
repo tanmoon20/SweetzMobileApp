@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SweetzMobileApp">
         <activity
-            android:name=".activity_splash_screen"
+            android:name=".Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity"/>
+        <activity
+            android:name=".activity_splash_screen"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
