@@ -3,6 +3,8 @@ package my.edu.utar.sweetzmobileapp;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -22,10 +24,12 @@ public class activity_splash_screen extends AppCompatActivity {
     private final int SPLASH_DELAY = 3000;
     private ImageView imageView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
 
         logo = findViewById(R.id.iv_logo);
 
@@ -64,5 +68,12 @@ public class activity_splash_screen extends AppCompatActivity {
         fadingInAnimation.setDuration(SPLASH_DELAY);
         imageView.startAnimation(fadingInAnimation);
 
+    }
+    public void setActionBar(Context context){
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        actionBar.setCustomView(R.layout.top_action_bar);
     }
 }

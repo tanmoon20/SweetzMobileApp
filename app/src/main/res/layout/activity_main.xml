@@ -10,40 +10,40 @@
 <!--    header-->
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingTop="30sp"
+        android:paddingBottom="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingTop="30sp"
-        android:paddingBottom="20sp"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="60sp"
+            android:layout_marginRight="60sp"
+            android:layout_marginBottom="20sp"
             android:background="@drawable/rounded_edge_all"
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
             android:hint="Search here"
-            android:paddingRight="15sp"
-            android:layout_marginBottom="20sp"
-            android:layout_marginLeft="60sp"
-            android:layout_marginRight="60sp"/>
+            android:paddingRight="15sp" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🔥Trending Now🔥"
             android:gravity="center"
+            android:paddingRight="15sp"
+            android:text="🔥Trending Now🔥"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingRight="15sp"/>
+            android:textStyle="bold" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -59,6 +59,16 @@
 
     </LinearLayout>
 
-    <!--    footer-->
+    <!--ENYEE    footer-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </android.support.constraint.ConstraintLayout>
