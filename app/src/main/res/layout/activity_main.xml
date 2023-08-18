@@ -62,5 +62,6 @@
     </LinearLayout>
 
     <!--ENYEE    footer-->
+    <include layout="@layout/bottom_navigation_menu"></include>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
