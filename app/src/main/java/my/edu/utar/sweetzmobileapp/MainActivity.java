@@ -3,7 +3,12 @@ package my.edu.utar.sweetzmobileapp;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends HeaderFooterActivity {
+
+    public MainActivity()
+    {
+        super("Home");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
