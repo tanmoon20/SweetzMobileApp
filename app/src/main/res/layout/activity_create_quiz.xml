@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:background="@drawable/rounded_edge_all"
-        android:paddingHorizontal="20dp"
         android:paddingVertical="2dp"
         android:textAllCaps="false"
         android:fontFamily="@font/monomaniac_one"
