@@ -49,7 +49,6 @@ public class HeaderFooterActivity extends AppCompatActivity {
         });
 
         homeItem.setOnMenuItemClickListener((itm)->{
-            Log.i("home", "Home");
             goHome();
             return true;
         });

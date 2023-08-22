@@ -3,19 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_edge_all"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/rounded_edge_all"
-            android:elevation="10dp">
+    android:layout_height="wrap_content"
+    android:layout_marginTop = "4dp"
+    android:layout_marginBottom = "4dp"
+    android:layout_marginLeft = "8dp"
+    android:layout_marginRight = "8dp">
 
             <LinearLayout
                 android:id="@+id/contentContainer"
@@ -23,49 +17,50 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="5dp">
+                android:elevation="10dp"
+                >
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="2dp"
                     android:shadowColor="@color/shadow_black"
                     android:shadowDx="2"
                     android:shadowDy="10"
                     android:shadowRadius="10"
                     android:text="Title"
                     android:textColor="@color/black"
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="2dp"
                     android:text="Description"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:id="@+id/buttonContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <!--author-->
                     <LinearLayout
                         android:id="@+id/authorDateContainer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="3.5"
                         android:background="@drawable/rounded_edge_all"
                         android:backgroundTint="@color/grey"
                         android:orientation="horizontal"
-                        android:padding="7dp">
+                        android:padding="4dp">
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/authorImgContainer"
@@ -80,7 +75,7 @@
                                 android:layout_height="50dp"
                                 android:padding="10dp"
                                 android:scaleType="centerCrop"
-                                tools:srcCompat="@tools:sample/avatars" />
+                                android:background="@drawable/key_icon" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -91,14 +86,15 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="By: Author\nnum Month Ago"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
                     <!--play count-->
                     <LinearLayout
                         android:id="@+id/playCountContainer"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="2"
@@ -108,13 +104,13 @@
                         android:padding="7dp">
 
                         <ImageView
-                            android:layout_width="34dp"
-                            android:layout_height="52dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:padding="10dp"
+                            android:padding="4dp"
                             android:scaleType="centerCrop"
-                            tools:srcCompat="@drawable/ic_play" />
+                            app:srcCompat="@drawable/ic_play" />
 
 
                         <TextView
@@ -124,13 +120,14 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="num plays"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
                     <ImageButton
                         android:id="@+id/shareBtn"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
@@ -144,17 +141,16 @@
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="@drawable/round_button"
                         android:backgroundTint="@color/green"
-                        android:padding="12dp"
+                        android:padding="15dp"
                         android:scaleType="fitCenter"
-                        android:textAlignment="center"
-                        tools:srcCompat="@drawable/ic_play_button" />
+                        app:srcCompat="@drawable/ic_play_button" />
 
 
                     <!--                    <Button-->
@@ -173,6 +169,4 @@
 
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </RelativeLayout>
 </RelativeLayout>

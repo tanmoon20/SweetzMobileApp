@@ -34,6 +34,8 @@
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
             android:hint="Search here"
+            android:textColorHint="@color/grey"
+            android:textColor="@color/black"
             android:paddingRight="15sp"/>
 
         <TextView
@@ -52,11 +54,13 @@
             android:layout_height="match_parent"
             android:paddingTop="20sp">
 
-            <TableLayout
+            <LinearLayout
+                android:id="@+id/quiz_title_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            </TableLayout>
+            </LinearLayout>
         </ScrollView>
 
     </LinearLayout>
