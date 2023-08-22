@@ -1,8 +1,12 @@
 package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class MainActivity extends HeaderFooterActivity {
@@ -31,6 +35,11 @@ public class MainActivity extends HeaderFooterActivity {
         params.setMargins(30,4,30,4);
         cardView.setLayoutParams(params);
 
+        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
+        btnPlay.setOnClickListener((v)->{
+            Intent intent = new Intent(this, PlayActivity.class);
+            startActivity(intent);
+        });
         ll.addView(cardView);
     }
 }

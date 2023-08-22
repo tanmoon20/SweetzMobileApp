@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="60sp"
             android:layout_marginRight="60sp"
-            android:layout_marginBottom="20sp"
+            android:layout_marginBottom="10sp"
             android:background="@drawable/rounded_edge_all"
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
@@ -52,7 +52,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="20sp">
+            android:paddingTop="10sp">
 
             <LinearLayout
                 android:id="@+id/quiz_title_container"

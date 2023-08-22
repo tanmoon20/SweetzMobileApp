@@ -75,7 +75,7 @@
                                 android:layout_height="50dp"
                                 android:padding="10dp"
                                 android:scaleType="centerCrop"
-                                android:background="@drawable/key_icon" />
+                                android:background="@drawable/open_door" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -140,7 +140,7 @@
                         app:srcCompat="@drawable/share_icon" />
 
                     <ImageView
-                        android:id="@+id/imageView3"
+                        android:id="@+id/btnPlay"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
