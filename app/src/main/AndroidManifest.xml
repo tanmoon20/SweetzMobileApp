@@ -13,7 +13,9 @@
             android:name=".Login"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"/>
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
         <activity
             android:name=".CreateRoomActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
