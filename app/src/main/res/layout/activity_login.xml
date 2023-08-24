@@ -17,7 +17,7 @@
         android:background="@drawable/sign"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="370dp"
             android:layout_height="355dp"
             android:layout_gravity="center"
@@ -87,22 +87,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="23dp" />
 
-        </android.support.v7.widget.CardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:background="#FFF">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Footer"
-            android:textSize="40dp"
-            />
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

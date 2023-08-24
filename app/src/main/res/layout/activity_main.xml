@@ -8,8 +8,6 @@
     tools:context=".MainActivity"
     android:background="@drawable/purple_to_blue_bg">
 
-<!--    header-->
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -60,8 +58,5 @@
         </ScrollView>
 
     </LinearLayout>
-
-    <!--ENYEE    footer-->
-    <include layout="@layout/bottom_navigation_menu"></include>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
