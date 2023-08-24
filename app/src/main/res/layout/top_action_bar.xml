@@ -11,11 +11,11 @@
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     >
     <TextView
+        android:id="@+id/top_nav_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/monomaniac_one"
         android:paddingTop="20dp"
-        android:text="create room"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="40sp"
