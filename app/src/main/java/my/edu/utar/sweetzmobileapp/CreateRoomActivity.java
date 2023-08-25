@@ -12,10 +12,6 @@ import android.os.Bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_room);
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.custom_toolbar);
-//        setSupportActionBar(myToolbar);
-
-
+        setContentView(R.layout.activity_quiz_question);
     }
 }

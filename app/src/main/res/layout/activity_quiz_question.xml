@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/purple_to_blue_bg">
+
+    <ImageButton
+        android:id="@+id/imageButton6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/rounded_edge_all"
+        android:backgroundTint="@color/teal_200"
+        android:padding="16dp"
+        android:clickable="true"
+        android:layout_marginBottom="20dp"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/rounded_edge_all"
+        android:backgroundTint="@color/teal_200"
+        android:padding="16dp"
+        android:clickable="true"
+        android:layout_marginBottom="20dp"
+        android:elevation="@dimen/cardview_compat_inset_shadow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+
+    <ScrollView
+        android:id="@+id/quiz_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            android:weightSum="8">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:elevation="4dp"
+                android:fontFamily="@font/monomaniac_one"
+                android:hint="Iphone 14"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:text="Question"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/quiz_top_nav" />
+
+            <EditText
+                android:id="@+id/editTextText"
+                android:layout_width="match_parent"
+                android:layout_height="133dp"
+                android:layout_weight="3"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/white"
+                android:elevation="4dp"
+                android:ems="10"
+                android:fontFamily="@font/monomaniac_one"
+                android:hint="What is the hardest phone in the world"
+                android:inputType="text"
+                android:lines="5"
+                android:maxLines="8"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:scrollbars="vertical"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintEnd_toEndOf="@+id/quiz_scroll_view"
+                app:layout_constraintStart_toStartOf="@+id/quiz_scroll_view"
+                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <EditText
+                android:id="@+id/editTextText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/grey"
+                android:elevation="4dp"
+                android:ems="10"
+                android:fontFamily="@font/monomaniac_one"
+                android:hint="Samsung A13"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintStart_toStartOf="@+id/editTextText"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+
+            <EditText
+                android:id="@+id/editTextText3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/grey"
+                android:ems="10"
+                android:fontFamily="@font/monomaniac_one"
+                android:hint="Nokia3310"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText2"
+                app:layout_constraintStart_toStartOf="@+id/editTextText2"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+
+            <EditText
+                android:id="@+id/editTextText4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/grey"
+                android:elevation="4dp"
+                android:ems="10"
+                android:fontFamily="@font/monomaniac_one"
+                android:hint="Xiaomi13"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText3"
+                app:layout_constraintStart_toStartOf="@+id/editTextText3"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+
+            <EditText
+                android:id="@+id/editTextText5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/grey"
+                android:elevation="4dp"
+                android:ems="10"
+                android:fontFamily="@font/monomaniac_one"
+                android:hint="Samsung A13"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintEnd_toEndOf="@+id/editTextText4"
+                app:layout_constraintStart_toStartOf="@+id/editTextText4"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

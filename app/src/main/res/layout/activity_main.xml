@@ -8,8 +8,6 @@
     tools:context=".MainActivity"
     android:background="@drawable/purple_to_blue_bg">
 
-<!--    header-->
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"

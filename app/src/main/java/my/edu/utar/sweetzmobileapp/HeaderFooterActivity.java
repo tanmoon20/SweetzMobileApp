@@ -59,6 +59,11 @@ public class HeaderFooterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    protected void goCreateQuiz(){
+        Intent intent = new Intent(this,CreateQuizActivity.class);
+        startActivity(intent);
+    }
+
     protected void goHome(){
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
