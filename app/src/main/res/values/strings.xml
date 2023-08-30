@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sweetz</string>
+    <string name="SUPABASE_KEY">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqZmVjanZ5dWtremFxd2hweXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTI3MTUyMjMsImV4cCI6MjAwODI5MTIyM30.zbace4kf92M0M4SdkGJ5BKHQW42nyDpJXyKlZmMKUVE</string>
 </resources>
