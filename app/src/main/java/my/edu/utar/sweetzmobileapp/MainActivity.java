@@ -29,6 +29,7 @@ public class MainActivity extends HeaderFooterActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("MainActivity2", "Test pull request");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         displayRow();
