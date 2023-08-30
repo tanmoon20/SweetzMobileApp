@@ -44,7 +44,6 @@ public class HeaderFooterActivity extends AppCompatActivity {
         TextView titletv = findViewById(R.id.titletv);
         titletv.setText(title);
 
-        BottomNavigationView navigationView = findViewById(R.id.footer);
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
