@@ -69,4 +69,14 @@ public class MusicManager extends Application {
     public boolean isPlaying(){
         return mediaPlayer.isPlaying();
     }
+
+
+    public void stopOrPlayMusic(){
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.pause();
+        }
+        else{
+            mediaPlayer.start();
+        }
+    }
 }
