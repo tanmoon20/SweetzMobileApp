@@ -67,11 +67,4 @@ public class activity_splash_screen extends AppCompatActivity {
         imageView.startAnimation(fadingInAnimation);
 
     }
-    public void setActionBar(Context context){
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        actionBar.setCustomView(R.layout.top_action_bar);
-    }
 }

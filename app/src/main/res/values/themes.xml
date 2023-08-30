@@ -3,8 +3,18 @@
     <style name="Theme.SweetzMobileApp" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorPrimaryDark">@color/green</item>
         <item name="colorAccent">@color/teal_200</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="Theme.bottom_navigation" parent="Widget.Design.BottomNavigationView">
+        <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="android:background">@color/black</item>
+        <item name="iconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
+        <item name="itemTextAppearanceActive">@color/green</item>
+        <item name="itemTextAppearanceInactive">@color/white</item>
     </style>
 </resources>

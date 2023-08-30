@@ -1,7 +1,7 @@
 package my.edu.utar.sweetzmobileapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +10,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
 public class HeaderFooterActivity extends AppCompatActivity {
 
@@ -35,38 +33,40 @@ public class HeaderFooterActivity extends AppCompatActivity {
         LinearLayout ll = (LinearLayout) rl.findViewById(R.id.llcontainer);
         getLayoutInflater().inflate(layoutResID, ll, true);
 
-        BottomNavigationView navigationView = findViewById(R.id.footer);
-        Menu menu = navigationView.getMenu();
-        MenuItem createRoomItem = menu.findItem(R.id.createQuiz);
-        MenuItem homeItem = menu.findItem(R.id.searchQuizPublic);
-
         TextView titletv = findViewById(R.id.titletv);
         titletv.setText(title);
 
-        createRoomItem.setOnMenuItemClickListener((itm)->{
-            goCreateRoom();
-            return true;
+        BottomNavigationView navigationView = findViewById(R.id.footer);
+        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch (id){
+                    case R.id.createQuiz:
+                        goCreateRoom();
+                        return true;
+                    case R.id.searchQuizPublic:
+                        goHome();
+                        return true;
+                    case R.id.searchQuizPrivate:
+                        return true;
+                    case R.id.settings:
+                        return true;
+                }
+                return false;
+            }
         });
 
-        homeItem.setOnMenuItemClickListener((itm)->{
-            Log.i("home", "Home");
-            goHome();
-            return true;
-        });
+
     }
 
     protected void goCreateRoom(){
-        Intent intent = new Intent(this,CreateRoomActivity.class);
-        startActivity(intent);
-    }
-
-    protected void goCreateQuiz(){
-        Intent intent = new Intent(this,CreateQuizActivity.class);
+        Intent intent = new Intent(getApplicationContext(),CreateRoomActivity.class);
         startActivity(intent);
     }
 
     protected void goHome(){
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         startActivity(intent);
     }
 }

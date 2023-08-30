@@ -11,6 +11,7 @@
         android:theme="@style/Theme.SweetzMobileApp">
         <activity
             android:name=".QuizQuestionActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -18,9 +19,11 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".Login"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
         <activity
-            android:name=".CreateRoomActivity"
+            android:name=".activity_splash_screen"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustPan">
@@ -30,6 +33,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreateQuizActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+        <activity
+            android:name=".CreateRoomActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
     </application>
 
 </manifest>
