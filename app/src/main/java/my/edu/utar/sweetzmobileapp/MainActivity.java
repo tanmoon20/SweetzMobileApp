@@ -21,7 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends HeaderFooterActivity {
-
+    private MusicManager musicManager;
     public MainActivity()
     {
         super("Home");
@@ -33,6 +33,17 @@ public class MainActivity extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         displayRow();
+        // Make instance MusicManager
+        musicManager = MusicManager.getInstance();
+        if(!musicManager.isPlaying()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    musicManager.togglePlayback();
+                }
+            }, 2000); // <-- This is delay the music because the phone need to load first
+        }
+
     }
 
     public void displayRow(){
