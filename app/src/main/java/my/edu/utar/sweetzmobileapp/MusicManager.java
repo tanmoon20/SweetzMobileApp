@@ -79,4 +79,5 @@ public class MusicManager extends Application {
             mediaPlayer.start();
         }
     }
+    //This function would be used for everyone
 }
