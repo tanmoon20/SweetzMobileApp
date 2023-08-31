@@ -28,7 +28,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".Login"
             android:exported="false"
@@ -52,11 +52,6 @@
             />
         <activity
             android:name=".CreateRoomActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        <activity
-            android:name=".PlayActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
