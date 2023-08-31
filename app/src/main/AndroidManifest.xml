@@ -45,6 +45,12 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
+        <activity
+            android:name=".PlayActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
 
     </application>
 
