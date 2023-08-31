@@ -58,6 +58,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                     case R.id.searchQuizPrivate:
                         return true;
                     case R.id.settings:
+                        goSetting();
                         return true;
                 }
                 return false;
@@ -72,6 +73,11 @@ public class HeaderFooterActivity extends AppCompatActivity {
 
     protected void goHome(){
         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
+    }
+
+    protected void goSetting(){
+        Intent intent = new Intent(getApplicationContext(),SettingPage.class);
         startActivity(intent);
     }
 }
