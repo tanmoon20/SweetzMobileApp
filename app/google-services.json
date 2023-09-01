@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "308168526194",
+    "project_id": "sweetz-b5ecf",
+    "storage_bucket": "sweetz-b5ecf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308168526194:android:a164e579a44e0337b535eb",
+        "android_client_info": {
+          "package_name": "my.edu.utar.sweetzmobileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308168526194-rk1oln7fhgrlvhq3dq2tf0kuf6nh6dcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbEJBP-3SFE0qshEEUpoesTVfyU8TuEgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308168526194-rk1oln7fhgrlvhq3dq2tf0kuf6nh6dcv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
