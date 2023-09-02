@@ -21,9 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 
-public class MainActivity extends HeaderFooterActivity implements FirestoreManager.FirestoreCallback {
+public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
-    private FirestoreManager fm;                            //DELETE HERE POON
     public MainActivity()
     {
         super("Home");
@@ -34,8 +33,6 @@ public class MainActivity extends HeaderFooterActivity implements FirestoreManag
         Log.i("MainActivity2", "Test pull request");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        fm = new FirestoreManager();
-        fm.getPublicRoomQuizSpecificQuestion("quiz1","question1",this);
         displayRow();
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
@@ -129,16 +126,5 @@ public class MainActivity extends HeaderFooterActivity implements FirestoreManag
         } catch (IOException e) {
             return "";
         }
-    }
-
-
-    @Override
-    public void onCallback(String[] result) {
-        Log.i("987987 : ",Arrays.toString(result));
-    }
-
-    @Override
-    public void onCallbackError(Exception e) {
-        Log.i("987987 : ","FAILD");
     }
 }
