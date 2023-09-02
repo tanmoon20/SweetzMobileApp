@@ -47,6 +47,16 @@
             android:textSize="20dp"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CREATE QUIZ"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:backgroundTint="@color/green"
+            />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

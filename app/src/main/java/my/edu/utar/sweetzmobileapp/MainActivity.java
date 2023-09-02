@@ -33,6 +33,8 @@ public class MainActivity extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         displayRow();
+        displayRow();
+        displayRow();
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
         if(!musicManager.isPlaying()){
