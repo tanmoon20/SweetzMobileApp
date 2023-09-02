@@ -63,7 +63,7 @@ public class activity_splash_screen extends AppCompatActivity {
                 // Remove the finish() method below
                 // finish();
             }
-        }, 4000);
+        }, 1000);
 
     }
 
