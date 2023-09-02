@@ -1,21 +1,24 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HeaderFooterActivity extends AppCompatActivity {
+
+    protected boolean userAllowed = false;  //yb add
+    protected boolean isGuest = true;
 
     private String title;
 
@@ -27,6 +30,18 @@ public class HeaderFooterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            if (currentUser.getEmail() != null) {
+                userAllowed = true;
+                isGuest = false;
+            }
+        }
+
+        Intent intent = getIntent();
+        isGuest = intent.getBooleanExtra("IS_GUEST", false);
     }
 
     public void setContentView (int layoutResID){
@@ -45,18 +60,30 @@ public class HeaderFooterActivity extends AppCompatActivity {
         titletv.setText(title);
 
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
                 switch (id){
                     case R.id.createQuiz:
-                        goCreateRoom();
+                        if (userAllowed || !isGuest) {
+                            goCreateRoom();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "You are not allowed to access Private Room",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(HeaderFooterActivity.this, Login.class);
+                            startActivity(intent);
+                            finish();
+                        }
                         return true;
                     case R.id.searchQuizPublic:
                         goHome();
                         return true;
                     case R.id.searchQuizPrivate:
                         return true;
+
                     case R.id.settings:
                         goSetting();
                         return true;
@@ -81,3 +108,6 @@ public class HeaderFooterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
+
+
+

@@ -3,16 +3,15 @@ package my.edu.utar.sweetzmobileapp;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 //import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -60,7 +59,7 @@ public class activity_splash_screen extends AppCompatActivity {
             public void run() {
                 startActivity(new Intent(activity_splash_screen.this, Login.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
-        }, 4000);
+        }, 1000);
 
     }
 

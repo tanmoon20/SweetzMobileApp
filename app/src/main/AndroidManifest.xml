@@ -17,34 +17,36 @@
             android:name=".SettingPage"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity
             android:name=".PlayActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="false" />
+            android:exported="false"></activity>
         <activity
             android:name=".QuizQuestionActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+
         <activity
             android:name=".Login"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:exported="false" />
+
         <activity
             android:name=".activity_splash_screen"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".CreateQuizActivity"
             android:exported="false"

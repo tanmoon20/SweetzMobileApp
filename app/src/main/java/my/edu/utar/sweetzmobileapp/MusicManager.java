@@ -9,7 +9,8 @@ public class MusicManager extends Application {
     private int curSongIndex = 0;
     private int[] playlist = {R.raw.song1, R.raw.song2, R.raw.song3};
     private boolean isPlaying = false;
-
+    private boolean isMuted = false;
+    private boolean pauseMusic = false;
 
     @Override
     public void onCreate() {
@@ -22,6 +23,7 @@ public class MusicManager extends Application {
                 playNextSong();
             }
         });
+
     }
 
     public static synchronized MusicManager getInstance() {
@@ -40,10 +42,19 @@ public class MusicManager extends Application {
         isPlaying = !isPlaying;
     }
 
+    public void toggleMute() {
+        if (isMuted) {
+            mediaPlayer.setVolume(1.0f, 1.0f);
+        } else {
+            mediaPlayer.setVolume(0.0f, 0.0f);
+        }
+        isMuted = !isMuted;
+    }
+
     private void playNextSong() {
         curSongIndex++;
         if (curSongIndex < playlist.length) {
-            mediaPlayer.release(); // Release the current MediaPlayer
+            mediaPlayer.release();
             mediaPlayer = MediaPlayer.create(MusicManager.this, playlist[curSongIndex]);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -51,10 +62,12 @@ public class MusicManager extends Application {
                     playNextSong();
                 }
             });
-            mediaPlayer.start();
+            if (!pauseMusic && !isMuted) {
+                mediaPlayer.start();
+            }
         } else {
-            curSongIndex = 0; // Reset index for loop
-            mediaPlayer.release(); // Release the current MediaPlayer
+            curSongIndex = 0;
+            mediaPlayer.release();
             mediaPlayer = MediaPlayer.create(MusicManager.this, playlist[curSongIndex]);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -62,7 +75,9 @@ public class MusicManager extends Application {
                     playNextSong();
                 }
             });
-            mediaPlayer.start();
+            if (!pauseMusic && !isMuted) {
+                mediaPlayer.start();
+            }
         }
     }
 
@@ -70,6 +85,9 @@ public class MusicManager extends Application {
         return mediaPlayer.isPlaying();
     }
 
+    public boolean isMuted() {
+        return isMuted;
+    }
 
     public void stopOrPlayMusic(){
         if(mediaPlayer.isPlaying()){
@@ -79,5 +97,6 @@ public class MusicManager extends Application {
             mediaPlayer.start();
         }
     }
+
     //This function would be used for everyone
 }

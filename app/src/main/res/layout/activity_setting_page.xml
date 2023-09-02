@@ -42,6 +42,46 @@
             android:checked="true"
             android:thumbTint="#FE8EFC"
             android:trackTint="@android:color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:paddingVertical="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.977"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.939">
+
+        <TextView
+            android:id="@+id/fab_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/login"
+            android:layout_centerVertical="true"
+            android:text=""
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/login"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="end|bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/person"
+            app:backgroundTint="@color/green"
+            app:elevation="6dp"
+            app:rippleColor="#351420"
+            app:fabSize="normal" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
