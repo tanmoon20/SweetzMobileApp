@@ -45,8 +45,8 @@ public class PlayActivity extends HeaderFooterActivity {
         params.setMargins(30,30,30,60);
         cardView.setLayoutParams(params);
 
-        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
-        btnPlay.setVisibility(View.GONE);
+//        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
+//        btnPlay.setVisibility(View.GONE);
 
         ll.addView(cardView, 0);
     }

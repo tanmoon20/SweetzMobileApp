@@ -3,11 +3,14 @@ package my.edu.utar.sweetzmobileapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -24,7 +27,7 @@ public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
     public MainActivity()
     {
-        super("Home");
+        super("Public");
     }
 
     @Override
@@ -56,11 +59,24 @@ public class MainActivity extends HeaderFooterActivity {
         params.setMargins(30,4,30,4);
         cardView.setLayoutParams(params);
 
-        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
-        btnPlay.setOnClickListener((v)->{
+        cardView.setOnClickListener((v)->{
             Intent intent = new Intent(this, PlayActivity.class);
             startActivity(intent);
         });
+
+//        when clicking the share button
+        ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
+        shareBtn.setOnClickListener((v)->{
+//            Intent intent = new Intent(this, PrivateRoomActivity.class);
+//            startActivity(intent);
+        });
+
+
+//        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
+//        btnPlay.setOnClickListener((v)->{
+//            Intent intent = new Intent(this, PlayActivity.class);
+//            startActivity(intent);
+//        });
         ll.addView(cardView);
 
         Log.i("MainActivity2", "Something: Hello ");

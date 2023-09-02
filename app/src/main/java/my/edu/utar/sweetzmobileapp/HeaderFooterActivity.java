@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -13,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
 public class HeaderFooterActivity extends AppCompatActivity {
 
@@ -56,6 +54,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                         goHome();
                         return true;
                     case R.id.searchQuizPrivate:
+                        goPrivate();
                         return true;
                     case R.id.settings:
                         goSetting();
@@ -78,6 +77,11 @@ public class HeaderFooterActivity extends AppCompatActivity {
 
     protected void goSetting(){
         Intent intent = new Intent(getApplicationContext(),SettingPage.class);
+        startActivity(intent);
+    }
+
+    protected void goPrivate(){
+        Intent intent = new Intent(getApplicationContext(), PrivateRoomActivity.class);
         startActivity(intent);
     }
 }

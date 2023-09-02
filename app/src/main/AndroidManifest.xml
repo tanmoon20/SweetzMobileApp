@@ -13,8 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SweetzMobileApp">
         <activity
-            android:name=".PrivateClassActivity"
-            android:exported="false" />
+            android:name=".PrivateRoomActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".SettingPage"
             android:exported="false"
