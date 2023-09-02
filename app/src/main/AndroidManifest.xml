@@ -12,28 +12,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SweetzMobileApp">
-
+        <activity
+            android:name=".PrivateClassActivity"
+            android:exported="false" />
         <activity
             android:name=".SettingPage"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".PlayActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".QuizQuestionActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".Login"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".activity_splash_screen"
             android:exported="true"
@@ -48,15 +49,11 @@
         <activity
             android:name=".CreateQuizActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".CreateRoomActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-
-
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
