@@ -123,7 +123,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
     private void showAccessDeniedMessage() {
         Toast.makeText(getApplicationContext(),
                 "You are not allowed to access this feature.\n " +
-                        "Please log in, register, or log in as a guest.",
+                        "Please login and enjoy our app.",
                 Toast.LENGTH_SHORT).show();
     }
 }
