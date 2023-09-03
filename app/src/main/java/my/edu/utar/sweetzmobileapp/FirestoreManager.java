@@ -1,4 +1,5 @@
 package my.edu.utar.sweetzmobileapp;
+import android.accounts.NetworkErrorException;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,11 +17,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class FirestoreManager {
-    private FirebaseFirestore db;
+    final private FirebaseFirestore db;
     private DocumentReference docRef;
     //
     //
@@ -93,7 +95,7 @@ public class FirestoreManager {
                 });
     }
 
-    public void getPrivateRoomInfo(String specificRoomID, final FirestoreCallback callback){
+    public ArrayList<String> getPrivateRoomInfo(String specificRoomID, final FirestoreCallback callback){
         //This method is to get the specific private room
         //Test case: specificRoomID = 1234
         //
@@ -117,6 +119,7 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -124,8 +127,10 @@ public class FirestoreManager {
             public void onFailure(Exception e) {
                 //query fail
                 Log.e("FIREMANAGER : ","QUERY FAILED !");
+                callback.onCallbackError(new NetworkErrorException());
             }
         });
+        return tmpList;
     }
 
     public void getPrivateRoomAuthor(String specificRoomID, final FirestoreCallback callback){

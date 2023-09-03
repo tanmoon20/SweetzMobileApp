@@ -140,8 +140,8 @@
                 android:textColor="@color/black"
                 android:textColorHint="@color/shadow_black"
                 app:layout_constraintEnd_toEndOf="@+id/edit_room_title"
-                app:layout_constraintStart_toStartOf="@+id/edit_room_title"
-                app:layout_constraintTop_toBottomOf="@+id/edit_room_title" />
+                app:layout_constraintStart_toStartOf="@+id/edit_room_pwd"
+                app:layout_constraintTop_toBottomOf="@+id/edit_room_pwd" />
 
             <Button
                 android:id="@+id/create_room_btn"
@@ -180,6 +180,45 @@
                 app:layout_constraintStart_toStartOf="@+id/join_room_textview"
                 app:layout_constraintTop_toBottomOf="@+id/join_room_textview" />
 
+            <TextView
+                android:id="@+id/room_pwd_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/rounded_edge_all"
+                android:fontFamily="@font/monomaniac_one"
+                android:paddingHorizontal="22dp"
+                android:text="Password"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_room_pwd"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/edit_room_pwd">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/edit_room_pwd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_edge_all"
+                android:ems="10"
+                android:gravity="top|start"
+                android:hint="make sure it is secure"
+                android:inputType="text"
+                android:lines="5"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/black"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintEnd_toEndOf="@+id/edit_room_title"
+                app:layout_constraintStart_toStartOf="@+id/edit_room_title"
+                app:layout_constraintTop_toBottomOf="@+id/edit_room_title">
+
+            </EditText>
             <Button
                 android:id="@+id/join_room_btn"
                 android:layout_width="wrap_content"
@@ -197,6 +236,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/edit_room_code">
 
             </Button>
+
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
@@ -216,7 +256,7 @@
                     android:textAlignment="center"></TextView>
 
                 <ImageButton
-                    android:id="@+id/QR_btn"
+                    android:id="@+id/camera_btn"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/rounded_edge_all"

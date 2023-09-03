@@ -27,13 +27,14 @@ public class FirestoreManager2 {
 
         db.collection("privateRoom").document(roomID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
+
     //
     //
     public void insertPrivateRoomAuthor(String roomID,String username){
@@ -41,12 +42,12 @@ public class FirestoreManager2 {
         data.put("username",username);
         db.collection("privateRoom").document(roomID).collection("author").document("author")
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
@@ -59,12 +60,12 @@ public class FirestoreManager2 {
 
         db.collection("privateRoom").document(roomID).collection("quiz").document(quizID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
@@ -81,12 +82,12 @@ public class FirestoreManager2 {
         db.collection("privateRoom").document(roomID).collection("quiz")
                 .document(quizID).collection("question").document(questionID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
@@ -96,12 +97,12 @@ public class FirestoreManager2 {
 
         db.collection("privateRoom").document(roomID).collection("user").document(userID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
@@ -114,12 +115,12 @@ public class FirestoreManager2 {
 
         db.collection("publicRoom").document(quizID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
@@ -136,12 +137,12 @@ public class FirestoreManager2 {
         db.collection("publicRoom")
                 .document(quizID).collection("question").document(questionID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
@@ -153,13 +154,14 @@ public class FirestoreManager2 {
 
         db.collection("user").document(userID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception e) {
-                //Fail to set
-                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        //Fail to set
+                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                    }
+                });
     }
     //
     //
 }
+
