@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="By: Author\nnum Month Ago"
+                    android:text="By: Author\nDate"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
 
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="num plays"
+                    android:text="Num plays"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
 
