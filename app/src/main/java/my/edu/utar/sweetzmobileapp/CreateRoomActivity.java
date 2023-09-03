@@ -64,37 +64,10 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
             @Override
             public void onClick(View view) {
                 roomCode = editRoomCode.getText().toString();
-                FirestoreManager.FirestoreCallback firestoreCallback = new FirestoreManager.FirestoreCallback() {
-                    @Override
-                    public void onCallback(String[] result) {
-                        if(roomList.isEmpty()){
-                            firestoreHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    createDialog("Room not found!","The room " + roomCode + " is not found!");
-                                }
-                            });
-                        }else{
-                            firestoreHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //change to intent
-                                    //put extra
-                                }
-                            });
-                        }
-                    }
+                Log.i("####RoomCode#####", roomCode);
+                JoinThread joinThread = new JoinThread(firestoreHandler, roomCode);
+                joinThread.start();
 
-                    @Override
-                    public void onCallbackError(Exception e) {
-                    }
-                };
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        roomList = fm.getPrivateRoomInfo(roomCode, firestoreCallback);
-                    }
-                }).start();
             }
         });
 
@@ -113,7 +86,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                     }
 
                     @Override
-                    public void onCallbackError(Exception e) {
+                    public void onCallbackError(String error) {
 
                     }
                 };
@@ -121,7 +94,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                     @Override
                     public void run() {
                         fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd);
-                        roomList = fm.getPrivateRoomInfo(roomCode, firestoreCallback);
+                        fm.getPrivateRoomInfo(roomCode, firestoreCallback);
                         //intent
                     }
                 }).start();
@@ -136,7 +109,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
      }
 
      @Override
-     public void onCallbackError(Exception e) {
+     public void onCallbackError(String error) {
 
      }
 
@@ -168,5 +141,54 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
         }
 
         return stringBuilder.toString();
+    }
+
+    private class JoinThread extends Thread{
+        private Handler mHandler;
+        private FirestoreManager.FirestoreCallback firestoreCallback;
+        private String roomCode;
+
+        public JoinThread(Handler handler, String roomCode) {
+            this.mHandler = handler;
+            this.firestoreCallback = new joinFirestoreCallback();
+            this.roomCode = roomCode;
+        }
+
+        @Override
+        public void run() {
+            fm.getPrivateRoomInfo(roomCode, firestoreCallback);
+        }
+
+
+        private class joinFirestoreCallback implements FirestoreManager.FirestoreCallback{
+
+            @Override
+            public void onCallback(String[] result) {
+
+                if(result==null){
+                    firestoreHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            createDialog("Room not found!","The room " + roomCode + " is not found!");
+                        }
+                    });
+                }else{
+                    Log.i("#####PASSWORD#######", "hello");
+                    Log.i("#####PASSWORD#####", result[2]);
+                    firestoreHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            //change to intent
+                            //put extra
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCallbackError(String error) {
+            }
+        };
     }
  }

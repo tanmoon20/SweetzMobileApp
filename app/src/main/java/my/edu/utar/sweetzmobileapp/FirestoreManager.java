@@ -1,14 +1,10 @@
 package my.edu.utar.sweetzmobileapp;
-import android.accounts.NetworkErrorException;
 import android.util.Log;
-import android.widget.Toast;
-
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,7 +15,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class FirestoreManager {
     final private FirebaseFirestore db;
@@ -95,7 +91,7 @@ public class FirestoreManager {
                 });
     }
 
-    public ArrayList<String> getPrivateRoomInfo(String specificRoomID, final FirestoreCallback callback){
+    public void getPrivateRoomInfo(String specificRoomID, final FirestoreCallback callback){
         //This method is to get the specific private room
         //Test case: specificRoomID = 1234
         //
@@ -119,7 +115,7 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
-
+                            callback.onCallbackError("NO ATTRIBUTE FOUND!");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -127,10 +123,9 @@ public class FirestoreManager {
             public void onFailure(Exception e) {
                 //query fail
                 Log.e("FIREMANAGER : ","QUERY FAILED !");
-                callback.onCallbackError(new NetworkErrorException());
+                callback.onCallbackError("Query failed");
             }
         });
-        return tmpList;
     }
 
     public void getPrivateRoomAuthor(String specificRoomID, final FirestoreCallback callback){
@@ -535,7 +530,7 @@ public class FirestoreManager {
 
     public interface FirestoreCallback {
         void onCallback(String [] result);
-        void onCallbackError(Exception e);
+        void onCallbackError(String error);
     }
 
 }
