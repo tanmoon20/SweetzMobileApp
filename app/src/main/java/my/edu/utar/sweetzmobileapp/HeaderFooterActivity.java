@@ -94,36 +94,17 @@ public class HeaderFooterActivity extends AppCompatActivity {
     }
 
     protected void goCreateRoom(){
-        if (userAllowed || isGuest) {
-            Intent intent = new Intent(getApplicationContext(), CreateRoomActivity.class);
-            startActivity(intent);
-        } else {
-            showAccessDeniedMessage();
-        }
+        Intent intent = new Intent(getApplicationContext(), CreateRoomActivity.class);
+        startActivity(intent);
     }
 
     protected void goHome(){
-        if (userAllowed || isGuest) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-        } else {
-            showAccessDeniedMessage();
-        }
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     protected void goSetting(){
-        if (userAllowed || isGuest) {
-            Intent intent = new Intent(getApplicationContext(), SettingPage.class);
-            startActivity(intent);
-        } else {
-            showAccessDeniedMessage();
-        }
-    }
-
-    private void showAccessDeniedMessage() {
-        Toast.makeText(getApplicationContext(),
-                "You are not allowed to access this feature.\n " +
-                        "Please login and enjoy our app.",
-                Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(), SettingPage.class);
+        startActivity(intent);
     }
 }
