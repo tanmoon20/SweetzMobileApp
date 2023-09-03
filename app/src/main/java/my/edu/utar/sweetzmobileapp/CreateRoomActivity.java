@@ -54,8 +54,6 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
         camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*                QR qr = new QR(CreateRoomActivity.this, "1234");
-                qr.createQRDialog();*/
                 Intent intent = new Intent(CreateRoomActivity.this, QRScanner.class);
                 startActivity(intent);
             }
@@ -96,8 +94,9 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                     @Override
                     public void run() {
                         fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd);
-                        fm.getPrivateRoomInfo(roomCode, firestoreCallback);
                         //intent
+                        //after intent use the following query
+                        //fm.getPrivateRoomInfo(roomCode, firestoreCallback);
                         //
                         //
                         //
@@ -153,6 +152,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
         return stringBuilder.toString();
     }
 
+    //this will check the room code entered and password
     private class JoinThread extends Thread{
         private Handler mHandler;
         private FirestoreManager.FirestoreCallback firestoreCallback;
@@ -189,16 +189,16 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                         firestoreHandler.post(new Runnable() {
                             @Override
                             public void run() {
-
-                                //change to intent
+                                //intent
                                 //put extra result[0] is the room code
+                                //use the same query
                             }
                         });
                     }else{ //if password is incorrect
                         firestoreHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                createDialog("Try again", "room code or password incorrect!");
+                                createDialog("Try again", "password incorrect!");
                             }
                         });
                     }
