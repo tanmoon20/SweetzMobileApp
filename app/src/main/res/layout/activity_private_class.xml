@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingRight="15sp"
-            android:text="🔥 Trending Now 🔥"
+            android:text="🚪 Private Room 🚪"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold" />
