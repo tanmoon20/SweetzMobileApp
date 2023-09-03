@@ -55,22 +55,23 @@ public class QRScanner extends AppCompatActivity {
 
             }
 
-            //when the code is scanned, it should check which kind of activity should be intent
-            //intent, the roomCode is data
             @Override
             public void onCodeScanned(String data) {
-                Toast.makeText(QRScanner.this, data, Toast.LENGTH_LONG).show();  //roomCode no need password
+                Toast.makeText(QRScanner.this, data, Toast.LENGTH_LONG).show();
                 if(data.length()==4){
-                    //start private room activity
-                }else{  //quizCode need password of room
-                    //get the room of quiz
-                    //get the password
-                    //dialog
-                    //granted access dialog
                     createPwdDialog(data);
-                    //if
+                    //start private room activity
+                }else{
+                    createDialog("Password", "Give me ur password");
                     //start quiz activity
                 }
+                //intent, the roomCode is data
+                //
+                //
+                //
+                //
+                //
+                //
             }
         });
     }
@@ -78,6 +79,8 @@ public class QRScanner extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ZXDecoder decoder = new ZXDecoder();
+        // 0.5 is the area where we have
+        // to place red marker for scanning.
         decoder.setScanAreaPercent(1.0f);
         // below method will set decoder to camera.
         camera.setDecoder(decoder);
@@ -131,6 +134,7 @@ public class QRScanner extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
     public void createPwdDialog(String roomCode){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -146,12 +150,14 @@ public class QRScanner extends AppCompatActivity {
                 String roomPwd = passwordEditText.getText().toString();
                 JoinThread joinThread = new JoinThread(new Handler(), roomCode, roomPwd);
                 joinThread.start();
+
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Handle Cancel button click here
             }
         });
 
