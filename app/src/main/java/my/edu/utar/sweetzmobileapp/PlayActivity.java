@@ -10,10 +10,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class PlayActivity extends HeaderFooterActivity {
+
+    FloatingActionButton mute;
+    TextView text;
 
     public PlayActivity(){
         super("Play");
@@ -29,12 +34,37 @@ public class PlayActivity extends HeaderFooterActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.footer);
         bottomNavigationView.setVisibility(View.GONE);
 
+        mute = findViewById(R.id.mute);
+
         displayQuizTitle();
         displayQuestionAnswer();
         displayQuestionAnswer();
         displayQuestionAnswer();
         displayQuestionAnswer();
         displayQuestionAnswer();
+
+        mute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MusicManager musicManager = MusicManager.getInstance();
+                musicManager.toggleMute();
+
+                if (musicManager.isMuted()) {
+                    mute.setImageResource(R.drawable.music_off);
+                } else {
+                    mute.setImageResource(R.drawable.music_on);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MusicManager musicManager = MusicManager.getInstance();
+        if (musicManager.isMuted()) {
+            musicManager.toggleMute();
+        }
     }
 
     public void displayQuizTitle(){
