@@ -11,13 +11,19 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HeaderFooterActivity extends AppCompatActivity {
 
     private String title;
+
+    protected boolean userAllowed = false;
+    protected boolean isGuest = true;
 
     public HeaderFooterActivity(String title)
     {
@@ -27,6 +33,17 @@ public class HeaderFooterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            if (currentUser.getEmail() != null) {
+                userAllowed = true;
+                isGuest = false;
+            }
+        }
+
+        Intent intent = getIntent();
+        isGuest = intent.getBooleanExtra("IS_GUEST", false);
     }
 
     public void setContentView (int layoutResID){
@@ -50,7 +67,17 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 switch (id){
                     case R.id.createQuiz:
-                        goCreateRoom();
+                        if (userAllowed || !isGuest) {
+                            goCreateRoom();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "You are not allowed to access Private Room",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(HeaderFooterActivity.this, Login.class);
+                            startActivity(intent);
+                            finish();
+                        }
                         return true;
                     case R.id.searchQuizPublic:
                         goHome();
