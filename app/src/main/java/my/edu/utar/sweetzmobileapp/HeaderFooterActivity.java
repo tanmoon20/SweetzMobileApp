@@ -94,17 +94,17 @@ public class HeaderFooterActivity extends AppCompatActivity {
     }
 
     protected void goCreateRoom(){
-        Intent intent = new Intent(getApplicationContext(),CreateRoomActivity.class);
+        Intent intent = new Intent(getApplicationContext(), CreateRoomActivity.class);
         startActivity(intent);
     }
 
     protected void goHome(){
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 
     protected void goSetting(){
-        Intent intent = new Intent(getApplicationContext(),SettingPage.class);
+        Intent intent = new Intent(getApplicationContext(), SettingPage.class);
         startActivity(intent);
     }
 }

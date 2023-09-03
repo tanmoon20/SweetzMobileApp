@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,7 @@ public class Login extends HeaderFooterActivity  {
 
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
+    private BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,20 @@ public class Login extends HeaderFooterActivity  {
         progressDialog.setCancelable(false);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        navigationView = findViewById(R.id.footer);
+
+        if (userAllowed || isGuest) {
+            navigationView.getMenu().findItem(R.id.createQuiz).setEnabled(true);
+            navigationView.getMenu().findItem(R.id.searchQuizPublic).setEnabled(true);
+            navigationView.getMenu().findItem(R.id.searchQuizPrivate).setEnabled(true);
+            navigationView.getMenu().findItem(R.id.settings).setEnabled(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.createQuiz).setEnabled(false);
+            navigationView.getMenu().findItem(R.id.settings).setEnabled(false);
+            navigationView.getMenu().findItem(R.id.searchQuizPublic).setEnabled(false);
+            navigationView.getMenu().findItem(R.id.searchQuizPrivate).setEnabled(false);
+        }
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
