@@ -9,6 +9,7 @@ public class MusicManager extends Application {
     private int curSongIndex = 0;
     private int[] playlist = {R.raw.song1, R.raw.song2, R.raw.song3};
     private boolean isPlaying = false;
+    private boolean isMuted = false;
 
 
     @Override
@@ -40,6 +41,15 @@ public class MusicManager extends Application {
         isPlaying = !isPlaying;
     }
 
+    public void toggleMute() {
+        if (isMuted) {
+            mediaPlayer.setVolume(1.0f, 1.0f);
+        } else {
+            mediaPlayer.setVolume(0.0f, 0.0f);
+        }
+        isMuted = !isMuted;
+    }
+
     private void playNextSong() {
         curSongIndex++;
         if (curSongIndex < playlist.length) {
@@ -51,7 +61,9 @@ public class MusicManager extends Application {
                     playNextSong();
                 }
             });
-            mediaPlayer.start();
+            if (!isMuted) {
+                mediaPlayer.start();
+            }
         } else {
             curSongIndex = 0; // Reset index for loop
             mediaPlayer.release(); // Release the current MediaPlayer
@@ -62,13 +74,17 @@ public class MusicManager extends Application {
                     playNextSong();
                 }
             });
-            mediaPlayer.start();
+            if (!isMuted) {
+                mediaPlayer.start();
+            }
         }
     }
 
     public boolean isPlaying(){
         return mediaPlayer.isPlaying();
     }
+
+    public boolean isMuted() { return isMuted; }
 
 
     public void stopOrPlayMusic(){
