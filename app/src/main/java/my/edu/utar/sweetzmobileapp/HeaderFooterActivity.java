@@ -104,7 +104,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
 
     protected void goHome(){
         if (userAllowed || isGuest) {
-            Intent intent = new Intent(getApplicationContext(), CreateRoomActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         } else {
             showAccessDeniedMessage();
@@ -122,7 +122,8 @@ public class HeaderFooterActivity extends AppCompatActivity {
 
     private void showAccessDeniedMessage() {
         Toast.makeText(getApplicationContext(),
-                "You are not allowed to access this feature. Please log in, register, or log in as a guest.",
+                "You are not allowed to access this feature.\n " +
+                        "Please log in, register, or log in as a guest.",
                 Toast.LENGTH_SHORT).show();
     }
 }
