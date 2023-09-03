@@ -115,7 +115,6 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
-                            callback.onCallbackError("NO ATTRIBUTE FOUND!");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -123,7 +122,6 @@ public class FirestoreManager {
             public void onFailure(Exception e) {
                 //query fail
                 Log.e("FIREMANAGER : ","QUERY FAILED !");
-                callback.onCallbackError("Query failed");
             }
         });
     }
@@ -530,7 +528,7 @@ public class FirestoreManager {
 
     public interface FirestoreCallback {
         void onCallback(String [] result);
-        void onCallbackError(String error);
+        void onCallbackError(Exception e);
     }
 
 }

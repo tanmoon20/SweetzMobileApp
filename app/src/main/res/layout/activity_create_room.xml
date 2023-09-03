@@ -180,6 +180,26 @@
                 app:layout_constraintStart_toStartOf="@+id/join_room_textview"
                 app:layout_constraintTop_toBottomOf="@+id/join_room_textview" />
 
+            <EditText
+                android:id="@+id/join_room_pwd"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/rounded_edge_all"
+                android:ems="10"
+                android:hint="enter password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="16dp"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textColorHint="@color/shadow_black"
+                app:layout_constraintEnd_toEndOf="@+id/join_room_textview"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/join_room_textview"
+                app:layout_constraintTop_toBottomOf="@+id/edit_room_code" />
+
             <TextView
                 android:id="@+id/room_pwd_textview"
                 android:layout_width="wrap_content"
@@ -207,7 +227,7 @@
                 android:ems="10"
                 android:gravity="top|start"
                 android:hint="make sure it is secure"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:lines="5"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="16dp"
@@ -230,10 +250,10 @@
                 android:paddingVertical="10dp"
                 android:text="Join"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/edit_room_code"
+                app:layout_constraintEnd_toEndOf="@+id/join_room_pwd"
                 app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="@+id/edit_room_code"
-                app:layout_constraintTop_toBottomOf="@+id/edit_room_code">
+                app:layout_constraintStart_toStartOf="@+id/join_room_pwd"
+                app:layout_constraintTop_toBottomOf="@+id/join_room_pwd">
 
             </Button>
 

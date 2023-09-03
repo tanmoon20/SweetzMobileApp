@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class SettingPage extends HeaderFooterActivity {
     private Switch musicBoolean;
     private MusicManager musicManager;
+    private ImageButton qr_btn;
 
     FloatingActionButton login;
     TextView text;
@@ -38,6 +40,7 @@ public class SettingPage extends HeaderFooterActivity {
 
         login = findViewById(R.id.login);
         text = findViewById(R.id.fab_text);
+        qr_btn = findViewById(R.id.quiz_camera_btn);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -74,6 +77,13 @@ public class SettingPage extends HeaderFooterActivity {
                     Intent intent = new Intent(SettingPage.this, Login.class);
                     startActivity(intent);
                 }
+            }
+        });
+
+        qr_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
