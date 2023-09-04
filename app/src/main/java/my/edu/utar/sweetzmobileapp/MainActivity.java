@@ -50,13 +50,16 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
+    Room myRoom = new Room();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private boolean isPublic = true;
 
     public MainActivity()
     {
@@ -75,7 +78,19 @@ public class MainActivity extends HeaderFooterActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("MainActivity2", "Test pull request");
+        //check public page or private page
+        Intent intent = getIntent();
+        String getPrivate = intent.getStringExtra("private");
+        if(getPrivate == null)
+        {
+            isPublic = true;
+        }
+        else
+        {
+            isPublic = false;
+            super.setHeaderTitle("Private Room");
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -91,8 +106,6 @@ public class MainActivity extends HeaderFooterActivity {
         }
 
         //search function
-
-
         EditText searchText = findViewById(R.id.search_bar);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -131,11 +144,7 @@ public class MainActivity extends HeaderFooterActivity {
             }
         });
 
-
         getQuizList();
-
-
-
     }
 
     public void displayRow(Quiz quiz){
@@ -169,29 +178,40 @@ public class MainActivity extends HeaderFooterActivity {
 
         cardView.setOnClickListener((v)->{
             Intent intent = new Intent(this, PlayActivity.class);
+
+            if(!isPublic)
+            {
+                intent.putExtra("private","Private");
+                quiz.setRoomCode(myRoom.getRoomCode());
+            }
+
             intent.putExtra("quiz",quiz);
             startActivityForResult(intent, 0);
         });
 
         ll.addView(cardView);
-
     }
 
     public void getQuizList() {
-        Handler mHandler = new Handler();
-        QuizThread myQuizThread = new QuizThread(mHandler);
+        QuizThread myQuizThread = new QuizThread();
         myQuizThread.start();
     }
 
     private class QuizThread extends Thread{
-        private Handler mHandler;
-
-        public QuizThread(Handler mHandler){
-            this.mHandler = mHandler;
-        }
 
         public void run(){
-            CollectionReference quizes = db.collection("publicRoom");
+            CollectionReference quizes;
+            if(isPublic)
+            {
+                quizes = db.collection("publicRoom");
+            }
+            else
+            {
+                myRoom = (Room)getIntent().getSerializableExtra("room");
+                quizes = db.collection("privateRoom")
+                                                .document(myRoom.getRoomCode())
+                                                .collection("quiz");
+            }
             quizes.orderBy("lastUpdate", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -199,8 +219,6 @@ public class MainActivity extends HeaderFooterActivity {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("documentId",document.getId());
-
                                     Quiz quizTemp = new Quiz();
 
                                     if(document.exists()){
@@ -216,7 +234,6 @@ public class MainActivity extends HeaderFooterActivity {
                                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                                         String lastUpdateDate = formatter.format(date);
                                         quizTemp.setLastUpdate(lastUpdateDate);
-
                                         quizList.add(quizTemp);
                                     }
                                     else
@@ -236,7 +253,8 @@ public class MainActivity extends HeaderFooterActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         quiz.setAuthor(documentSnapshot.getString("username"));
-                                                        displayRow(quiz);
+
+
                                                     } else {
                                                         Log.e("Public Quiz's Author : ", "NO AUTHOR FOUND!");
                                                     }
@@ -249,6 +267,7 @@ public class MainActivity extends HeaderFooterActivity {
                                                     Log.e("Public Quiz's Author : ","QUERY FAILED !");
                                                 }
                                             });
+                                    displayRow(quiz);
                                 }
 
 

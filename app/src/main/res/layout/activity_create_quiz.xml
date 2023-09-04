@@ -11,6 +11,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:gravity="center"
         android:background="@drawable/rounded_edge_all"
         android:fontFamily="@font/monomaniac_one"
         android:drawableRight="@drawable/edit_icon"

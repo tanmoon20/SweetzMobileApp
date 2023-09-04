@@ -2,6 +2,7 @@ package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -43,7 +44,6 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
         PrivateRoomActivity.roomThread myRoomThread = new roomThread();
         myRoomThread.start();
 
-//        displayRoom();
     }
 
     public void displayRoom(Room room){
@@ -73,6 +73,13 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
 
         });
 
+        cardView.setOnClickListener((v)->{
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("room",room);
+            intent.putExtra("private","Private");
+            startActivityForResult(intent, 0);
+        });
+
         ll.addView(cardView, 0);
     }
 
@@ -95,7 +102,7 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
                             if(task.isSuccessful()){
                                 for (QueryDocumentSnapshot document : task.getResult()){
                                     Room roomTemp = new Room();
-                                    roomTemp.setRoomId(document.getId());
+                                    roomTemp.setRoomCode(document.getId());
                                     roomTemp.setDesc(document.getString("roomDesc"));
                                     roomTemp.setTitle(document.getString("roomName"));
 
@@ -106,7 +113,7 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
                                 for(Room room:roomList)
                                 {
                                     privateRoomCollection
-                                            .document(room.getRoomId())
+                                            .document(room.getRoomCode())
                                             .collection("author")
                                             .document("author")
                                             .get()
