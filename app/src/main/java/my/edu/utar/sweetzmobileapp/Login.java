@@ -2,6 +2,7 @@ package my.edu.utar.sweetzmobileapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,12 +87,14 @@ public class Login extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String username = name.getText().toString();
-        String pwd = password.getText().toString();
+        String user_email = name.getText().toString();
+        String user_pwd = password.getText().toString();
 
-        if (username.isEmpty() || pwd.isEmpty()) {
+        String username;
+
+        if (user_email.isEmpty() || user_pwd.isEmpty()) {
             Toast.makeText(getApplicationContext(),
-                    "Username and password are required",
+                    "Email and password are required",
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -98,7 +102,7 @@ public class Login extends AppCompatActivity {
         progressDialog.setMessage("Logging User...");
         progressDialog.show();
 
-        firebaseAuth.signInWithEmailAndPassword(username, pwd)
+        firebaseAuth.signInWithEmailAndPassword(user_email, user_pwd)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
@@ -116,7 +120,7 @@ public class Login extends AppCompatActivity {
                         }
                     } else {
                         Toast.makeText(getApplicationContext(),
-                                "Authentication failed: Username or password is null",
+                                "Authentication failed: email or password is null",
                                 Toast.LENGTH_SHORT).show();
                     }
                     progressDialog.dismiss();
@@ -130,12 +134,12 @@ public class Login extends AppCompatActivity {
     }
 
     private void registerUser() {
-        String username = name.getText().toString();
-        String pwd = password.getText().toString();
+        String user_email = name.getText().toString();
+        String user_pwd = password.getText().toString();
 
-        if (username.isEmpty() || pwd.isEmpty()) {
+        if (user_email.isEmpty() || user_pwd.isEmpty()) {
             Toast.makeText(getApplicationContext(),
-                    "Username and password are required for registration",
+                    "Email and password are required for registration",
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -143,7 +147,7 @@ public class Login extends AppCompatActivity {
         progressDialog.setMessage("Registering User...");
         progressDialog.show();
 
-        firebaseAuth.fetchSignInMethodsForEmail(username)
+        firebaseAuth.fetchSignInMethodsForEmail(user_email)
                 .addOnSuccessListener(signInMethodsResult -> {
                     if (signInMethodsResult.getSignInMethods() != null && !signInMethodsResult.getSignInMethods().isEmpty()) {
                         Toast.makeText(getApplicationContext(),
@@ -151,11 +155,36 @@ public class Login extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     } else {
-                        createUserWithEmailAndPassword(username, pwd);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Username");
+
+                        final EditText usernameInput = new EditText(this);
+                        builder.setView(usernameInput);
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String username = usernameInput.getText().toString().trim();
+                                if (!username.isEmpty()) {
+                                    createUserWithEmailAndPassword(user_email, user_pwd, username);
+                                } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            "Username cannot be empty",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Display error message
                     Toast.makeText(getApplicationContext(),
                             "Error checking user registration status: " + e.getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -163,16 +192,16 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-    private void createUserWithEmailAndPassword(String username, String password)
+    private void createUserWithEmailAndPassword(String email, String password, String username)
     {
-        firebaseAuth.createUserWithEmailAndPassword(username, password)
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
                         String userId = user.getUid();
-                        User newUser = new User(username, password);
+                        User newUser = new User(email, password, username);
                         sendEmailVerification(user);
-                        storeUserInfo(user.getUid(), username, password);
+                        storeUserInfo(userId, email, password, username);
 
                         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
                         usersRef.child(userId).setValue(newUser);
@@ -206,8 +235,8 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-    private void storeUserInfo(String userId, String username, String password) {
-        User newUser = new User(username, password);
+    private void storeUserInfo(String userId, String user_email, String user_pwd, String username) {
+        User newUser = new User(user_email, user_pwd, username); // Include the username
 
         DocumentReference userDocument = usersCollection.document(userId);
         userDocument.set(newUser)
@@ -224,6 +253,7 @@ public class Login extends AppCompatActivity {
                     progressDialog.dismiss();
                 });
     }
+
 
 
     @Override
