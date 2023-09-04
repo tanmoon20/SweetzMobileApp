@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
     public HeaderFooterActivity(String title)
     {
         this.title = title;
+
     }
 
     @Override
@@ -51,6 +53,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
         }
 
         isGuest = userLoginManager.isGuest();
+
     }
 
     public void setContentView (int layoutResID){
@@ -62,8 +65,9 @@ public class HeaderFooterActivity extends AppCompatActivity {
 
         BottomNavigationView navigationView = findViewById(R.id.footer);
         Menu menu = navigationView.getMenu();
-        MenuItem createRoomItem = menu.findItem(R.id.createQuiz);
-        MenuItem homeItem = menu.findItem(R.id.searchQuizPublic);
+
+        //disable footer
+        disableFooter();
 
         TextView titletv = findViewById(R.id.titletv);
         titletv.setText(title);
@@ -80,6 +84,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                         goHome();
                         return true;
                     case R.id.searchQuizPrivate:
+
                         if (userAllowed || !isGuest) {
                             goPrivate();
                         } else {
@@ -121,6 +126,45 @@ public class HeaderFooterActivity extends AppCompatActivity {
     protected void goPrivate(){
         Intent intent = new Intent(getApplicationContext(), PrivateRoomActivity.class);
         startActivity(intent);
+    }
+
+    private void disableFooter(){
+        BottomNavigationView navigationView = findViewById(R.id.footer);
+        Menu menu = navigationView.getMenu();
+
+
+        if(title.compareTo("Create Room") == 0)
+        {
+            MenuItem menuItem = menu.findItem(R.id.createQuiz);
+            menuItem.setOnMenuItemClickListener((itm)->{
+                itm.setEnabled(false);
+                return true;
+            });
+        }
+        else if(title.compareTo("Public") == 0)
+        {
+            MenuItem menuItem = menu.findItem(R.id.searchQuizPublic);
+            menuItem.setOnMenuItemClickListener((itm)->{
+                itm.setEnabled(false);
+                return true;
+            });
+        }
+        else if(title.compareTo("Private") == 0)
+        {
+            MenuItem menuItem = menu.findItem(R.id.searchQuizPrivate);
+            menuItem.setOnMenuItemClickListener((itm)->{
+                itm.setEnabled(false);
+                return true;
+            });
+        }
+        else if(title.compareTo("Setting") == 0)
+        {
+            MenuItem menuItem = menu.findItem(R.id.settings);
+            menuItem.setOnMenuItemClickListener((itm)->{
+                itm.setEnabled(false);
+                return true;
+            });
+        }
     }
 
     public static void hideSoftKeyboard(Activity activity) {
