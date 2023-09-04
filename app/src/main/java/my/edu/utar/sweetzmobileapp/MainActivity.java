@@ -53,6 +53,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class MainActivity extends HeaderFooterActivity {
+    Button createQuizBtn;
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
 
@@ -79,6 +80,15 @@ public class MainActivity extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createQuizBtn = findViewById(R.id.button3);
+        createQuizBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CreateQuizActivity.class);
+                startActivity(intent);
+
+            }
+        });
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
         if(!musicManager.isPlaying()){

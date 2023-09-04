@@ -540,7 +540,7 @@ public class FirestoreManager {
 
     public void getLastQuiz(String roomType, String roomCode, FirestoreCallback callback){
         ArrayList<String> tmplist = new ArrayList<>();
-        if(roomType.equals("privateRoom")){
+        if(roomType.equals("private")){
             Query query = db.collection("privateRoom").document(roomCode).collection("quiz").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1);
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override

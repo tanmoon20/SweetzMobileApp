@@ -67,9 +67,10 @@ public class FirestoreManager2 {
                     @Override
                     public void onFailure(Exception e) {
                         //Fail to set
-                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+                        Log.e("FIRESTORE 2 : ", "FAILED TO INSERT");
                     }
                 });
+
     }
     //
     //

@@ -2,6 +2,7 @@ package my.edu.utar.sweetzmobileapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,7 +15,9 @@ public class CreateQuizActivity extends HeaderFooterActivity {
     Button enterBtn;
     String roomCode, quizName, quizDesc, quizCode, author = "user1";
     Integer numPlay = 0;
-    FirestoreManager2 firestoreManager2;
+    FirestoreManager2 firestoreManager2 = new FirestoreManager2();
+    FirestoreManager firestoreManager = new FirestoreManager();
+    Quiz quiz;
 
     public CreateQuizActivity() {
         super("Create Quiz");
@@ -31,26 +34,49 @@ public class CreateQuizActivity extends HeaderFooterActivity {
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                roomCode = editRoomCode.getText().toString();
+                /*roomCode = editRoomCode.getText().toString();*/
+                roomCode = "1234";
                 quizName = editName.getText().toString();
                 quizDesc = editDesc.getText().toString();
-
-                Quiz quiz = new Quiz();
-                quiz.setQuizId("");
+                new IDThread().run();
+                quiz = new Quiz();
+                quiz.setQuizId(quizCode);
                 quiz.setAuthor(author);
                 quiz.setDesc(quizDesc);
                 quiz.setTitle(quizName);
                 quiz.setNumPlay(numPlay);
 
-                firestoreManager2.insertPrivateRoomQuiz(roomCode,"", quizName, quizDesc);
-                Intent intent = new Intent(CreateQuizActivity.this, PlayActivity.class);
+/*                Intent intent = new Intent(CreateQuizActivity.this, PlayActivity.class);
                 intent.putExtra("quiz",quiz);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, 0);*/
             }
         });
         //get current quiz id
         //get room code
 
+
     }
 
+    private class IDThread extends Thread{
+        FirestoreManager fm = new FirestoreManager();
+
+        @Override
+        public void run() {
+            fm.getLastQuiz("private", roomCode, new LastQuizFirestoreCallback());
+        }
+
+        private class LastQuizFirestoreCallback implements FirestoreManager.FirestoreCallback{
+
+            @Override
+            public void onCallback(String[] result) {
+                quizCode = "quiz"+(Integer.parseInt(result[0].substring(4))+1);
+                firestoreManager2.insertPrivateRoomQuiz(roomCode,quizCode, quizName, quizDesc);
+            }
+
+            @Override
+            public void onCallbackError(Exception e) {
+
+            }
+        }
+    }
 }
