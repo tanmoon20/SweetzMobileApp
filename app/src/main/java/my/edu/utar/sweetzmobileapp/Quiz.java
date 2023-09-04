@@ -1,6 +1,5 @@
 package my.edu.utar.sweetzmobileapp;
 
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;

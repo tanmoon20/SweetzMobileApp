@@ -27,6 +27,14 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name=".editPage"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".showOwnerOfQuiz"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".PrivateRoomActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

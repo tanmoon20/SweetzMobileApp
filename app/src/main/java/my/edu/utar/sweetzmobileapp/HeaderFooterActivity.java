@@ -82,7 +82,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                         goHome();
                         return true;
                     case R.id.searchQuizPrivate:
-                        userAllowed = true;
+
                         if (userAllowed || !isGuest) {
                             goPrivate();
                         } else {
@@ -107,7 +107,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
     }
 
     protected void goCreateRoom(){
-        Intent intent = new Intent(getApplicationContext(),CreateQuizActivity.class);
+        Intent intent = new Intent(getApplicationContext(),showOwnerOfQuiz.class);
         startActivity(intent);
     }
 

@@ -18,6 +18,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Handler;
@@ -536,6 +537,68 @@ public class FirestoreManager {
                 Log.e("FIREMANAGER : ","QUERY FAILED !");
             }
         });
+    }
+    public void getUserAllPublicQuizQuestion(String userID,String quizID, final FirestoreCallback callback){
+        //This method is to get all the QuizId
+        //Test case: specificRoomID = 1234
+        //
+        //
+        ArrayList<String> tmpList = new ArrayList<>();
+        tmpList.add("publicRoom"); // <-to indicate what list is this
+        db.collection("user")
+                .document(userID)
+                .collection("publicRoom")
+                .document(quizID)
+                .collection("question")
+                //.whereEqualTo("capital", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                tmpList.add(document.getId());
+                            }
+                            String[] tmp = tmpList.toArray(new String[0]); //Convert back to array
+                            Log.e("getUserAllPubliCQ", "before callback"+Arrays.toString(tmp));
+                            callback.onCallback(tmp); //need to parse array into it
+                        } else {
+                            Log.e("getUserAllPubicquiz :", "Failed" );
+                        }
+                    }
+                });
+    }
+
+    public void getUserAllPrivateQuizQuestion(String userID,String roomID,String quizID, final FirestoreCallback callback){
+        //This method is to get all the QuizId
+        //Test case: specificRoomID = 1234
+        //
+        //
+        ArrayList<String> tmpList = new ArrayList<>();
+        tmpList.add("privateRoom"); // <-to indicate what list is this
+        db.collection("user")
+                .document(userID)
+                .collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
+                .document(quizID)
+                .collection("question")
+                //.whereEqualTo("capital", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                tmpList.add(document.getId());
+                            }
+                            String[] tmp = tmpList.toArray(new String[0]); //Convert back to array
+                            callback.onCallback(tmp); //need to parse array into it
+                        } else {
+
+                        }
+                    }
+                });
     }
 
     public void getLastQuiz(String roomType, String roomCode, FirestoreCallback callback){
