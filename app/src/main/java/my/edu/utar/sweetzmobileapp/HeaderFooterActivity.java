@@ -82,6 +82,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                         goHome();
                         return true;
                     case R.id.searchQuizPrivate:
+                        userAllowed = true;
                         if (userAllowed || !isGuest) {
                             goPrivate();
                         } else {

@@ -69,10 +69,15 @@ public class MainActivity extends HeaderFooterActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        if(!isPublic)
+        {
+            intent.putExtra("private","Private");
+            intent.putExtra("room",myRoom);
+        }
         finish();
         overridePendingTransition(0, 0);
-        startActivity(i);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 
@@ -198,6 +203,7 @@ public class MainActivity extends HeaderFooterActivity {
     }
 
     private class QuizThread extends Thread{
+        public Integer getCount = 0;
 
         public void run(){
             CollectionReference quizes;
@@ -243,7 +249,9 @@ public class MainActivity extends HeaderFooterActivity {
 
                                 }
 
+
                                 for (Quiz quiz: quizList){
+                                    Log.d("Start","start");
                                     quizes.document(quiz.getQuizId())
                                             .collection("author")
                                             .document("author")
@@ -253,8 +261,14 @@ public class MainActivity extends HeaderFooterActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         quiz.setAuthor(documentSnapshot.getString("username"));
-
-
+                                                        getCount += 1;
+                                                        if(getCount == quizList.size())
+                                                        {
+                                                            for (Quiz quiz: quizList)
+                                                            {
+                                                                displayRow(quiz);
+                                                            }
+                                                        }
                                                     } else {
                                                         Log.e("Public Quiz's Author : ", "NO AUTHOR FOUND!");
                                                     }
@@ -267,7 +281,6 @@ public class MainActivity extends HeaderFooterActivity {
                                                     Log.e("Public Quiz's Author : ","QUERY FAILED !");
                                                 }
                                             });
-                                    displayRow(quiz);
                                 }
 
 

@@ -31,6 +31,8 @@
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
             android:hint="Search Room"
+            android:maxLines="1"
+            android:inputType="text"
             android:textColorHint="@color/grey"
             android:textColor="@color/black"
             android:paddingRight="15sp"/>

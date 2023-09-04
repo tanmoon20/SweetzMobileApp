@@ -177,7 +177,6 @@ public class FirestoreManager2 {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("increase 3",Integer.toString(playNum));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -187,6 +186,27 @@ public class FirestoreManager2 {
                 //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
             }
         });
+    }
+
+    public void insertNewPrivateQuizPlay(String roomID, String quizID, int playNum){
+        Map<String, Object> data = new HashMap<>();
+        data.put("playCount", playNum);
+
+        db.collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
+                .document(quizID)
+                .set(data, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
     }
 }
 

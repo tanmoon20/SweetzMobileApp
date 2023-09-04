@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,6 +46,45 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
         //retrieve data from firestore
         PrivateRoomActivity.roomThread myRoomThread = new roomThread();
         myRoomThread.start();
+
+        //search function
+        EditText searchText = findViewById(R.id.search_bar);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                LinearLayout ll = findViewById(R.id.room_container);
+                if (charSequence.toString().length() == 0) {
+                    ll.removeAllViews();
+
+                    for(Room room: roomList)
+                    {
+                        displayRoom(room);
+                    }
+                } // This is used as if user erases the characters in the search field.
+                else {
+                    ll.removeAllViews();
+                    String txtSearch = charSequence.toString().trim().toLowerCase();
+
+                    for(Room room: roomList)
+                    {
+                        if(room.getTitle().toLowerCase().contains(txtSearch))
+                        {
+                            displayRoom(room);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
     }
 
