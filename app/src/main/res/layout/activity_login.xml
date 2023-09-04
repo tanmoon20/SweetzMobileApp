@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/purple_to_blue_bg"
+    android:id="@+id/loginContainer"
     tools:context=".Login">
 
     <LinearLayout

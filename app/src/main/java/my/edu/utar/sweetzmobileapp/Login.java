@@ -1,10 +1,14 @@
 package my.edu.utar.sweetzmobileapp;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -42,6 +46,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setupUI(findViewById(R.id.loginContainer));
 
         name = findViewById(R.id.name);
         password = findViewById(R.id.password);
@@ -231,7 +236,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void storeUserInfo(String userId, String user_email, String user_pwd, String username) {
-        User newUser = new User(user_email, user_pwd, username);
+        User newUser = new User(user_email, user_pwd, username); 
 
         DocumentReference userDocument = usersCollection.document(userId);
         userDocument.set(newUser)
@@ -249,12 +254,10 @@ public class Login extends AppCompatActivity {
                 });
     }
 
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        userLoginManager.clear();
+        userLoginManager.clear(); // Clear the login mode
     }
 
     private void startMainActivity(boolean go) {
@@ -264,5 +267,35 @@ public class Login extends AppCompatActivity {
         finish();
     }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodManager.isAcceptingText()){
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
+    }
 
+    public void setupUI(View view) {
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(Login.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
+    }
 }
