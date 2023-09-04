@@ -171,7 +171,6 @@ public class MainActivity extends HeaderFooterActivity {
             Intent intent = new Intent(this, PlayActivity.class);
             intent.putExtra("quiz",quiz);
             startActivityForResult(intent, 0);
-
         });
 
         ll.addView(cardView);
@@ -200,6 +199,8 @@ public class MainActivity extends HeaderFooterActivity {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.d("documentId",document.getId());
+
                                     Quiz quizTemp = new Quiz();
 
                                     if(document.exists()){
