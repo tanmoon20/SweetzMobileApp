@@ -32,17 +32,14 @@
             android:textColor="#000000"
             android:textSize="30sp" />
 
-        <Switch
+        <Button
             android:id="@+id/musicBoolean"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_gravity="center"
-            android:checked="true"
-            android:padding="3dp"
-            android:layout_margin="10dp"
-            android:thumbTint="#FE8EFC"
-            android:trackTint="@android:color/white" />
+            android:gravity="center"
+            android:textColor="#FFFFFF"/>
 
     </RelativeLayout>
 
