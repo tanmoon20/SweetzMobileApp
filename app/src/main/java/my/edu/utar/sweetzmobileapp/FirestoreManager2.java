@@ -189,7 +189,7 @@ public class FirestoreManager2 {
         });
     }
 
-    public void manipulatePublicQuizQuestion(String userID,String roomID, String quizID, String questionID
+    public void manipulatePublicQuizQuestion(String userID, String quizID, String questionID
             , String correct, String title, String A, String B, String C){
 
         Map<String, Object> data = new HashMap<>();
@@ -198,7 +198,7 @@ public class FirestoreManager2 {
         data.put("wrongA", A);
         data.put("wrongB", B);
         data.put("wrongC", C);
-
+/*
         db.collection("publicRoom")
                 .document(quizID)
                 .collection("question")
@@ -209,7 +209,7 @@ public class FirestoreManager2 {
                 //Fail to set
                 //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
             }
-        });
+        });*/
         db.collection("user")
                 .document(userID)
                 .collection("publicRoom")
@@ -235,7 +235,7 @@ public class FirestoreManager2 {
         data.put("wrongA", A);
         data.put("wrongB", B);
         data.put("wrongC", C);
-
+/*
         db.collection("privateRoom")
                 .document(roomID)
                 .collection("quiz")
@@ -248,10 +248,12 @@ public class FirestoreManager2 {
                 //Fail to set
                 //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
             }
-        });
+        });*/
         db.collection("user")
                 .document(userID)
-                .collection("publicRoom")
+                .collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
                 .document(quizID)
                 .collection("question")
                 .document(questionID)

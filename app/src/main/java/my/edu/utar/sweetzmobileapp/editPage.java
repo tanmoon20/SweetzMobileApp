@@ -28,6 +28,8 @@ import java.util.List;
 public class editPage extends HeaderFooterActivity {
     FloatingActionButton mute;
     Quiz myQuiz;
+    private ArrayList<String> questionIDArrayList = new ArrayList<>();
+    private ArrayList<EditText> titleList = new ArrayList<>();
     private ArrayList<EditText> listOfQuestion = new ArrayList<>();
     private int listOfQuestionINDEX = 0;
     public editPage() {
@@ -110,7 +112,7 @@ public class editPage extends HeaderFooterActivity {
         ll.addView(cardView, 0);
     }
 
-    public void displayQuestionAnswer(String title, String[] wrong, String correct){
+    public void displayQuestionAnswer(String questionID,String title, String[] wrong, String correct){
         LinearLayout ll = findViewById(R.id.questionContainer);
         int [] indexCurSetQuestion = new int[4];
 
@@ -119,7 +121,7 @@ public class editPage extends HeaderFooterActivity {
         params.setMargins(30,4,30,4);
         cardView.setLayoutParams(params);
 
-        TextView questionTV = cardView.findViewById(R.id.question);
+        EditText questionTV = cardView.findViewById(R.id.question);
         questionTV.setText(title);
 
         EditText ansABtn = cardView.findViewById(R.id.ansA);
@@ -140,16 +142,38 @@ public class editPage extends HeaderFooterActivity {
         listOfQuestion.get(listOfQuestion.size()-4).setText(correct); // the last one which is every 1/4 of option that is correct
         listOfQuestion.get(listOfQuestion.size()-3).setText(wrong[0]);
         listOfQuestion.get(listOfQuestion.size()-2).setText(wrong[1]);
-        listOfQuestion.get(listOfQuestion.size()-1).setText(wrong[2]); // the most top of the array list
+        listOfQuestion.get(listOfQuestion.size()-1).setText(wrong[2]); // option d
+
+        titleList.add(questionTV);
+        questionIDArrayList.add(questionID);
 
         ll.addView(cardView);
     }
     // remove set correct and set wrong method
 
     public void goBack(View view) { // This is the done button
+        FirestoreManager2 fm2 = new FirestoreManager2();
+        String [] tmp4 = new String[4];
+        if(myQuiz.getRoomID()==null){
+            for(int i = 0; i<titleList.size();i++){
+                for(int j = 0; j< 4;j++){
+                    tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
+                }
+                fm2.manipulatePublicQuizQuestion("user1", myQuiz.getQuizId(),
+                        questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
+            }
+        }else{
+            for(int i = 0; i<titleList.size();i++){
+                for(int j = 0; j< 4;j++){
+                    tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
+                }
+                fm2.manipulatePrivateQuizQuestion("user1", myQuiz.getRoomID(),
+                        myQuiz.getQuizId(),questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
+            }
+        }
         Intent intent = new Intent(this, showOwnerOfQuiz.class);
         startActivity(intent);
-//        finish();
+        finish();
     }
 
     private class QuestionThread extends Thread implements FirestoreManager.FirestoreCallback{
@@ -162,8 +186,7 @@ public class editPage extends HeaderFooterActivity {
         }
 
         public void run() {
-            Log.e("testing 104",myQuiz.getRoomID());
-            if(myQuiz.getRoomID()==""){
+            if(myQuiz.getRoomID()==null){
                 questionFM.getUserAllPublicQuizQuestion("user1",myQuiz.getQuizId(),QuestionThread.this);
                 Log.e("testing 103: ","getPublic");
             }
@@ -185,20 +208,19 @@ public class editPage extends HeaderFooterActivity {
             Log.e("testing 102 : ",Arrays.toString(result)+ "-"+checking+"-");
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            if(myQuiz.getRoomID()==""){
+            if(myQuiz.getRoomID()==null){
                 for(String question : result){
                     db.collection("user")
                             .document("user1")
-                            .collection(checking) // the list return will get private/public room string at the first index of the array list
+                            .collection(checking)
                             .document(myQuiz.getQuizId())
                             .collection("question")
-                            .document(question)//this would get the "question1" question id
+                            .document(question)
                             .get()
                             .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists()) {
-
                                         String correct;
                                         String[] wrong = new String[3];
 
@@ -208,13 +230,19 @@ public class editPage extends HeaderFooterActivity {
                                         wrong[2] = documentSnapshot.getString("wrongC");
                                         String title = documentSnapshot.getString("title");
 
-                                        displayQuestionAnswer(title, wrong, correct);
+                                        displayQuestionAnswer(question, title, wrong, correct);
 
+                                        // Update the EditText values here
+                                        listOfQuestion.get(listOfQuestion.size() - 4).setText(correct);
+                                        listOfQuestion.get(listOfQuestion.size() - 3).setText(wrong[0]);
+                                        listOfQuestion.get(listOfQuestion.size() - 2).setText(wrong[1]);
+                                        listOfQuestion.get(listOfQuestion.size() - 1).setText(wrong[2]);
                                     } else {
                                         Log.e("Public Quiz's Ans ", "Query fail");
                                     }
                                 }
                             });
+
                 }
             }else{
                 for(String question : result){
@@ -241,7 +269,7 @@ public class editPage extends HeaderFooterActivity {
                                         wrong[2] = documentSnapshot.getString("wrongC");
                                         String title = documentSnapshot.getString("title");
 
-                                        displayQuestionAnswer(title, wrong, correct);
+                                        displayQuestionAnswer(question,title, wrong, correct);
 
                                     } else {
                                         Log.e("Public Quiz's Ans ", "Query fail");
