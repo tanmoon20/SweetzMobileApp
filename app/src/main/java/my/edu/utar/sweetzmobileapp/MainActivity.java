@@ -2,11 +2,7 @@ package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -79,6 +75,7 @@ public class MainActivity extends HeaderFooterActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("MainActivity2", "Test pull request");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -167,7 +164,7 @@ public class MainActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
-            
+
         });
 
         cardView.setOnClickListener((v)->{
