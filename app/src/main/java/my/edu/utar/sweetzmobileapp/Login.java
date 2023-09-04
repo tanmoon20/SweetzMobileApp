@@ -254,7 +254,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        userLoginManager.clear(); // Clear the login mode
+        userLoginManager.clear();
     }
 
     private void startMainActivity(boolean go) {
