@@ -16,6 +16,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -532,7 +533,6 @@ public class FirestoreManager {
         //Test case: specificRoomID = 1234
         //
         //
-        Log.e("getUserAllPublicQuizQ","touched");
         ArrayList<String> tmpList = new ArrayList<>();
         tmpList.add("publicRoom"); // <-to indicate what list is this
         db.collection("user")
@@ -550,9 +550,10 @@ public class FirestoreManager {
                                 tmpList.add(document.getId());
                             }
                             String[] tmp = tmpList.toArray(new String[0]); //Convert back to array
+                            Log.e("getUserAllPubliCQ", "before callback"+Arrays.toString(tmp));
                             callback.onCallback(tmp); //need to parse array into it
                         } else {
-
+                            Log.e("getUserAllPubicquiz :", "Failed" );
                         }
                     }
                 });

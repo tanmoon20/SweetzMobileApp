@@ -11,6 +11,7 @@ public class Quiz implements Serializable {
     private String author = "N/A";
     private String lastUpdate;
     private Integer numPlay = 0;
+    private String roomID="";
 
     public Quiz(){
         Date date = new Date();
@@ -65,4 +66,8 @@ public class Quiz implements Serializable {
     public void setNumPlay(Integer numPlay) {
         this.numPlay = numPlay;
     }
+
+    public void setRoomID(String roomID){this.roomID = roomID;}
+
+    public String getRoomID(){return roomID;}
 }
