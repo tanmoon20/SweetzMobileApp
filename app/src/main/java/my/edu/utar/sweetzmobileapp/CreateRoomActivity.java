@@ -54,10 +54,10 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
         camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-/*                QR qr = new QR(CreateRoomActivity.this, "1234");
-                qr.createQRDialog();*/
-                Intent intent = new Intent(CreateRoomActivity.this, QRScanner.class);
-                startActivity(intent);
+                QR qr = new QR(CreateRoomActivity.this, "1234 quiz1");
+                qr.createQRDialog();
+/*                Intent intent = new Intent(CreateRoomActivity.this, QRScanner.class);
+                startActivity(intent);*/
             }
         });
 

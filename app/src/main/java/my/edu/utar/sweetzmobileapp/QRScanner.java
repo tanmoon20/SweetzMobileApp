@@ -26,7 +26,7 @@ public class QRScanner extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
     private ScannerLiveView camera;
     private TextView tv;
-
+    FirestoreManager fm = new FirestoreManager();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,23 +55,27 @@ public class QRScanner extends AppCompatActivity {
 
             }
 
+            //when the code is scanned, it should check which kind of activity should be intent
+            //intent, the roomCode is data
             @Override
             public void onCodeScanned(String data) {
-                Toast.makeText(QRScanner.this, data, Toast.LENGTH_LONG).show();
-                if(data.length()==4){
-                    createPwdDialog(data);
+                Toast.makeText(QRScanner.this, data, Toast.LENGTH_LONG).show();  //roomCode no need password
+                if(data.length()==4 && !data.contains(" ")){
                     //start private room activity
-                }else{
-                    createDialog("Password", "Give me ur password");
+                } else if (data.substring(0,3).equals("quiz")) {
+                    //to public quiz activity
+                } else{
+                    String[] dataArray = data.split("\\s+");
+
+                    //quizCode need password of room
+                    //get the room of quiz
+                    //get the password
+                    //dialog
+                    //granted access dialog
+                    createPwdDialog(data);
+                    //if
                     //start quiz activity
                 }
-                //intent, the roomCode is data
-                //
-                //
-                //
-                //
-                //
-                //
             }
         });
     }
@@ -79,8 +83,6 @@ public class QRScanner extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ZXDecoder decoder = new ZXDecoder();
-        // 0.5 is the area where we have
-        // to place red marker for scanning.
         decoder.setScanAreaPercent(1.0f);
         // below method will set decoder to camera.
         camera.setDecoder(decoder);
@@ -134,7 +136,6 @@ public class QRScanner extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
     public void createPwdDialog(String roomCode){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -148,16 +149,14 @@ public class QRScanner extends AppCompatActivity {
                 // Handle OK button click here
                 EditText passwordEditText = dialogView.findViewById(R.id.join_room_pwd_qr);
                 String roomPwd = passwordEditText.getText().toString();
-                JoinThread joinThread = new JoinThread(new Handler(), roomCode, roomPwd);
+                JoinThread joinThread = new JoinThread(roomCode, roomPwd);
                 joinThread.start();
-
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Handle Cancel button click here
             }
         });
 
@@ -165,14 +164,15 @@ public class QRScanner extends AppCompatActivity {
         dialog.show();
 
     }
+
+    //for joining room
     private class JoinThread extends Thread {
         FirestoreManager fm = new FirestoreManager();
-        private Handler mHandler;
         private FirestoreManager.FirestoreCallback firestoreCallback;
         private String roomCode, roomPwd;
 
-        public JoinThread(Handler handler, String roomCode, String roomPwd) {
-            this.mHandler = handler;
+        public JoinThread(String roomCode, String roomPwd) {
+
             this.firestoreCallback = new joinFirestoreCallback();
             this.roomCode = roomCode;
             this.roomPwd = roomPwd;
@@ -223,5 +223,40 @@ public class QRScanner extends AppCompatActivity {
             public void onCallbackError(Exception e) {
             }
         };
+    }
+
+    //for joining quiz
+    private class JoinQuizThread extends Thread{
+        String roomCode, quizId;
+        FirestoreManager fm;
+
+        public JoinQuizThread(String roomCode, String quizId){
+            this.roomCode = roomCode;
+            this.quizId = quizId;
+        }
+
+        @Override
+        public void run() {
+            fm.getPrivateRoomQuizInfo(roomCode, quizId, new JoinQuizFirestoreCallback());
+        }
+
+        private class JoinQuizFirestoreCallback implements FirestoreManager.FirestoreCallback {
+
+            @Override
+            public void onCallback(String[] result) {
+                if(result == null){
+                    createDialog("Invalid QR", "Room or Quiz not found");
+                }else{
+                    createDialog("Quiz Info", result.toString());
+                     //check if members, if no, createDialogPwd
+                    //need get the current user
+                }
+            }
+
+            @Override
+            public void onCallbackError(Exception e) {
+
+            }
+        }
     }
 }

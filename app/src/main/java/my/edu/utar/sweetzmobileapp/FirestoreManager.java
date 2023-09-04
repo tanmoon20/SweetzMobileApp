@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -15,6 +16,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class FirestoreManager {
@@ -525,6 +527,16 @@ public class FirestoreManager {
             }
         });
     }
+
+/*    public void getLastQuiz(String roomType, String roomCode){
+        ArrayList<String> tmplist = new ArrayList<>();
+        if(roomType.equals("privateRoom")){
+
+            Query query = db.collection("privateRoom").document(roomCode).collection("quiz").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1);
+            query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            });
+        }
+    }*/
 
     public interface FirestoreCallback {
         void onCallback(String [] result);
