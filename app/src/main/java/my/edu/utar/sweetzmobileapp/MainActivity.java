@@ -5,15 +5,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.google.firebase.FirebaseApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,14 +42,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
+    private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public MainActivity()
     {
-        super("Home");
+        super("Public");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(i);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -38,10 +79,6 @@ public class MainActivity extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Firebase start by En Yee
-        FirebaseApp.initializeApp(this);
-
-        /*displayRow();*/
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
         if(!musicManager.isPlaying()){
@@ -53,9 +90,55 @@ public class MainActivity extends HeaderFooterActivity {
             }, 2000); // <-- This is delay the music because the phone need to load first
         }
 
+        //search function
+
+
+        EditText searchText = findViewById(R.id.search_bar);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                LinearLayout ll = findViewById(R.id.quiz_title_container);
+                if (charSequence.toString().length() == 0) {
+                    ll.removeAllViews();
+
+                    for(Quiz quiz:quizList)
+                    {
+                        displayRow(quiz);
+                    }
+                } // This is used as if user erases the characters in the search field.
+                else {
+                    ll.removeAllViews();
+                    String txtSearch = charSequence.toString().trim().toLowerCase();
+
+                    for(Quiz quiz:quizList)
+                    {
+                        if(quiz.getTitle().toLowerCase().contains(txtSearch))
+                        {
+                            displayRow(quiz);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        getQuizList();
+
+
+
     }
 
-    public void displayRow(){
+    public void displayRow(Quiz quiz){
         LinearLayout ll = findViewById(R.id.quiz_title_container);
 
         View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card, null);
@@ -63,80 +146,117 @@ public class MainActivity extends HeaderFooterActivity {
         params.setMargins(30,4,30,4);
         cardView.setLayoutParams(params);
 
-        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
-        btnPlay.setOnClickListener((v)->{
-            Intent intent = new Intent(this, PlayActivity.class);
-            startActivity(intent);
+        TextView titleTV = cardView.findViewById(R.id.title);
+        titleTV.setText(quiz.getTitle());
+
+        TextView descriptionTV = cardView.findViewById(R.id.description);
+        descriptionTV.setText(quiz.getDesc());
+
+        TextView playCountTV = cardView.findViewById(R.id.playCountTV);
+        String playCount = Integer.toString(quiz.getNumPlay());
+        playCountTV.setText(playCountTV.getText().toString().replace("Num",playCount));
+
+        TextView authorDateTV = cardView.findViewById(R.id.authorDateTV);
+        String authorDate = authorDateTV.getText().toString();
+        authorDate = authorDate.replace("Author", quiz.getAuthor());
+        authorDate = authorDate.replace("Date", quiz.getLastUpdate());
+        authorDateTV.setText(authorDate);
+
+        ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
+        shareBtn.setOnClickListener((v)->{
+
         });
+
+        cardView.setOnClickListener((v)->{
+            Intent intent = new Intent(this, PlayActivity.class);
+            intent.putExtra("quiz",quiz);
+            startActivityForResult(intent, 0);
+
+        });
+
         ll.addView(cardView);
 
-        Log.i("MainActivity2", "Something: Hello ");
-        Handler mHandler = new Handler();
-        MyThread connectingThread = new MyThread(mHandler);
-        connectingThread.start();
     }
 
-    private class MyThread extends Thread {
+    public void getQuizList() {
+        Handler mHandler = new Handler();
+        QuizThread myQuizThread = new QuizThread(mHandler);
+        myQuizThread.start();
+    }
+
+    private class QuizThread extends Thread{
         private Handler mHandler;
 
-        public MyThread(Handler handler) {
-            mHandler = handler;
+        public QuizThread(Handler mHandler){
+            this.mHandler = mHandler;
         }
 
-        public void run() {
-            try {
-//                URL url = new URL("https://pjfecjvyukkzaqwhpysj.supabase.co/rest/v1/Quiz?QuizId=eq.1");
-                URL url = new URL("https://pjfecjvyukkzaqwhpysj.supabase.co/rest/v1/Quiz?select=*");
-                HttpURLConnection hc = (HttpURLConnection) url.openConnection();
+        public void run(){
+            CollectionReference quizes = db.collection("publicRoom");
+            quizes.orderBy("lastUpdate", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Quiz quizTemp = new Quiz();
 
-//                hc.setRequestMethod("GET");
-                hc.setRequestProperty("apikey", getString(R.string.SUPABASE_KEY));
-                hc.setRequestProperty("Authorization", "Bearer " + getString(R.string.SUPABASE_KEY));
+                                    if(document.exists()){
+                                        quizTemp.setQuizId(document.getId());
+                                        quizTemp.setTitle(document.getData().get("title").toString());
+                                        quizTemp.setDesc(document.getData().get("description").toString());
+                                        quizTemp.setNumPlay(document.getData().get("playCount").hashCode());
 
-                InputStream input = hc.getInputStream();
-                String result = readStream(input);
+                                        String author;
 
-//                try{
-//                    JSONObject jsonObject = new JSONObject(result);
-//                    String title = jsonObject.getString("Title");
-//                    Log.i("MainActivity2", "Something Title: " + title);
-////                    int age = jsonObject.getInt("age");
-////                    tv.setText("You have successfully accessed a web API!\n" + intent.getStringExtra("response") + name + "'s age is " + age);
-//                }catch(JSONException e){
-//                    e.printStackTrace();
-//                }
+                                        Timestamp timestamp = (Timestamp) document.getData().get("lastUpdate");
+                                        Date date = timestamp.toDate();
+                                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                        String lastUpdateDate = formatter.format(date);
+                                        quizTemp.setLastUpdate(lastUpdateDate);
+
+                                        quizList.add(quizTemp);
+                                    }
+                                    else
+                                    {
+                                        Log.d("Public Quiz's Info", "No such document");
+                                    }
+
+                                }
+
+                                for (Quiz quiz: quizList){
+                                    quizes.document(quiz.getQuizId())
+                                            .collection("author")
+                                            .document("author")
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()) {
+                                                        quiz.setAuthor(documentSnapshot.getString("username"));
+                                                        displayRow(quiz);
+                                                    } else {
+                                                        Log.e("Public Quiz's Author : ", "NO AUTHOR FOUND!");
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    //query fail
+                                                    Log.e("Public Quiz's Author : ","QUERY FAILED !");
+                                                }
+                                            });
+                                }
 
 
-
-                Log.i("MainActivity2", "Something: " + result);
-                if (hc.getResponseCode() == 200) {
-                    Log.i("MainActivity2", "Response: success " + result);
-//                    Intent myIntent = new Intent(MainActivity2.this, SuccessActivity.class);
-                } else {
-                    Log.i("MainActivity2", "Response: failed " + hc.getResponseCode());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                            } else {
+                                Log.e("Public Quiz's Info : ", "Query fail");
+                            }
+                        }
+                    });
         }
     }
 
-    private String readStream(InputStream is) {
-        try {
-            ByteArrayOutputStream bo = new
-                    ByteArrayOutputStream();
-            int i = is.read();
-            while (i != -1) {
-                bo.write(i);
-                i = is.read();
-            }
-            return bo.toString();
-        } catch (IOException e) {
-            return "";
-        }
-    }
-
-    private class InternetPermission{
-
-    }
 }

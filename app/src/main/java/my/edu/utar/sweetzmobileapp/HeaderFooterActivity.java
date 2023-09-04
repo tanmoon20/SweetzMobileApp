@@ -1,29 +1,35 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class HeaderFooterActivity extends AppCompatActivity {
 
     private String title;
+    private UserLoginManager userLoginManager;
 
     protected boolean userAllowed = false;
-    protected boolean isGuest = true;
+    protected boolean isGuest = false;
 
     public HeaderFooterActivity(String title)
     {
@@ -34,16 +40,17 @@ public class HeaderFooterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        userLoginManager = new UserLoginManager(this);
+
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             if (currentUser.getEmail() != null) {
                 userAllowed = true;
-                isGuest = false;
+                isGuest = userLoginManager.isGuest();
             }
         }
 
-        Intent intent = getIntent();
-        isGuest = intent.getBooleanExtra("IS_GUEST", false);
+        isGuest = userLoginManager.isGuest();
     }
 
     public void setContentView (int layoutResID){
@@ -67,8 +74,14 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 switch (id){
                     case R.id.createQuiz:
+                        goCreateRoom();
+                        return true;
+                    case R.id.searchQuizPublic:
+                        goHome();
+                        return true;
+                    case R.id.searchQuizPrivate:
                         if (userAllowed || !isGuest) {
-                            goCreateRoom();
+                            goPrivate();
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "You are not allowed to access Private Room",
@@ -79,11 +92,6 @@ public class HeaderFooterActivity extends AppCompatActivity {
                             finish();
                         }
                         return true;
-                    case R.id.searchQuizPublic:
-                        goHome();
-                        return true;
-                    case R.id.searchQuizPrivate:
-                        return true;
                     case R.id.settings:
                         goSetting();
                         return true;
@@ -91,6 +99,8 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        setupUI(findViewById(R.id.parentContainer));
     }
 
     protected void goCreateRoom(){
@@ -106,5 +116,43 @@ public class HeaderFooterActivity extends AppCompatActivity {
     protected void goSetting(){
         Intent intent = new Intent(getApplicationContext(),SettingPage.class);
         startActivity(intent);
+    }
+
+    protected void goPrivate(){
+        Intent intent = new Intent(getApplicationContext(), PrivateRoomActivity.class);
+        startActivity(intent);
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodManager.isAcceptingText()){
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
+    }
+
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(HeaderFooterActivity.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
     }
 }

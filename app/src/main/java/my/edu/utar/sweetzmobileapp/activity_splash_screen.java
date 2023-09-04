@@ -59,6 +59,7 @@ public class activity_splash_screen extends AppCompatActivity {
             @Override
             public void run() {
                 startActivity(new Intent(activity_splash_screen.this, Login.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                finish();
             }
         }, 1000);
 

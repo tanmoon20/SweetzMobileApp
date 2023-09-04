@@ -1,8 +1,12 @@
 package my.edu.utar.sweetzmobileapp;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -163,5 +167,26 @@ public class FirestoreManager2 {
     }
     //
     //
+
+    public void insertNewPublicQuizPlay(String quizID, int playNum){
+        Map<String, Object> data = new HashMap<>();
+        data.put("playCount", playNum);
+
+        db.collection("publicRoom").document(quizID)
+                .set(data, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("increase 3",Integer.toString(playNum));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                //Fail to set
+                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+            }
+        });
+    }
 }
 

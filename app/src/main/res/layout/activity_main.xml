@@ -31,9 +31,11 @@
             android:background="@drawable/rounded_edge_all"
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
-            android:hint="Search here"
+            android:hint="Search Quiz"
             android:textColorHint="@color/grey"
             android:textColor="@color/black"
+            android:maxLines="1"
+            android:inputType="text"
             android:paddingRight="15sp"/>
 
         <TextView
@@ -44,8 +46,19 @@
             android:paddingRight="15sp"
             android:text="🔥 Trending Now 🔥"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CREATE QUIZ"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:padding="8dp"
+            android:backgroundTint="@color/lightGreen"
+            />
 
         <ScrollView
             android:layout_width="match_parent"
