@@ -527,6 +527,68 @@ public class FirestoreManager {
             }
         });
     }
+    public void getUserAllPublicQuizQuestion(String userID,String quizID, final FirestoreCallback callback){
+        //This method is to get all the QuizId
+        //Test case: specificRoomID = 1234
+        //
+        //
+        Log.e("getUserAllPublicQuizQ","touched");
+        ArrayList<String> tmpList = new ArrayList<>();
+        tmpList.add("publicRoom"); // <-to indicate what list is this
+        db.collection("user")
+                .document(userID)
+                .collection("publicRoom")
+                .document(quizID)
+                .collection("question")
+                //.whereEqualTo("capital", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                tmpList.add(document.getId());
+                            }
+                            String[] tmp = tmpList.toArray(new String[0]); //Convert back to array
+                            callback.onCallback(tmp); //need to parse array into it
+                        } else {
+
+                        }
+                    }
+                });
+    }
+
+    public void getUserAllPrivateQuizQuestion(String userID,String roomID,String quizID, final FirestoreCallback callback){
+        //This method is to get all the QuizId
+        //Test case: specificRoomID = 1234
+        //
+        //
+        ArrayList<String> tmpList = new ArrayList<>();
+        tmpList.add("privateRoom"); // <-to indicate what list is this
+        db.collection("user")
+                .document(userID)
+                .collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
+                .document(quizID)
+                .collection("question")
+                //.whereEqualTo("capital", true)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                tmpList.add(document.getId());
+                            }
+                            String[] tmp = tmpList.toArray(new String[0]); //Convert back to array
+                            callback.onCallback(tmp); //need to parse array into it
+                        } else {
+
+                        }
+                    }
+                });
+    }
 
 /*    public void getLastQuiz(String roomType, String roomCode){
         ArrayList<String> tmplist = new ArrayList<>();
