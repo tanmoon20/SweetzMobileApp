@@ -104,7 +104,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
     }
 
     protected void goCreateRoom(){
-        Intent intent = new Intent(getApplicationContext(),CreateRoomActivity.class);
+        Intent intent = new Intent(getApplicationContext(),CreateQuizActivity.class);
         startActivity(intent);
     }
 
