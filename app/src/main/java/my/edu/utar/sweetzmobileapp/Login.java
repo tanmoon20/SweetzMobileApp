@@ -9,16 +9,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 
 
-public class Login extends HeaderFooterActivity  {
-
-    public Login(){ super("Login"); }
+public class Login extends AppCompatActivity {
 
     EditText name;
     EditText password;
@@ -26,9 +28,13 @@ public class Login extends HeaderFooterActivity  {
     Button login;
     Button register;
 
+    private UserLoginManager userLoginManager;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
-    private BottomNavigationView navigationView;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersCollection = db.collection("users");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,20 +52,8 @@ public class Login extends HeaderFooterActivity  {
         progressDialog.setCancelable(false);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        userLoginManager = new UserLoginManager(this);
 
-        navigationView = findViewById(R.id.footer);
-
-        if (userAllowed || isGuest) {
-            navigationView.getMenu().findItem(R.id.createQuiz).setEnabled(true);
-            navigationView.getMenu().findItem(R.id.searchQuizPublic).setEnabled(true);
-            navigationView.getMenu().findItem(R.id.searchQuizPrivate).setEnabled(true);
-            navigationView.getMenu().findItem(R.id.settings).setEnabled(true);
-        } else {
-            navigationView.getMenu().findItem(R.id.createQuiz).setEnabled(false);
-            navigationView.getMenu().findItem(R.id.settings).setEnabled(false);
-            navigationView.getMenu().findItem(R.id.searchQuizPublic).setEnabled(false);
-            navigationView.getMenu().findItem(R.id.searchQuizPrivate).setEnabled(false);
-        }
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +72,8 @@ public class Login extends HeaderFooterActivity  {
         guest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startMainActivity();
+                userLoginManager.setLoginMode(true);
+                startMainActivity(true);
             }
         });
     }
@@ -97,12 +92,22 @@ public class Login extends HeaderFooterActivity  {
         progressDialog.setMessage("Logging User...");
         progressDialog.show();
 
-
         firebaseAuth.signInWithEmailAndPassword(username, pwd)
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
-                    if (user != null && user.getEmail() != null) {
-                        startMainActivity();
+                    if (user != null) {
+                        if (user.isEmailVerified()) {
+                            if (userLoginManager.isGuest()) {
+                                startMainActivity(true);
+                            } else {
+                                startMainActivity(false);
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Please verify your email address before logging in.",
+                                    Toast.LENGTH_LONG).show();
+                            firebaseAuth.signOut();
+                        }
                     } else {
                         Toast.makeText(getApplicationContext(),
                                 "Authentication failed: Username or password is null",
@@ -160,6 +165,8 @@ public class Login extends HeaderFooterActivity  {
                     if (user != null) {
                         String userId = user.getUid();
                         User newUser = new User(username, password);
+                        sendEmailVerification(user);
+                        storeUserInfo(user.getUid(), username, password);
 
                         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
                         usersRef.child(userId).setValue(newUser);
@@ -176,12 +183,55 @@ public class Login extends HeaderFooterActivity  {
                 });
     }
 
+    private void sendEmailVerification(FirebaseUser user) {
+        user.sendEmailVerification()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(),
+                                "Registration successful. Please verify your email before logging in.",
+                                Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Email verification could not be sent. Please try again later.",
+                                Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+                });
+    }
 
-    private void startMainActivity() {
+    private void storeUserInfo(String userId, String username, String password) {
+        User newUser = new User(username, password);
+
+        DocumentReference userDocument = usersCollection.document(userId);
+        userDocument.set(newUser)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getApplicationContext(),
+                            "Registration successful. Please verify your email before logging in.",
+                            Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getApplicationContext(),
+                            "Error storing user information: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                });
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        userLoginManager.clear(); // Clear the login mode
+    }
+
+    private void startMainActivity(boolean go) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("IS_GUEST", true);
+        intent.putExtra("IS_GUEST", go);
         startActivity(intent);
         finish();
     }
+
 
 }
