@@ -53,9 +53,21 @@ public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
 
+
+
     public MainActivity()
     {
         super("Public");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(i);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -110,7 +122,8 @@ public class MainActivity extends HeaderFooterActivity {
         cardView.setOnClickListener((v)->{
             Intent intent = new Intent(this, PlayActivity.class);
             intent.putExtra("quiz",quiz);
-            startActivity(intent);
+            startActivityForResult(intent, 0);
+
         });
 
         ll.addView(cardView);
