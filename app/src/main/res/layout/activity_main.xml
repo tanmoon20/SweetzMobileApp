@@ -34,6 +34,8 @@
             android:hint="Search Quiz"
             android:textColorHint="@color/grey"
             android:textColor="@color/black"
+            android:maxLines="1"
+            android:inputType="text"
             android:paddingRight="15sp"/>
 
         <TextView

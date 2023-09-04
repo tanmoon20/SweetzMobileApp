@@ -2,16 +2,19 @@ package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,13 +56,26 @@ public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public MainActivity()
     {
         super("Public");
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(i);
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("MainActivity2", "Test pull request");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -74,19 +90,51 @@ public class MainActivity extends HeaderFooterActivity {
             }, 2000); // <-- This is delay the music because the phone need to load first
         }
 
-//        FirestoreManager firestoreQuiz = new FirestoreManager();
-//        firestoreQuiz.getPublicRoomAllQuiz(this);
-
-        try {
-            getQuizList();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        //search function
 
 
-//        displayRow();
-//        displayRow();
-//        displayRow();
+        EditText searchText = findViewById(R.id.search_bar);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                LinearLayout ll = findViewById(R.id.quiz_title_container);
+                if (charSequence.toString().length() == 0) {
+                    ll.removeAllViews();
+
+                    for(Quiz quiz:quizList)
+                    {
+                        displayRow(quiz);
+                    }
+                } // This is used as if user erases the characters in the search field.
+                else {
+                    ll.removeAllViews();
+                    String txtSearch = charSequence.toString().trim().toLowerCase();
+
+                    for(Quiz quiz:quizList)
+                    {
+                        if(quiz.getTitle().toLowerCase().contains(txtSearch))
+                        {
+                            displayRow(quiz);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        getQuizList();
+
+
 
     }
 
@@ -105,7 +153,8 @@ public class MainActivity extends HeaderFooterActivity {
         descriptionTV.setText(quiz.getDesc());
 
         TextView playCountTV = cardView.findViewById(R.id.playCountTV);
-        playCountTV.setText(playCountTV.getText().toString().replace("Num",quiz.getNumPlay()));
+        String playCount = Integer.toString(quiz.getNumPlay());
+        playCountTV.setText(playCountTV.getText().toString().replace("Num",playCount));
 
         TextView authorDateTV = cardView.findViewById(R.id.authorDateTV);
         String authorDate = authorDateTV.getText().toString();
@@ -113,83 +162,26 @@ public class MainActivity extends HeaderFooterActivity {
         authorDate = authorDate.replace("Date", quiz.getLastUpdate());
         authorDateTV.setText(authorDate);
 
+        ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
+        shareBtn.setOnClickListener((v)->{
+
+        });
+
+        cardView.setOnClickListener((v)->{
+            Intent intent = new Intent(this, PlayActivity.class);
+            intent.putExtra("quiz",quiz);
+            startActivityForResult(intent, 0);
+
+        });
+
         ll.addView(cardView);
 
     }
 
-    public void getQuizList() throws InterruptedException {
-
-
-
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        CollectionReference quizes = db.collection("publicRoom");
-//        quizes.orderBy("lastUpdate", Query.Direction.DESCENDING)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                Quiz quizTemp = new Quiz();
-//
-//                                if(document.exists()){
-//                                    quizTemp.setQuizId(document.getId());
-//                                    quizTemp.setTitle(document.getData().get("title").toString());
-//                                    quizTemp.setDesc(document.getData().get("description").toString());
-//                                    quizTemp.setNumPlay(document.getData().get("playCount").toString());
-//
-//                                    String author;
-//
-//                                    Timestamp timestamp = (Timestamp) document.getData().get("lastUpdate");
-//                                    Date date = timestamp.toDate();
-//                                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//                                    String lastUpdateDate = formatter.format(date);
-//                                    quizTemp.setLastUpdate(lastUpdateDate);
-//
-//                                    quizList.add(quizTemp);
-//                                }
-//                                else
-//                                {
-//                                    Log.d("Public Quiz's Info", "No such document");
-//                                }
-//
-//                            }
-//
-//                            for (Quiz quiz: quizList){
-//                                quizes.document(quiz.getQuizId())
-//                                        .collection("author")
-//                                        .document("author")
-//                                        .get()
-//                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                                if (documentSnapshot.exists()) {
-//
-//                                                    quiz.setAuthor(documentSnapshot.getString("username"));
-//                                                } else {
-//                                                    Log.e("Public Quiz's Author : ", "NO AUTHOR FOUND!");
-//                                                }
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(Exception e) {
-//                                                //query fail
-//                                                Log.e("Public Quiz's Author : ","QUERY FAILED !");
-//                                            }
-//                                        });
-//                            }
-//
-//                        } else {
-//                            Log.e("Public Quiz's Info : ", "Query fail");
-//                        }
-//                    }
-//                });
+    public void getQuizList() {
         Handler mHandler = new Handler();
         QuizThread myQuizThread = new QuizThread(mHandler);
         myQuizThread.start();
-        myQuizThread.join();
     }
 
     private class QuizThread extends Thread{
@@ -200,8 +192,6 @@ public class MainActivity extends HeaderFooterActivity {
         }
 
         public void run(){
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
             CollectionReference quizes = db.collection("publicRoom");
             quizes.orderBy("lastUpdate", Query.Direction.DESCENDING)
                     .get()
@@ -216,7 +206,7 @@ public class MainActivity extends HeaderFooterActivity {
                                         quizTemp.setQuizId(document.getId());
                                         quizTemp.setTitle(document.getData().get("title").toString());
                                         quizTemp.setDesc(document.getData().get("description").toString());
-                                        quizTemp.setNumPlay(document.getData().get("playCount").toString());
+                                        quizTemp.setNumPlay(document.getData().get("playCount").hashCode());
 
                                         String author;
 
@@ -268,4 +258,5 @@ public class MainActivity extends HeaderFooterActivity {
                     });
         }
     }
+
 }

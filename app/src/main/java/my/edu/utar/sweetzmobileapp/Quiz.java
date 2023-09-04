@@ -1,15 +1,16 @@
 package my.edu.utar.sweetzmobileapp;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Quiz {
+public class Quiz implements Serializable {
     private String quizId;
     private String title = "N/A";
     private String desc = "N/A";
     private String author = "N/A";
     private String lastUpdate;
-    private String numPlay = "0";
+    private Integer numPlay = 0;
 
     public Quiz(){
         Date date = new Date();
@@ -49,19 +50,19 @@ public class Quiz {
         this.quizId = quizId;
     }
 
-    public String getNumPlay() {
-        return numPlay;
-    }
-
-    public void setNumPlay(String numPlay) {
-        this.numPlay = numPlay;
-    }
-
     public String getLastUpdate() {
         return lastUpdate;
     }
 
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public Integer getNumPlay() {
+        return numPlay;
+    }
+
+    public void setNumPlay(Integer numPlay) {
+        this.numPlay = numPlay;
     }
 }
