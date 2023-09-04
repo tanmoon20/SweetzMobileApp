@@ -54,10 +54,11 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
         camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                QR qr = new QR(CreateRoomActivity.this, "1234 quiz1");
-                qr.createQRDialog();
+/*                QR qr = new QR(CreateRoomActivity.this, "1234 quiz1");
+                qr.createQRDialog();*/
 /*                Intent intent = new Intent(CreateRoomActivity.this, QRScanner.class);
                 startActivity(intent);*/
+
             }
         });
 
@@ -175,8 +176,8 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
 
             @Override
             public void onCallback(String[] result) {
-
-                if(result==null){
+                Log.i("####errror", result[0]);
+                if(result[0].equals("not found")){
                     firestoreHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -198,7 +199,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                         firestoreHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                createDialog("Try again", "room code or password incorrect!");
+                                createDialog("Try again!", "Room code or password incorrect!");
                             }
                         });
                     }
