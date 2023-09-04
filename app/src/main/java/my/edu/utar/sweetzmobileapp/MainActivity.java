@@ -93,7 +93,8 @@ public class MainActivity extends HeaderFooterActivity {
         descriptionTV.setText(quiz.getDesc());
 
         TextView playCountTV = cardView.findViewById(R.id.playCountTV);
-        playCountTV.setText(playCountTV.getText().toString().replace("Num",quiz.getNumPlay()));
+        String playCount = Integer.toString(quiz.getNumPlay());
+        playCountTV.setText(playCountTV.getText().toString().replace("Num",playCount));
 
         TextView authorDateTV = cardView.findViewById(R.id.authorDateTV);
         String authorDate = authorDateTV.getText().toString();
@@ -146,7 +147,7 @@ public class MainActivity extends HeaderFooterActivity {
                                         quizTemp.setQuizId(document.getId());
                                         quizTemp.setTitle(document.getData().get("title").toString());
                                         quizTemp.setDesc(document.getData().get("description").toString());
-                                        quizTemp.setNumPlay(document.getData().get("playCount").toString());
+                                        quizTemp.setNumPlay(document.getData().get("playCount").hashCode());
 
                                         String author;
 

@@ -35,6 +35,8 @@ public class PlayActivity extends HeaderFooterActivity {
 
     FloatingActionButton mute;
     Quiz myQuiz;
+    Integer totalQuiz;
+    Integer correctCount = 0;
 
     public PlayActivity(){
         super("Play");
@@ -105,7 +107,8 @@ public class PlayActivity extends HeaderFooterActivity {
         descriptionTV.setText(myQuiz.getDesc());
 
         TextView playCountTV = cardView.findViewById(R.id.playCountTV);
-        playCountTV.setText(playCountTV.getText().toString().replace("Num",myQuiz.getNumPlay()));
+        String playCount = Integer.toString(myQuiz.getNumPlay());
+        playCountTV.setText(playCountTV.getText().toString().replace("Num",playCount));
 
         TextView authorDateTV = cardView.findViewById(R.id.authorDateTV);
         String authorDate = authorDateTV.getText().toString();
@@ -190,6 +193,15 @@ public class PlayActivity extends HeaderFooterActivity {
             for(Button wrongBtn:wrongBtnList){
                 wrongBtn.setEnabled(false);
             }
+
+            correctCount++;
+            if(correctCount == totalQuiz)
+            {
+                myQuiz.setNumPlay(myQuiz.getNumPlay() + 1);
+                Log.d("increase",Integer.toString(myQuiz.getNumPlay()));
+                SetNumPlayThread setNumPlayThread = new SetNumPlayThread();
+                setNumPlayThread.start();
+            }
         });
     }
 
@@ -202,9 +214,9 @@ public class PlayActivity extends HeaderFooterActivity {
     }
 
     public void goBack(View view) {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        startActivity(intent);
-        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+//        finish();
     }
 
     private class QuestionThread extends Thread implements FirestoreManager.FirestoreCallback{
@@ -222,6 +234,7 @@ public class PlayActivity extends HeaderFooterActivity {
 
         @Override
         public void onCallback(String[] result) {
+            totalQuiz = result.length;
             //shuffle question
             List<String> resultList = Arrays.asList(result);
             Collections.shuffle(resultList);
@@ -263,6 +276,15 @@ public class PlayActivity extends HeaderFooterActivity {
         @Override
         public void onCallbackError(Exception e) {
             Log.e("Public Quiz's Id ", "Firebase Manager fail");
+        }
+    }
+
+    private class SetNumPlayThread extends Thread {
+        private FirestoreManager2 quizFM = new FirestoreManager2();
+
+        public void run(){
+            Log.d("increase 2",Integer.toString(myQuiz.getNumPlay()));
+            quizFM.insertNewPublicQuizPlay(myQuiz.getQuizId(), myQuiz.getNumPlay());
         }
     }
 }
