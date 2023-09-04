@@ -1,9 +1,10 @@
 package my.edu.utar.sweetzmobileapp;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Quiz {
+public class Quiz implements Serializable {
     private String quizId;
     private String title = "N/A";
     private String desc = "N/A";
