@@ -65,15 +65,6 @@ public class MainActivity extends HeaderFooterActivity {
 
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
-        if(!musicManager.isPlaying()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    musicManager.togglePlayback();
-                }
-            }, 2000); // <-- This is delay the music because the phone need to load first
-        }
-
 //        FirestoreManager firestoreQuiz = new FirestoreManager();
 //        firestoreQuiz.getPublicRoomAllQuiz(this);
 
