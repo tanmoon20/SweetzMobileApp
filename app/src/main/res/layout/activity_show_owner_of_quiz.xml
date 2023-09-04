@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PrivateRoomActivity"
+    tools:context=".showOwnerOfQuiz"
     android:background="@drawable/purple_to_blue_bg">
 
     <LinearLayout
@@ -30,35 +30,10 @@
             android:background="@drawable/rounded_edge_all"
             android:drawableRight="@drawable/ic_search"
             android:gravity="center"
-            android:hint="Search Room"
-            android:maxLines="1"
-            android:inputType="text"
+            android:hint="Search Quiz"
             android:textColorHint="@color/grey"
             android:textColor="@color/black"
             android:paddingRight="15sp"/>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingRight="15sp"
-            android:text="🚪 Private Room 🚪"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CREATE/JOIN ROOM"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:padding="8dp"
-            android:backgroundTint="@color/lightGreen"
-            />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -66,7 +41,7 @@
             android:paddingTop="10sp">
 
             <LinearLayout
-                android:id="@+id/room_container"
+                android:id="@+id/quiz_title_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -75,5 +50,4 @@
         </ScrollView>
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

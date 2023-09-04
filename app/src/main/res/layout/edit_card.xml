@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/rounded_edge_all"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop = "4dp"
+    android:layout_marginBottom = "4dp"
+    android:layout_marginLeft = "8dp"
+    android:layout_marginRight = "8dp">
+
+    <LinearLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center"
+            android:shadowColor="@color/shadow_black"
+            android:shadowDx="2"
+            android:shadowDy="10"
+            android:shadowRadius="10"
+            android:text="Question"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"/>
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!--Make sure ansA is the correct Answer-->
+                <EditText
+                    android:id="@+id/ansA"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/green_settingmusicbutton"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+                <EditText
+                    android:id="@+id/ansB"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/red_settingmusicbutton"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/ansC"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_settingmusicbutton"
+                    android:gravity="center"/>
+
+                <EditText
+                    android:id="@+id/ansD"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/red_settingmusicbutton"
+                    android:gravity="center"/>
+            </TableRow>
+
+        </TableLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class Quiz implements Serializable {
     private String quizId;
+    private String roomCode = null;
     private String title = "N/A";
     private String desc = "N/A";
     private String author = "N/A";
@@ -64,5 +65,13 @@ public class Quiz implements Serializable {
 
     public void setNumPlay(Integer numPlay) {
         this.numPlay = numPlay;
+    }
+
+    public String getRoomCode() {
+        return roomCode;
+    }
+
+    public void setRoomCode(String roomCode) {
+        this.roomCode = roomCode;
     }
 }
