@@ -30,9 +30,6 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
         LinearLayout playCountContatner = cardView.findViewById(R.id.playCountContainer);
         playCountContatner.setVisibility(View.GONE);
 
-//        ImageView btnPlay = cardView.findViewById(R.id.btnPlay);
-//        btnPlay.setVisibility(View.GONE);
-
         ll.addView(cardView, 0);
     }
 }
