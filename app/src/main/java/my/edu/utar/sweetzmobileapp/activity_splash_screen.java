@@ -14,7 +14,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-//import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class activity_splash_screen extends AppCompatActivity {
 
@@ -24,18 +24,18 @@ public class activity_splash_screen extends AppCompatActivity {
     Handler handler = new Handler();
     private final int SPLASH_DELAY = 3000;
     private ImageView imageView;
-   // private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-//        //firebase testing
-//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-//        Bundle bundle = new Bundle();
-//        bundle.putString("button_click", "user_clicked_button");
-//        mFirebaseAnalytics.logEvent("custom_event", bundle);
+        //firebase testing
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString("button_click", "user_clicked_button");
+        mFirebaseAnalytics.logEvent("custom_event", bundle);
 
         logo = findViewById(R.id.iv_logo);
 
@@ -59,8 +59,9 @@ public class activity_splash_screen extends AppCompatActivity {
             @Override
             public void run() {
                 startActivity(new Intent(activity_splash_screen.this, Login.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                finish();
             }
-        }, 4000);
+        }, 1000);
 
     }
 

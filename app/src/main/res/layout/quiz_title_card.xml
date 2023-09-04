@@ -1,172 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/rounded_edge_all"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop = "4dp"
-    android:layout_marginBottom = "4dp"
-    android:layout_marginLeft = "8dp"
-    android:layout_marginRight = "8dp">
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/rounded_edge_all">
 
+    <LinearLayout
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="4dp"
+            android:shadowColor="@color/shadow_black"
+            android:shadowDx="2"
+            android:shadowDy="10"
+            android:shadowRadius="10"
+            android:text="Title"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="Description"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!--author-->
             <LinearLayout
-                android:id="@+id/contentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:elevation="10dp"
-                >
+                android:id="@+id/authorDateContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="3.5"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/grey"
+                android:orientation="horizontal"
+                android:padding="4dp">
 
-                <TextView
-                    android:id="@+id/title"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/authorImgContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="2dp"
-                    android:shadowColor="@color/shadow_black"
-                    android:shadowDx="2"
-                    android:shadowDy="10"
-                    android:shadowRadius="10"
-                    android:text="Title"
-                    android:textColor="@color/black"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:text="Description"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
-
-                <LinearLayout
-                    android:id="@+id/buttonContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!--author-->
-                    <LinearLayout
-                        android:id="@+id/authorDateContainer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:layout_weight="3.5"
-                        android:background="@drawable/rounded_edge_all"
-                        android:backgroundTint="@color/grey"
-                        android:orientation="horizontal"
-                        android:padding="4dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/authorImgContainer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="5dp"
-                            app:cardCornerRadius="250dp">
-
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:padding="10dp"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/open_door" />
-
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:id="@+id/authorDateTV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="By: Author\nnum Month Ago"
-                            android:textColor="@color/black"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <!--play count-->
-                    <LinearLayout
-                        android:id="@+id/playCountContainer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:layout_weight="2"
-                        android:background="@drawable/rounded_edge_all"
-                        android:backgroundTint="@color/grey"
-                        android:orientation="horizontal"
-                        android:padding="7dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:padding="4dp"
-                            android:scaleType="centerCrop"
-                            app:srcCompat="@drawable/ic_play" />
-
-
-                        <TextView
-                            android:id="@+id/playCountTV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="num plays"
-                            android:textColor="@color/black"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <ImageButton
-                        android:id="@+id/shareBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/round_button"
-                        android:backgroundTint="@color/grey"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:textAlignment="center"
-                        app:srcCompat="@drawable/share_icon" />
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="250dp">
 
                     <ImageView
-                        android:id="@+id/btnPlay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
-                        android:background="@drawable/round_button"
-                        android:backgroundTint="@color/green"
-                        android:padding="15dp"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/ic_play_button" />
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/open_door"
+                        android:padding="10dp"
+                        android:scaleType="centerCrop" />
 
+                </androidx.cardview.widget.CardView>
 
-                    <!--                    <Button-->
-                    <!--                        android:id="@+id/button"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_weight="1"-->
-                    <!--                        android:background="@drawable/rounded_edge_all"-->
-                    <!--                        android:backgroundTint="@color/grey"-->
-                    <!--                        android:clickable="false"-->
-                    <!--                        android:text="By: Author\nnum Month Ago"-->
-                    <!--                        android:textAllCaps="false" />-->
-
-
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/authorDateTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="By: Author\nDate"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
             </LinearLayout>
+
+            <!--play count-->
+
+            <LinearLayout
+                android:id="@+id/playCountContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:background="@drawable/rounded_edge_all"
+                android:backgroundTint="@color/grey"
+                android:orientation="horizontal"
+                android:padding="7dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/ic_play" />
+
+
+                <TextView
+                    android:id="@+id/playCountTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="Num plays"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/shareBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@drawable/round_button"
+                android:backgroundTint="@color/grey"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:textAlignment="center"
+                app:srcCompat="@drawable/share_icon" />
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/btnPlay"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:layout_margin="5dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:adjustViewBounds="true"-->
+            <!--                android:background="@drawable/round_button"-->
+            <!--                android:backgroundTint="@color/green"-->
+            <!--                android:padding="15dp"-->
+            <!--                android:scaleType="fitCenter"-->
+            <!--                app:srcCompat="@drawable/ic_play_button" />-->
+
+
+            <!--                    <Button-->
+            <!--                        android:id="@+id/button"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_weight="1"-->
+            <!--                        android:background="@drawable/rounded_edge_all"-->
+            <!--                        android:backgroundTint="@color/grey"-->
+            <!--                        android:clickable="false"-->
+            <!--                        android:text="By: Author\nnum Month Ago"-->
+            <!--                        android:textAllCaps="false" />-->
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </RelativeLayout>
