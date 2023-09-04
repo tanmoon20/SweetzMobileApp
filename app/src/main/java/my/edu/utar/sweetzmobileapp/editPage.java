@@ -154,7 +154,7 @@ public class editPage extends HeaderFooterActivity {
     public void goBack(View view) { // This is the done button
         FirestoreManager2 fm2 = new FirestoreManager2();
         String [] tmp4 = new String[4];
-        if(myQuiz.getRoomID()==null){
+        if(myQuiz.getRoomCode()==null){
             for(int i = 0; i<titleList.size();i++){
                 for(int j = 0; j< 4;j++){
                     tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
@@ -167,7 +167,7 @@ public class editPage extends HeaderFooterActivity {
                 for(int j = 0; j< 4;j++){
                     tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
                 }
-                fm2.manipulatePrivateQuizQuestion("user1", myQuiz.getRoomID(),
+                fm2.manipulatePrivateQuizQuestion("user1", myQuiz.getRoomCode(),
                         myQuiz.getQuizId(),questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
             }
         }
@@ -186,12 +186,12 @@ public class editPage extends HeaderFooterActivity {
         }
 
         public void run() {
-            if(myQuiz.getRoomID()==null){
+            if(myQuiz.getRoomCode()==null){
                 questionFM.getUserAllPublicQuizQuestion("user1",myQuiz.getQuizId(),QuestionThread.this);
                 Log.e("testing 103: ","getPublic");
             }
             else {
-                questionFM.getUserAllPrivateQuizQuestion("user1", myQuiz.getRoomID(), myQuiz.getQuizId(), QuestionThread.this);
+                questionFM.getUserAllPrivateQuizQuestion("user1", myQuiz.getRoomCode(), myQuiz.getQuizId(), QuestionThread.this);
                 Log.e("testing 103: ","getPrivate");
             }
         }
@@ -208,7 +208,7 @@ public class editPage extends HeaderFooterActivity {
             Log.e("testing 102 : ",Arrays.toString(result)+ "-"+checking+"-");
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            if(myQuiz.getRoomID()==null){
+            if(myQuiz.getRoomCode()==null){
                 for(String question : result){
                     db.collection("user")
                             .document("user1")
@@ -249,7 +249,7 @@ public class editPage extends HeaderFooterActivity {
                     db.collection("user")
                             .document("user1")
                             .collection(checking) // the list return will get private/public room string at the first index of the array list
-                            .document(myQuiz.getRoomID())
+                            .document(myQuiz.getRoomCode())
                             .collection("quiz")
                             .document(myQuiz.getQuizId())
                             .collection("question")

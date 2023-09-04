@@ -6,12 +6,12 @@ import java.util.Date;
 
 public class Quiz implements Serializable {
     private String quizId;
+    private String roomCode = null;
     private String title = "N/A";
     private String desc = "N/A";
     private String author = "N/A";
     private String lastUpdate;
     private Integer numPlay = 0;
-    private String roomID=null;
 
     public Quiz(){
         Date date = new Date();
@@ -67,7 +67,11 @@ public class Quiz implements Serializable {
         this.numPlay = numPlay;
     }
 
-    public void setRoomID(String roomID){this.roomID = roomID;}
+    public String getRoomCode() {
+        return roomCode;
+    }
 
-    public String getRoomID(){return roomID;}
+    public void setRoomCode(String roomCode) {
+        this.roomCode = roomCode;
+    }
 }

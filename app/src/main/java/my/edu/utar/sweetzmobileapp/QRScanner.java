@@ -1,6 +1,5 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,10 +8,12 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -61,18 +62,26 @@ public class QRScanner extends AppCompatActivity {
             public void onCodeScanned(String data) {
                 Toast.makeText(QRScanner.this, data, Toast.LENGTH_LONG).show();  //roomCode no need password
                 if(data.length()==4 && !data.contains(" ")){
+                    Toast.makeText(QRScanner.this, "this is a private room", Toast.LENGTH_LONG).show();  //roomCode no need password
                     //start private room activity
                 } else if (data.substring(0,3).equals("quiz")) {
-                    //to public quiz activity
+                    Toast.makeText(QRScanner.this, "Public room", Toast.LENGTH_LONG).show();  //roomCode no need password
+
+/*                    Intent intent = new Intent(this, PlayActivity.class);
+                    intent.putExtra("quiz",quiz);
+                    startActivityForResult(intent, 0);*/
                 } else{
                     String[] dataArray = data.split("\\s+");
+                    Toast.makeText(QRScanner.this, dataArray[0], Toast.LENGTH_LONG).show();  //roomCode no need password
+                    Toast.makeText(QRScanner.this, dataArray[1], Toast.LENGTH_LONG).show();  //roomCode no need password
 
+                    JoinQuizThread joinQuizThread = new JoinQuizThread(dataArray[0], dataArray[1]);
+                    joinQuizThread.start();
                     //quizCode need password of room
                     //get the room of quiz
                     //get the password
                     //dialog
                     //granted access dialog
-                    createPwdDialog(data);
                     //if
                     //start quiz activity
                 }
@@ -227,8 +236,9 @@ public class QRScanner extends AppCompatActivity {
 
     //for joining quiz
     private class JoinQuizThread extends Thread{
-        String roomCode, quizId;
-        FirestoreManager fm;
+        String roomCode, quizId, roomPwd;
+        FirestoreManager fm = new FirestoreManager();
+        Handler handler = new Handler();
 
         public JoinQuizThread(String roomCode, String quizId){
             this.roomCode = roomCode;
@@ -237,6 +247,7 @@ public class QRScanner extends AppCompatActivity {
 
         @Override
         public void run() {
+            Log.i("Tag", roomCode+" "+quizId);
             fm.getPrivateRoomQuizInfo(roomCode, quizId, new JoinQuizFirestoreCallback());
         }
 
@@ -244,12 +255,43 @@ public class QRScanner extends AppCompatActivity {
 
             @Override
             public void onCallback(String[] result) {
-                if(result == null){
-                    createDialog("Invalid QR", "Room or Quiz not found");
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result[0].equals("not found")){
+                            createDialog("Invalid QR", "Room or Quiz not found");
+                        }else{
+                            fm.getPrivateRoomMembers2(roomCode, "user5", new JoinQuizFirestoreCallback2("user1", roomCode));
+                            //check if members, if no, createDialogPwd
+                            //need get the current user
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onCallbackError(Exception e) {
+
+            }
+        }
+
+        private class JoinQuizFirestoreCallback2 implements FirestoreManager.FirestoreCallback {
+            FirestoreManager fm = new FirestoreManager();
+            String userId, roomCode;
+            public JoinQuizFirestoreCallback2(String userId, String roomCode){
+                this.userId = userId;
+                this.roomCode = roomCode;
+            }
+
+
+            @Override
+            public void onCallback(String[] result) {
+                if(result[0].equals("not found")){
+                    createPwdDialog(roomCode);
                 }else{
-                    createDialog("Quiz Info", result.toString());
-                     //check if members, if no, createDialogPwd
-                    //need get the current user
+                    //intent
+                    createDialog("Successful", "You are the user!");
                 }
             }
 

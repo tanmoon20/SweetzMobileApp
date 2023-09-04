@@ -1,5 +1,6 @@
 package my.edu.utar.sweetzmobileapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +12,9 @@ import androidx.appcompat.widget.Toolbar;
 public class CreateQuizActivity extends HeaderFooterActivity {
     TextView editName, editRoomCode, editDesc;
     Button enterBtn;
-    String roomCode, quizName, quizDesc;
+    String roomCode, quizName, quizDesc, quizCode, author = "user1";
+    Integer numPlay = 0;
+    FirestoreManager2 firestoreManager2;
 
     public CreateQuizActivity() {
         super("Create Quiz");
@@ -32,11 +35,22 @@ public class CreateQuizActivity extends HeaderFooterActivity {
                 quizName = editName.getText().toString();
                 quizDesc = editDesc.getText().toString();
 
+                Quiz quiz = new Quiz();
+                quiz.setQuizId("");
+                quiz.setAuthor(author);
+                quiz.setDesc(quizDesc);
+                quiz.setTitle(quizName);
+                quiz.setNumPlay(numPlay);
 
+                firestoreManager2.insertPrivateRoomQuiz(roomCode,"", quizName, quizDesc);
+                Intent intent = new Intent(CreateQuizActivity.this, PlayActivity.class);
+                intent.putExtra("quiz",quiz);
+                startActivityForResult(intent, 0);
             }
         });
         //get current quiz id
         //get room code
+
     }
 
 }

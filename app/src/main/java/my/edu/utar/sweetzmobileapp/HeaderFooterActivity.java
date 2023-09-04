@@ -26,7 +26,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class HeaderFooterActivity extends AppCompatActivity {
 
-    private String title;
+    private String headerTitle;
     private UserLoginManager userLoginManager;
 
     protected boolean userAllowed = false;
@@ -34,8 +34,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
 
     public HeaderFooterActivity(String title)
     {
-        this.title = title;
-
+        this.headerTitle = title;
     }
 
     @Override
@@ -69,8 +68,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
         //disable footer
         disableFooter();
 
-        TextView titletv = findViewById(R.id.titletv);
-        titletv.setText(title);
+        displayTitle();
 
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -133,7 +131,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
         Menu menu = navigationView.getMenu();
 
 
-        if(title.compareTo("Create Room") == 0)
+        if(headerTitle.compareTo("Create Room") == 0)
         {
             MenuItem menuItem = menu.findItem(R.id.createQuiz);
             menuItem.setOnMenuItemClickListener((itm)->{
@@ -141,7 +139,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 return true;
             });
         }
-        else if(title.compareTo("Public") == 0)
+        else if(headerTitle.compareTo("Public") == 0)
         {
             MenuItem menuItem = menu.findItem(R.id.searchQuizPublic);
             menuItem.setOnMenuItemClickListener((itm)->{
@@ -149,7 +147,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 return true;
             });
         }
-        else if(title.compareTo("Private") == 0)
+        else if(headerTitle.compareTo("Private") == 0)
         {
             MenuItem menuItem = menu.findItem(R.id.searchQuizPrivate);
             menuItem.setOnMenuItemClickListener((itm)->{
@@ -157,7 +155,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 return true;
             });
         }
-        else if(title.compareTo("Setting") == 0)
+        else if(headerTitle.compareTo("Setting") == 0)
         {
             MenuItem menuItem = menu.findItem(R.id.settings);
             menuItem.setOnMenuItemClickListener((itm)->{
@@ -165,6 +163,12 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 return true;
             });
         }
+    }
+
+    public void displayTitle()
+    {
+        TextView titletv = findViewById(R.id.titletv);
+        titletv.setText(headerTitle);
     }
 
     public static void hideSoftKeyboard(Activity activity) {
@@ -198,5 +202,14 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 setupUI(innerView);
             }
         }
+    }
+
+
+    public String getHeaderTitle() {
+        return headerTitle;
+    }
+
+    public void setHeaderTitle(String headerTitle) {
+        this.headerTitle = headerTitle;
     }
 }

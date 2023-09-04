@@ -5,8 +5,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -18,6 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.logging.Handler;
 
 
 public class FirestoreManager {
@@ -118,6 +122,8 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+                            String[] error = {"not found"};
+                            callback.onCallback(error);
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -215,6 +221,8 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+                            String[] error = {"not found"};
+                            callback.onCallback(error);
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -282,6 +290,8 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+                            String[] error = {"not found"};
+                            callback.onCallback(error);
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -591,15 +601,53 @@ public class FirestoreManager {
                 });
     }
 
-/*    public void getLastQuiz(String roomType, String roomCode){
+    public void getLastQuiz(String roomType, String roomCode, FirestoreCallback callback){
         ArrayList<String> tmplist = new ArrayList<>();
         if(roomType.equals("privateRoom")){
-
             Query query = db.collection("privateRoom").document(roomCode).collection("quiz").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1);
-            query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for(QueryDocumentSnapshot document: task.getResult())
+                        {
+                            Log.i("test id", document.getId());
+                        }
+
+
+                        Log.i("Private", "in private room");
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            // Retrieve the last document
+                            DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
+
+                            // Access the data in the last document
+                            tmplist.add(lastDocument.getId());
+                            Map<String, Object> data = lastDocument.getData();
+                            tmplist.add(data.get("description").toString());
+                            tmplist.add(data.get("lastUpdate").toString());
+                            tmplist.add(data.get("playCount").toString());
+                            tmplist.add(data.get("title").toString());
+                            callback.onCallback(tmplist.toArray(new String[0]));
+                            // Handle the data as needed
+                        } else {
+                            Log.i("Private", "No quiz in the room "+roomCode);
+
+                            // No documents found in the collection
+                        }
+                    } else {
+                        // Handle errors
+                        Log.i("Private", "not successful");
+
+                        Exception exception = task.getException();
+                        if (exception != null) {
+                            // Handle the exception
+                        }
+                    }
+                }
             });
         }
-    }*/
+    }
 
     public interface FirestoreCallback {
         void onCallback(String [] result);

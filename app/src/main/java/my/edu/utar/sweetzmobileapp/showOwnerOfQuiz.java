@@ -265,7 +265,7 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         quiz.setAuthor(documentSnapshot.getString("username"));
-                                                        quiz.setRoomID(roomID);
+                                                        quiz.setRoomCode(roomID);
                                                         Log.e("Testing number 99",": "+quiz.getQuizId());
                                                         displayRow(quiz);
                                                     } else {
