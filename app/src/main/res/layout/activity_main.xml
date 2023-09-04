@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
@@ -34,6 +35,8 @@
             android:hint="Search Quiz"
             android:textColorHint="@color/grey"
             android:textColor="@color/black"
+            android:maxLines="1"
+            android:inputType="text"
             android:paddingRight="15sp"/>
 
         <TextView

@@ -3,15 +3,22 @@ package my.edu.utar.sweetzmobileapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,6 +60,7 @@ public class MainActivity extends HeaderFooterActivity {
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     public MainActivity()
@@ -74,6 +82,7 @@ public class MainActivity extends HeaderFooterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupUI(findViewById(R.id.parentContainer));
 
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
@@ -86,7 +95,51 @@ public class MainActivity extends HeaderFooterActivity {
             }, 2000); // <-- This is delay the music because the phone need to load first
         }
 
+        //search function
+
+
+        EditText searchText = findViewById(R.id.search_bar);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                LinearLayout ll = findViewById(R.id.quiz_title_container);
+                if (charSequence.toString().length() == 0) {
+                    ll.removeAllViews();
+
+                    for(Quiz quiz:quizList)
+                    {
+                        displayRow(quiz);
+                    }
+                } // This is used as if user erases the characters in the search field.
+                else {
+                    ll.removeAllViews();
+                    String txtSearch = charSequence.toString().trim().toLowerCase();
+
+                    for(Quiz quiz:quizList)
+                    {
+                        if(quiz.getTitle().toLowerCase().contains(txtSearch))
+                        {
+                            displayRow(quiz);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
         getQuizList();
+
+
 
     }
 
@@ -144,8 +197,6 @@ public class MainActivity extends HeaderFooterActivity {
         }
 
         public void run(){
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
             CollectionReference quizes = db.collection("publicRoom");
             quizes.orderBy("lastUpdate", Query.Direction.DESCENDING)
                     .get()
@@ -210,6 +261,39 @@ public class MainActivity extends HeaderFooterActivity {
                             }
                         }
                     });
+        }
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        if(inputMethodManager.isAcceptingText()){
+            inputMethodManager.hideSoftInputFromWindow(
+                    activity.getCurrentFocus().getWindowToken(),
+                    0
+            );
+        }
+    }
+
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(MainActivity.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
         }
     }
 }
