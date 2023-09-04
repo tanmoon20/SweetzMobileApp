@@ -90,8 +90,6 @@ public class Login extends AppCompatActivity {
         String user_email = name.getText().toString();
         String user_pwd = password.getText().toString();
 
-        String username;
-
         if (user_email.isEmpty() || user_pwd.isEmpty()) {
             Toast.makeText(getApplicationContext(),
                     "Email and password are required",
