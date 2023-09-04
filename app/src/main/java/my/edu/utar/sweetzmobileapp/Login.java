@@ -142,7 +142,7 @@ public class Login extends AppCompatActivity {
                 .addOnSuccessListener(signInMethodsResult -> {
                     if (signInMethodsResult.getSignInMethods() != null && !signInMethodsResult.getSignInMethods().isEmpty()) {
                         Toast.makeText(getApplicationContext(),
-                                "User is already registered. Please log in.",
+                                "User is already registered. Please login.",
                                 Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     } else {
