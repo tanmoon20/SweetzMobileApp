@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,9 +20,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class HeaderFooterActivity extends AppCompatActivity {
 
     private String title;
+    private UserLoginManager userLoginManager;
 
     protected boolean userAllowed = false;
-    protected boolean isGuest = true;
+    protected boolean isGuest = false;
 
     public HeaderFooterActivity(String title)
     {
@@ -34,16 +34,17 @@ public class HeaderFooterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        userLoginManager = new UserLoginManager(this);
+
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             if (currentUser.getEmail() != null) {
                 userAllowed = true;
-                isGuest = false;
+                isGuest = userLoginManager.isGuest();
             }
         }
 
-        Intent intent = getIntent();
-        isGuest = intent.getBooleanExtra("IS_GUEST", false);
+        isGuest = userLoginManager.isGuest();
     }
 
     public void setContentView (int layoutResID){
@@ -67,8 +68,14 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 switch (id){
                     case R.id.createQuiz:
+                        goCreateRoom();
+                        return true;
+                    case R.id.searchQuizPublic:
+                        goHome();
+                        return true;
+                    case R.id.searchQuizPrivate:
                         if (userAllowed || !isGuest) {
-                            goCreateRoom();
+                            goPrivate();
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "You are not allowed to access Private Room",
@@ -78,12 +85,6 @@ public class HeaderFooterActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
-                        return true;
-                    case R.id.searchQuizPublic:
-                        goHome();
-                        return true;
-                    case R.id.searchQuizPrivate:
-                        goPrivate();
                         return true;
                     case R.id.settings:
                         goSetting();
