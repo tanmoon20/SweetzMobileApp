@@ -7,42 +7,44 @@
     tools:context=".SettingPage"
     android:background="@drawable/purple_to_blue_bg">
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/setting_label_background"
+        android:padding="20dp"
+        android:layout_margin="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginHorizontal="40dp"
-        android:paddingVertical="10dp"
-        android:background="@drawable/setting_label_background"
         app:layout_constraintVertical_bias="0.274">
 
         <TextView
             android:id="@+id/settingMusicLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_gravity="center"
-            android:paddingHorizontal="50dp"
-            android:paddingVertical="8dp"
+            android:layout_marginLeft="30dp"
             android:text="Music"
             android:textColor="#000000"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <Switch
             android:id="@+id/musicBoolean"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="center"
-            android:scaleX="2"
-            android:scaleY="2"
-            android:layout_marginLeft="60dp"
             android:checked="true"
+            android:padding="3dp"
+            android:layout_margin="10dp"
             android:thumbTint="#FE8EFC"
-            android:trackTint="@android:color/white"/>
-    </LinearLayout>
+            android:trackTint="@android:color/white" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
