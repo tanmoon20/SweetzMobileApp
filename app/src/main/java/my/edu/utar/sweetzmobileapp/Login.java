@@ -26,7 +26,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import my.edu.utar.sweetzmobileapp.User;
 
-
 public class Login extends AppCompatActivity {
 
     EditText name;
