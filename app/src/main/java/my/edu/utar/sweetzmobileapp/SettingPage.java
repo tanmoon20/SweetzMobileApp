@@ -1,17 +1,10 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +15,13 @@ import com.google.firebase.auth.FirebaseUser;
 public class SettingPage extends HeaderFooterActivity {
     private Button musicButton;
     private MusicManager musicManager;
-    private ImageButton qr_btn;
+    private FloatingActionButton addBtn;
+    private FloatingActionButton login;
+    private FloatingActionButton qr_btn;
+    private TextView text;
+    private TextView qr_text;
 
-    FloatingActionButton login;
-    TextView text;
+    private Boolean isVisible;
 
     public SettingPage() {
         super("Setting");
@@ -37,10 +33,18 @@ public class SettingPage extends HeaderFooterActivity {
         setContentView(R.layout.activity_setting_page);
         musicManager = MusicManager.getInstance();
 
-
+        addBtn = findViewById(R.id.add_fab);
         login = findViewById(R.id.login);
-        text = findViewById(R.id.fab_text);
+        text = findViewById(R.id.login_text);
         qr_btn = findViewById(R.id.quiz_camera_btn);
+        qr_text = findViewById(R.id.quiz_camera_action_text);
+
+        login.setVisibility(View.GONE);
+        qr_btn.setVisibility(View.GONE);
+        text.setVisibility(View.GONE);
+        qr_text.setVisibility(View.GONE);
+
+        isVisible = false;
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -73,6 +77,36 @@ public class SettingPage extends HeaderFooterActivity {
             }
         });
 
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isVisible) {
+                    login.show();
+                    qr_btn.show();
+                    text.setVisibility(View.VISIBLE);
+                    qr_text.setVisibility(View.VISIBLE);
+
+                    addBtn.animate()
+                            .scaleX(1.2f)
+                            .scaleY(1.2f)
+                            .setDuration(200)
+                            .start();
+                    isVisible = true;
+                } else {
+                    login.hide();
+                    qr_btn.hide();
+                    text.setVisibility(View.GONE);
+                    qr_text.setVisibility(View.GONE);
+
+                    addBtn.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(200)
+                            .start();
+                    isVisible = false;
+                }
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

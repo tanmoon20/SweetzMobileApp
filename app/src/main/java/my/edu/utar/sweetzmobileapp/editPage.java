@@ -31,6 +31,7 @@ public class editPage extends HeaderFooterActivity {
     private ArrayList<String> questionIDArrayList = new ArrayList<>();
     private ArrayList<EditText> titleList = new ArrayList<>();
     private ArrayList<EditText> listOfQuestion = new ArrayList<>();
+    private Button deleteQuizButton;
     private int listOfQuestionINDEX = 0;
     public editPage() {
         super("Edit");
@@ -42,7 +43,6 @@ public class editPage extends HeaderFooterActivity {
         setContentView(R.layout.activity_edit_page);
 
         myQuiz = (Quiz) getIntent().getSerializableExtra("quiz");
-        Log.e("Testing 101 : ","title is "+myQuiz.getTitle()+"    id is "+myQuiz.getQuizId());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.footer);
         bottomNavigationView.setVisibility(View.GONE);
@@ -88,7 +88,7 @@ public class editPage extends HeaderFooterActivity {
 
         LinearLayout ll = findViewById(R.id.titleContainer);
 
-        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card, null);
+        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card2, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(30,30,30,60);
         cardView.setLayoutParams(params);
@@ -109,7 +109,15 @@ public class editPage extends HeaderFooterActivity {
         authorDate = authorDate.replace("Date", myQuiz.getLastUpdate());
         authorDateTV.setText(authorDate);
 
+
         ll.addView(cardView, 0);
+        deleteQuizButton = findViewById(R.id.deleteButton);
+        deleteQuizButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteCurrentQuiz();
+            }
+        });
     }
 
     public void displayQuestionAnswer(String questionID,String title, String[] wrong, String correct){
@@ -148,6 +156,16 @@ public class editPage extends HeaderFooterActivity {
         questionIDArrayList.add(questionID);
 
         ll.addView(cardView);
+        Button deleteQuestion = findViewById(R.id.buttonToDelete);
+        deleteQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteThisQuestion(questionID);
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
     }
     // remove set correct and set wrong method
 
@@ -287,4 +305,51 @@ public class editPage extends HeaderFooterActivity {
         }
     }
     //remove firestore to increase play count here
+    public void deleteCurrentQuiz(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if(myQuiz.getRoomCode()==null) {
+            db.collection("user")
+                    .document("user1")
+                    .collection("publicRoom")
+                    .document(myQuiz.getQuizId())
+                    .delete();
+        }else{
+            db.collection("user")
+                    .document("user1")
+                    .collection("privateRoom")
+                    .document(myQuiz.getRoomCode())
+                    .collection("quiz")
+                    .document(myQuiz.getQuizId())
+                    .delete();
+        }
+        Intent intent = new Intent(this, showOwnerOfQuiz.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void deleteThisQuestion(String questionID){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if(myQuiz.getRoomCode()==null) {
+            db.collection("user")
+                    .document("user1")
+                    .collection("publicRoom")
+                    .document(myQuiz.getQuizId())
+                    .collection("question")
+                    .document(questionID)
+                    .delete();
+        }else{
+            db.collection("user")
+                    .document("user1")
+                    .collection("privateRoom")
+                    .document(myQuiz.getRoomCode())
+                    .collection("quiz")
+                    .document(myQuiz.getQuizId())
+                    .collection("question")
+                    .document(questionID)
+                    .delete();
+        }
+        Intent intent = new Intent(this, showOwnerOfQuiz.class);
+        startActivity(intent);
+        finish();
+    }
 }
