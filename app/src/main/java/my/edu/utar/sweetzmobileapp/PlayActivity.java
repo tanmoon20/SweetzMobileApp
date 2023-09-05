@@ -1,35 +1,26 @@
 package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class PlayActivity extends HeaderFooterActivity {
 
@@ -37,6 +28,7 @@ public class PlayActivity extends HeaderFooterActivity {
     Quiz myQuiz;
     Integer totalQuiz;
     Integer correctCount = 0;
+    private boolean isPublic = true;
 
     public PlayActivity(){
         super("Play");
@@ -44,15 +36,24 @@ public class PlayActivity extends HeaderFooterActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //check public page or private page
+        Intent intent = getIntent();
+        String getPrivate = intent.getStringExtra("private");
+        if(getPrivate == null)
+        {
+            isPublic = true;
+        }
+        else
+        {
+            isPublic = false;
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
         myQuiz = (Quiz) getIntent().getSerializableExtra("quiz");
 
-//        Log.d("quiz",myQuiz.getTitle());
-
-//        hide footer
+//      hide footer
         BottomNavigationView bottomNavigationView = findViewById(R.id.footer);
         bottomNavigationView.setVisibility(View.GONE);
 
@@ -86,8 +87,7 @@ public class PlayActivity extends HeaderFooterActivity {
     }
 
     public void getQnAList() {
-        Handler mHandler = new Handler();
-        QuestionThread myQuesThread = new QuestionThread(mHandler);
+        QuestionThread myQuesThread = new QuestionThread();
         myQuesThread.start();
     }
 
@@ -195,7 +195,7 @@ public class PlayActivity extends HeaderFooterActivity {
             }
 
             correctCount++;
-            if(correctCount == totalQuiz)
+            if(correctCount.equals(totalQuiz))
             {
                 myQuiz.setNumPlay(myQuiz.getNumPlay() + 1);
                 Log.d("increase",Integer.toString(myQuiz.getNumPlay()));
@@ -222,14 +222,16 @@ public class PlayActivity extends HeaderFooterActivity {
     private class QuestionThread extends Thread implements FirestoreManager.FirestoreCallback{
 
         private FirestoreManager questionFM = new FirestoreManager();
-        private Handler mHandler;
-
-        public QuestionThread(Handler mHandler){
-            this.mHandler = mHandler;
-        }
 
         public void run() {
-            questionFM.getPublicRoomQuizAllQuestion(myQuiz.getQuizId(), QuestionThread.this);
+            if(isPublic)
+            {
+                questionFM.getPublicRoomQuizAllQuestion(myQuiz.getQuizId(), QuestionThread.this);
+            }
+            else
+            {
+                questionFM.getPrivateRoomAllQuestion(myQuiz.getRoomCode(), myQuiz.getQuizId(), QuestionThread.this);
+            }
         }
 
         @Override
@@ -241,12 +243,24 @@ public class PlayActivity extends HeaderFooterActivity {
             result = resultList.toArray(new String[resultList.size()]);
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference qCollection;
+            if(isPublic)
+            {
+                qCollection = db.collection("publicRoom")
+                        .document(myQuiz.getQuizId())
+                        .collection("question");
+            }
+            else
+            {
+                qCollection = db.collection("privateRoom")
+                        .document(myQuiz.getRoomCode())
+                        .collection("quiz")
+                        .document(myQuiz.getQuizId())
+                        .collection("question");
+            }
 
             for(String question : result){
-                db.collection("publicRoom")
-                        .document(myQuiz.getQuizId())
-                        .collection("question")
-                        .document(question)
+                qCollection.document(question)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
@@ -266,7 +280,7 @@ public class PlayActivity extends HeaderFooterActivity {
                                     displayQuestionAnswer(title, wrong, correct);
 
                                 } else {
-                                    Log.e("Public Quiz's Ans ", "Query fail");
+                                    Log.e("Play Quiz's Ans ", "Query fail");
                                 }
                             }
                         });
@@ -275,7 +289,7 @@ public class PlayActivity extends HeaderFooterActivity {
 
         @Override
         public void onCallbackError(Exception e) {
-            Log.e("Public Quiz's Id ", "Firebase Manager fail");
+            Log.e("Play Quiz's Id ", "Firebase Manager fail");
         }
     }
 
@@ -283,8 +297,14 @@ public class PlayActivity extends HeaderFooterActivity {
         private FirestoreManager2 quizFM = new FirestoreManager2();
 
         public void run(){
-            Log.d("increase 2",Integer.toString(myQuiz.getNumPlay()));
-            quizFM.insertNewPublicQuizPlay(myQuiz.getQuizId(), myQuiz.getNumPlay());
+            if(isPublic)
+            {
+                quizFM.insertNewPublicQuizPlay(myQuiz.getQuizId(), myQuiz.getNumPlay());
+            }
+            else
+            {
+                quizFM.insertNewPrivateQuizPlay(myQuiz.getRoomCode(), myQuiz.getQuizId(), myQuiz.getNumPlay());
+            }
         }
     }
 }

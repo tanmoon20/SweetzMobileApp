@@ -2,10 +2,15 @@ package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,16 +39,55 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
     public PrivateRoomActivity(){super("Private");}
     public ArrayList<Room> roomList = new ArrayList<Room>();
 
+    Button createRoomBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_class);
-
+        createRoomBtn = findViewById(R.id.createRoomBtn);
         //retrieve data from firestore
         PrivateRoomActivity.roomThread myRoomThread = new roomThread();
         myRoomThread.start();
 
-//        displayRoom();
+        //search function
+        EditText searchText = findViewById(R.id.search_bar);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                LinearLayout ll = findViewById(R.id.room_container);
+                if (charSequence.toString().length() == 0) {
+                    ll.removeAllViews();
+
+                    for(Room room: roomList)
+                    {
+                        displayRoom(room);
+                    }
+                } // This is used as if user erases the characters in the search field.
+                else {
+                    ll.removeAllViews();
+                    String txtSearch = charSequence.toString().trim().toLowerCase();
+
+                    for(Room room: roomList)
+                    {
+                        if(room.getTitle().toLowerCase().contains(txtSearch))
+                        {
+                            displayRoom(room);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
     }
 
     public void displayRoom(Room room){
@@ -70,7 +114,14 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
+            QR qrGenerator = new QR(getApplicationContext(), room.getRoomCode());
+        });
 
+        cardView.setOnClickListener((v)->{
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("room",room);
+            intent.putExtra("private","Private");
+            startActivityForResult(intent, 0);
         });
 
         ll.addView(cardView, 0);
@@ -95,7 +146,7 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
                             if(task.isSuccessful()){
                                 for (QueryDocumentSnapshot document : task.getResult()){
                                     Room roomTemp = new Room();
-                                    roomTemp.setRoomId(document.getId());
+                                    roomTemp.setRoomCode(document.getId());
                                     roomTemp.setDesc(document.getString("roomDesc"));
                                     roomTemp.setTitle(document.getString("roomName"));
 
@@ -106,7 +157,7 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
                                 for(Room room:roomList)
                                 {
                                     privateRoomCollection
-                                            .document(room.getRoomId())
+                                            .document(room.getRoomCode())
                                             .collection("author")
                                             .document("author")
                                             .get()

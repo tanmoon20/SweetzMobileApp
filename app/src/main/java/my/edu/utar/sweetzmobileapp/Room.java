@@ -1,7 +1,9 @@
 package my.edu.utar.sweetzmobileapp;
 
-public class Room {
-    private String roomId;
+import java.io.Serializable;
+
+public class Room implements Serializable {
+    private String roomCode;
     private String title;
     private String desc;
     private String author;
@@ -22,19 +24,19 @@ public class Room {
         this.author = author;
     }
 
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getRoomCode() {
+        return roomCode;
+    }
+
+    public void setRoomCode(String roomCode) {
+        this.roomCode = roomCode;
     }
 }

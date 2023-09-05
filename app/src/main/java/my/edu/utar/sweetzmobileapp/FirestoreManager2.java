@@ -178,7 +178,6 @@ public class FirestoreManager2 {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("increase 3",Integer.toString(playNum));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -189,5 +188,107 @@ public class FirestoreManager2 {
             }
         });
     }
+
+    public void insertNewPrivateQuizPlay(String roomID, String quizID, int playNum){
+        Map<String, Object> data = new HashMap<>();
+        data.put("playCount", playNum);
+
+        db.collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
+                .document(quizID)
+                .set(data, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                    }
+                });
+    }
+
+    public void manipulatePublicQuizQuestion(String userID, String quizID, String questionID
+            , String correct, String title, String A, String B, String C){
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("correct", correct);
+        data.put("title", title);
+        data.put("wrongA", A);
+        data.put("wrongB", B);
+        data.put("wrongC", C);
+/*
+        db.collection("publicRoom")
+                .document(quizID)
+                .collection("question")
+                .document(questionID)
+                .set(data).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                //Fail to set
+                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+            }
+        });*/
+        db.collection("user")
+                .document(userID)
+                .collection("publicRoom")
+                .document(quizID)
+                .collection("question")
+                .document(questionID)
+                .set(data).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                //Fail to set
+                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+            }
+        });
+
+    }
+
+    public void manipulatePrivateQuizQuestion(String userID,String roomID, String quizID, String questionID
+            , String correct, String title, String A, String B, String C){
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("correct", correct);
+        data.put("title", title);
+        data.put("wrongA", A);
+        data.put("wrongB", B);
+        data.put("wrongC", C);
+/*
+        db.collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
+                .document(quizID)
+                .collection("question")
+                .document(questionID)
+                .set(data).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                //Fail to set
+                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+            }
+        });*/
+        db.collection("user")
+                .document(userID)
+                .collection("privateRoom")
+                .document(roomID)
+                .collection("quiz")
+                .document(quizID)
+                .collection("question")
+                .document(questionID)
+                .set(data).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                //Fail to set
+                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+            }
+        });
+
+    }
+
+
 }
+
 

@@ -1,7 +1,5 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.annotation.Nullable;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -67,5 +65,13 @@ public class Quiz implements Serializable {
 
     public void setNumPlay(Integer numPlay) {
         this.numPlay = numPlay;
+    }
+
+    public String getRoomCode() {
+        return roomCode;
+    }
+
+    public void setRoomCode(String roomCode) {
+        this.roomCode = roomCode;
     }
 }

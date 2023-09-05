@@ -1,22 +1,15 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +19,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,30 +26,19 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class MainActivity extends HeaderFooterActivity {
     Button createQuizBtn;
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
+    Room myRoom = new Room();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private boolean isPublic = true;
 
     public MainActivity()
     {
@@ -67,26 +48,46 @@ public class MainActivity extends HeaderFooterActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Intent i = new Intent(MainActivity.this, MainActivity.class);
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        if(!isPublic)
+        {
+            intent.putExtra("private","Private");
+            intent.putExtra("room",myRoom);
+        }
         finish();
         overridePendingTransition(0, 0);
-        startActivity(i);
+        startActivity(intent);
         overridePendingTransition(0, 0);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("MainActivity2", "Test pull request");
+        //check public page or private page
+        Intent intent = getIntent();
+        String getPrivate = intent.getStringExtra("private");
+        if(getPrivate == null)
+        {
+            isPublic = true;
+        }
+        else
+        {
+            isPublic = false;
+            super.setHeaderTitle("Private Room");
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createQuizBtn = findViewById(R.id.button3);
+        createQuizBtn = findViewById(R.id.createQuizBtn);
         createQuizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CreateQuizActivity.class);
+                intent.putExtra("isPublic",isPublic);
+                if(!isPublic){
+                    intent.putExtra("roomCode", myRoom.getRoomCode());
+                }
                 startActivity(intent);
-
             }
         });
         // Make instance MusicManager
@@ -101,8 +102,6 @@ public class MainActivity extends HeaderFooterActivity {
         }
 
         //search function
-
-
         EditText searchText = findViewById(R.id.search_bar);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -141,11 +140,7 @@ public class MainActivity extends HeaderFooterActivity {
             }
         });
 
-
         getQuizList();
-
-
-
     }
 
     public void displayRow(Quiz quiz){
@@ -179,29 +174,41 @@ public class MainActivity extends HeaderFooterActivity {
 
         cardView.setOnClickListener((v)->{
             Intent intent = new Intent(this, PlayActivity.class);
+
+            if(!isPublic)
+            {
+                intent.putExtra("private","Private");
+                quiz.setRoomCode(myRoom.getRoomCode());
+            }
+
             intent.putExtra("quiz",quiz);
             startActivityForResult(intent, 0);
         });
 
         ll.addView(cardView);
-
     }
 
     public void getQuizList() {
-        Handler mHandler = new Handler();
-        QuizThread myQuizThread = new QuizThread(mHandler);
+        QuizThread myQuizThread = new QuizThread();
         myQuizThread.start();
     }
 
     private class QuizThread extends Thread{
-        private Handler mHandler;
-
-        public QuizThread(Handler mHandler){
-            this.mHandler = mHandler;
-        }
+        public Integer getCount = 0;
 
         public void run(){
-            CollectionReference quizes = db.collection("publicRoom");
+            CollectionReference quizes;
+            if(isPublic)
+            {
+                quizes = db.collection("publicRoom");
+            }
+            else
+            {
+                myRoom = (Room)getIntent().getSerializableExtra("room");
+                quizes = db.collection("privateRoom")
+                                                .document(myRoom.getRoomCode())
+                                                .collection("quiz");
+            }
             quizes.orderBy("lastUpdate", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -209,8 +216,6 @@ public class MainActivity extends HeaderFooterActivity {
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.d("documentId",document.getId());
-
                                     Quiz quizTemp = new Quiz();
 
                                     if(document.exists()){
@@ -226,7 +231,6 @@ public class MainActivity extends HeaderFooterActivity {
                                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                                         String lastUpdateDate = formatter.format(date);
                                         quizTemp.setLastUpdate(lastUpdateDate);
-
                                         quizList.add(quizTemp);
                                     }
                                     else
@@ -236,7 +240,9 @@ public class MainActivity extends HeaderFooterActivity {
 
                                 }
 
+
                                 for (Quiz quiz: quizList){
+                                    Log.d("Start","start");
                                     quizes.document(quiz.getQuizId())
                                             .collection("author")
                                             .document("author")
@@ -246,7 +252,14 @@ public class MainActivity extends HeaderFooterActivity {
                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                     if (documentSnapshot.exists()) {
                                                         quiz.setAuthor(documentSnapshot.getString("username"));
-                                                        displayRow(quiz);
+                                                        getCount += 1;
+                                                        if(getCount == quizList.size())
+                                                        {
+                                                            for (Quiz quiz: quizList)
+                                                            {
+                                                                displayRow(quiz);
+                                                            }
+                                                        }
                                                     } else {
                                                         Log.e("Public Quiz's Author : ", "NO AUTHOR FOUND!");
                                                     }
