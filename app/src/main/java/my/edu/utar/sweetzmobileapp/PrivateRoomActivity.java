@@ -114,7 +114,8 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
-            QR qrGenerator = new QR(getApplicationContext(), room.getRoomCode());
+            QR qrGenerator = new QR(PrivateRoomActivity.this, room.getRoomCode());
+            qrGenerator.createQRDialog();
         });
 
         cardView.setOnClickListener((v)->{

@@ -10,28 +10,6 @@
     android:background="@drawable/purple_to_blue_bg">
 
     <TextView
-        android:id="@+id/create_quiz_textview"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:gravity="center"
-        android:background="@drawable/rounded_edge_all"
-        android:fontFamily="@font/monomaniac_one"
-        android:drawableRight="@drawable/edit_icon"
-        android:drawableTint="@color/green"
-        android:padding="10dp"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="8dp"
-        android:text="Create Quiz"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="40sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/enter_code_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,15 +37,15 @@
         android:layout_marginEnd="12dp"
         android:background="@drawable/rounded_edge_all"
         android:ems="10"
-        android:inputType="text"
         android:enabled="false"
+        android:inputType="text"
         android:paddingHorizontal="20dp"
         android:paddingVertical="16dp"
         android:singleLine="true"
         android:textColor="@color/black"
         android:textColorHint="@color/shadow_black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_quiz_textview" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/quiz_name_textview"
@@ -133,12 +111,12 @@
         android:ems="10"
         android:gravity="top|start"
         android:hint="Who is the target participants"
-        android:textColor="@color/black"
         android:inputType="textMultiLine"
-        android:minLines="5"
         android:maxLines="5"
+        android:minLines="5"
         android:paddingHorizontal="20dp"
         android:paddingVertical="16dp"
+        android:textColor="@color/black"
         android:textColorHint="@color/shadow_black"
         app:layout_constraintEnd_toEndOf="@+id/edit_quiz_name"
         app:layout_constraintStart_toStartOf="@+id/edit_quiz_name"
@@ -149,12 +127,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="96dp"
         android:background="@drawable/rounded_edge_all"
         android:backgroundTint="@color/green"
         android:paddingHorizontal="22dp"
         android:paddingVertical="10dp"
         android:text="Create Quiz"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_quiz_desc"></Button>

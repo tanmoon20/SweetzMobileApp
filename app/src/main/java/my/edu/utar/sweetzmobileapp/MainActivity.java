@@ -169,7 +169,13 @@ public class MainActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
-
+            if(isPublic){
+                QR qrGenerator = new QR(MainActivity.this, quiz.getQuizId());
+                qrGenerator.createQRDialog();
+            }else{
+                QR qrGenerator = new QR(MainActivity.this, myRoom.getRoomCode() +" "+ quiz.getQuizId());
+                qrGenerator.createQRDialog();
+            }
         });
 
         cardView.setOnClickListener((v)->{
