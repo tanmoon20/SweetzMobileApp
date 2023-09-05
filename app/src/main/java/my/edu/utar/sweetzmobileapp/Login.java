@@ -25,7 +25,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
-
 public class Login extends AppCompatActivity {
 
     EditText name;
