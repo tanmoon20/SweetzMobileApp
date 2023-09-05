@@ -1,5 +1,6 @@
 package my.edu.utar.sweetzmobileapp;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -423,10 +424,13 @@ public class FirestoreManager {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 String author = task.getResult().getString("username");
                                 tmpList.add(author);
-                                Log.i("Author", author);
+                                Log.i("Author debug: ", author);
                                 callback.onCallback(tmpList.toArray(new String[0]));
                             } else {
                                 Log.e("Author Retrieval Error", "An error occurred while retrieving author information.");
+                                tmpList.add("anonymous");
+                                Log.i("Author debug: ", "anonymous");
+                                callback.onCallback(tmpList.toArray(new String[0]));
                             }
                         }
                     });

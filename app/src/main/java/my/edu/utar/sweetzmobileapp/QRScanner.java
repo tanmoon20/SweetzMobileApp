@@ -359,6 +359,7 @@ public class QRScanner extends AppCompatActivity {
 
     private class JoinPublicQuizThread extends Thread{
         String quizId;
+        Handler handler = new Handler();
 
         public JoinPublicQuizThread(String quizId){
             this.quizId = quizId;
