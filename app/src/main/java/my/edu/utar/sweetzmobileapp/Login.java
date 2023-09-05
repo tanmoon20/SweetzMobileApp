@@ -199,7 +199,7 @@ public class Login extends AppCompatActivity {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
                         String userId = user.getUid();
-                        User newUser = new User(email, password, username);
+                        User newUser = new User(email, password, username, false);
                         sendEmailVerification(user);
                         storeUserInfo(userId, email, password, username);
 
@@ -236,7 +236,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void storeUserInfo(String userId, String user_email, String user_pwd, String username) {
-        User newUser = new User(user_email, user_pwd, username); // Include the username
+        User newUser = new User(user_email, user_pwd, username, false);
 
         DocumentReference userDocument = usersCollection.document(userId);
         userDocument.set(newUser)

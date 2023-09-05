@@ -4,24 +4,25 @@ public class User {
     String username;
     String user_pwd;
     String user_email;
+    boolean isGuest;
 
     public User() {
         this.username = "";
         this.user_email = "";
         this.user_pwd = "";
+        this.isGuest = false;
     }
 
-    public User(String username, String user_pwd, String user_email) {
+    public User(String username, String user_pwd, String user_email, boolean isGuest) {
         this.username = username;
         this.user_pwd = user_pwd;
         this.user_email = user_email;
+        this.isGuest = false;
     }
 
-    public User(String username, String user_pwd) {
-        this.username = username;
-        this.user_pwd = user_pwd;
-        this.user_email = "";
-    }
+    public boolean isGuest() { return isGuest; }
+
+    public void setGuest(boolean guest) { isGuest = guest; }
 
     public String getUsername() {
         return username;
