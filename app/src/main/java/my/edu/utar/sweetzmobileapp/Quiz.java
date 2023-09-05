@@ -1,8 +1,14 @@
 package my.edu.utar.sweetzmobileapp;
 
+import android.util.Log;
+
+import androidx.annotation.Px;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Quiz implements Serializable {
     private String quizId;
@@ -56,7 +62,18 @@ public class Quiz implements Serializable {
     }
 
     public void setLastUpdate(String lastUpdate) {
-        this.lastUpdate = lastUpdate;
+        String pattern = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z";
+        Pattern regexPattern = Pattern.compile(pattern);
+        Matcher matcher = regexPattern.matcher(lastUpdate);
+        boolean matches = matcher.matches();
+        if (matches) {
+            Log.i("Match", "This is from firebase");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            this.lastUpdate = sdf.format(lastUpdate);
+        } else {
+            Log.i("Match", "This is not from firebase");
+
+        }
     }
 
     public Integer getNumPlay() {
