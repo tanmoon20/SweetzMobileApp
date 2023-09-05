@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -16,12 +15,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Handler;
 
 
 public class FirestoreManager {
@@ -111,15 +107,21 @@ public class FirestoreManager {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
+                            tmpList.add(specificRoomID);
                             tmpList.add(documentSnapshot.getString("roomName"));
                             tmpList.add(documentSnapshot.getString("roomDesc"));
                             tmpList.add(documentSnapshot.getString("roomPwd"));
-                            callback.onCallback(tmpList.toArray(new String[0]));
-                            //
-                            //For Debugging, uncomment the bellow line
-                            //String [] tmpL = tmpList.toArray(new String[0]);
-                            //Log.i("FIREMANAGER",Arrays.toString(tmpL));
-                            //
+
+                            db.collection("privateRoom").document(specificRoomID).collection("author").document("author").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()){
+                                        tmpList.add(documentSnapshot.getString("username"));
+                                        callback.onCallback(tmpList.toArray(new String[0]));
+                                    }
+                                }
+                            });
+                            //callback.onCallback(tmpList.toArray(new String[0]));
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
                             String[] error = {"not found"};
@@ -275,14 +277,18 @@ public class FirestoreManager {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
+
                             //
                             //If any more attribute needed to be retrieve, you just modify here
                             //Add one more line referring to the line below
+                            tmpList.add(documentSnapshot.getId());
                             tmpList.add(documentSnapshot.getString("description"));
                             tmpList.add(documentSnapshot.getTimestamp("lastUpdate").toDate().toString()); //note this guy is timestamp data type
                             tmpList.add(documentSnapshot.getLong("playCount").toString()); // note this guy is int, long data type should do the job
                             tmpList.add(documentSnapshot.getString("title"));
                             callback.onCallback(tmpList.toArray(new String[0]));
+                            Log.i("Timestamp", "Hi");
+
                             //
                             //For Debugging, uncomment the bellow line
                             //String [] tmpL = tmpList.toArray(new String[0]);
@@ -396,44 +402,46 @@ public class FirestoreManager {
                 });
     }
 
-    public void getPublicRoomSpecificQuizInfo(String quizID, final FirestoreCallback callback){
-        //This method is to get the QuizId's info from public quiz
-        //Test case: specificRoomID = 1234
-        //
-        //
+    public void getPublicRoomSpecificQuizInfo(String quizID, final FirestoreCallback callback) {
         ArrayList<String> tmpList = new ArrayList<>();
-        db.collection("publicRoom").document(quizID)
-                //.whereEqualTo("capital", true)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            //
-                            //If any more attribute needed to be retrieve, you just modify here
-                            //Add one more line referring to the line below
-                            tmpList.add(documentSnapshot.getString("description"));
-                            tmpList.add(documentSnapshot.getTimestamp("lastUpdate").toDate().toString()); //note this guy is timestamp data type
-                            tmpList.add(documentSnapshot.getLong("playCount").toString()); // note this guy is int, long data type should do the job
-                            tmpList.add(documentSnapshot.getString("title"));
-                            callback.onCallback(tmpList.toArray(new String[0]));
-                            //
-                            //For Debugging, uncomment the bellow line
-                            //String [] tmpL = tmpList.toArray(new String[0]);
-                            //Log.i("FIREMANAGER",Arrays.toString(tmpL));
-                            //
-                        } else {
-                            Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+        DocumentReference docRef = db.collection("publicRoom").document(quizID);
+
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    // Retrieve attributes from the main document
+                    tmpList.add(documentSnapshot.getString("description"));
+                    tmpList.add(documentSnapshot.getTimestamp("lastUpdate").toDate().toString());
+                    tmpList.add(String.valueOf(documentSnapshot.getLong("playCount").toString()));
+                    tmpList.add(documentSnapshot.getString("title"));
+
+                    // Retrieve author information from the "author" subcollection
+                    docRef.collection("author").document("author").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                String author = task.getResult().getString("username");
+                                tmpList.add(author);
+                                Log.i("Author", author);
+                                callback.onCallback(tmpList.toArray(new String[0]));
+                            } else {
+                                Log.e("Author Retrieval Error", "An error occurred while retrieving author information.");
+                            }
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                    });
+                } else {
+                    Log.e("Quiz Document Not Found", "No attributes found for the specified quiz ID.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(Exception e) {
-                //query fail
-                Log.e("FIREMANAGER : ","QUERY FAILED !");
+                Log.e("Query Failure", "Failed to query the Firestore database.");
             }
         });
     }
+
 
     public void getPublicRoomSpecificQuizAuthor(String quizID, final FirestoreCallback callback){
         //This method is to get the particular public quiz author
@@ -601,21 +609,14 @@ public class FirestoreManager {
                 });
     }
 
-    public void getLastQuiz(String roomType, String roomCode, FirestoreCallback callback){
+    public void getLastPrivateQuiz(String roomCode, FirestoreCallback callback){
         ArrayList<String> tmplist = new ArrayList<>();
-        if(roomType.equals("privateRoom")){
+
             Query query = db.collection("privateRoom").document(roomCode).collection("quiz").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1);
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
-                        for(QueryDocumentSnapshot document: task.getResult())
-                        {
-                            Log.i("test id", document.getId());
-                        }
-
-
-                        Log.i("Private", "in private room");
                         QuerySnapshot querySnapshot = task.getResult();
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             // Retrieve the last document
@@ -629,10 +630,10 @@ public class FirestoreManager {
                             tmplist.add(data.get("playCount").toString());
                             tmplist.add(data.get("title").toString());
                             callback.onCallback(tmplist.toArray(new String[0]));
-                            // Handle the data as needed
                         } else {
                             Log.i("Private", "No quiz in the room "+roomCode);
-
+                            tmplist.add("quiz0");
+                            callback.onCallback(tmplist.toArray(new String[0]));
                             // No documents found in the collection
                         }
                     } else {
@@ -646,8 +647,49 @@ public class FirestoreManager {
                     }
                 }
             });
-        }
+
     }
+
+    public void getLastPublicQuiz(FirestoreCallback callback){
+        ArrayList<String> tmplist = new ArrayList<>();
+        Query query = db.collection("publicRoom").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        // Retrieve the last document
+                        DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
+
+                        // Access the data in the last document
+                        tmplist.add(lastDocument.getId());
+                        Map<String, Object> data = lastDocument.getData();
+                        tmplist.add(data.get("description").toString());
+                        tmplist.add(data.get("lastUpdate").toString());
+                        tmplist.add(data.get("playCount").toString());
+                        tmplist.add(data.get("title").toString());
+                        callback.onCallback(tmplist.toArray(new String[0]));
+                    } else {
+                        Log.i("public", "No quiz in the public room yet");
+                        tmplist.add("quiz0");
+                        callback.onCallback(tmplist.toArray(new String[0]));
+                        // No documents found in the collection
+                    }
+                } else {
+                    // Handle errors
+                    Log.i("Public room", "last index not successful");
+
+                    Exception exception = task.getException();
+                    if (exception != null) {
+                        // Handle the exception
+                    }
+                }
+            }
+        });
+    }
+
+
 
     public interface FirestoreCallback {
         void onCallback(String [] result);

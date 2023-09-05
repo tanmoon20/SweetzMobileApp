@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,11 +39,12 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
     public PrivateRoomActivity(){super("Private");}
     public ArrayList<Room> roomList = new ArrayList<Room>();
 
+    Button createRoomBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_class);
-
+        createRoomBtn = findViewById(R.id.createRoomBtn);
         //retrieve data from firestore
         PrivateRoomActivity.roomThread myRoomThread = new roomThread();
         myRoomThread.start();
@@ -112,7 +114,7 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
-
+            QR qrGenerator = new QR(getApplicationContext(), room.getRoomCode());
         });
 
         cardView.setOnClickListener((v)->{

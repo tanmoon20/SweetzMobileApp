@@ -1,22 +1,15 @@
 package my.edu.utar.sweetzmobileapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +19,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,26 +26,13 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 
 public class MainActivity extends HeaderFooterActivity {
+    Button createQuizBtn;
     private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
     Room myRoom = new Room();
@@ -99,6 +78,18 @@ public class MainActivity extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createQuizBtn = findViewById(R.id.createQuizBtn);
+        createQuizBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CreateQuizActivity.class);
+                intent.putExtra("isPublic",isPublic);
+                if(!isPublic){
+                    intent.putExtra("roomCode", myRoom.getRoomCode());
+                }
+                startActivity(intent);
+            }
+        });
         // Make instance MusicManager
         musicManager = MusicManager.getInstance();
         if(!musicManager.isPlaying()){

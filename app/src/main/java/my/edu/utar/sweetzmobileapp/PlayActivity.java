@@ -1,36 +1,26 @@
 package my.edu.utar.sweetzmobileapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class PlayActivity extends HeaderFooterActivity {
 
@@ -63,7 +53,7 @@ public class PlayActivity extends HeaderFooterActivity {
 
         myQuiz = (Quiz) getIntent().getSerializableExtra("quiz");
 
-//        hide footer
+//      hide footer
         BottomNavigationView bottomNavigationView = findViewById(R.id.footer);
         bottomNavigationView.setVisibility(View.GONE);
 
@@ -205,7 +195,7 @@ public class PlayActivity extends HeaderFooterActivity {
             }
 
             correctCount++;
-            if(correctCount == totalQuiz)
+            if(correctCount.equals(totalQuiz))
             {
                 myQuiz.setNumPlay(myQuiz.getNumPlay() + 1);
                 Log.d("increase",Integer.toString(myQuiz.getNumPlay()));
