@@ -60,7 +60,7 @@
                     android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_margin="2dp"
-                    android:background="@drawable/red_settingmusicbutton"
+                    android:background="@drawable/wronganswereditpage"
                     android:gravity="center"
                     android:layout_weight="1"/>
             </TableRow>
@@ -76,7 +76,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="2dp"
                     android:layout_weight="1"
-                    android:background="@drawable/red_settingmusicbutton"
+                    android:background="@drawable/wronganswereditpage"
                     android:gravity="center"/>
 
                 <EditText
@@ -86,11 +86,28 @@
                     android:layout_gravity="center"
                     android:layout_margin="2dp"
                     android:layout_weight="1"
-                    android:background="@drawable/red_settingmusicbutton"
+                    android:background="@drawable/wronganswereditpage"
                     android:gravity="center"/>
             </TableRow>
 
         </TableLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
+
+            <Button
+                android:id="@+id/buttonToDelete"
+                android:background="@drawable/fordeletebuttonpoon"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_width="120dp"
+                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:text="DELETE" />
+        </LinearLayout>
 
 
     </LinearLayout>
