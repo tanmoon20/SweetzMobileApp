@@ -24,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import my.edu.utar.sweetzmobileapp.User;
+
 
 public class Login extends AppCompatActivity {
 
@@ -60,6 +62,7 @@ public class Login extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userLoginManager = new UserLoginManager(this);
 
+        User.currentUser = new User("", "", "", userLoginManager.isGuest());
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,10 +82,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userLoginManager.setLoginMode(true);
+                User.currentUser.setGuest(true);
                 startMainActivity(true);
             }
         });
-
     }
 
     private void loginUser() {
