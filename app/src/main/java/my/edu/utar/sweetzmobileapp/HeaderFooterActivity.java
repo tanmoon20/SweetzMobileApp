@@ -30,7 +30,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
     private UserLoginManager userLoginManager;
 
     protected boolean userAllowed = false;
-    protected boolean isGuest = false;
+    protected boolean isGuest;
 
     public HeaderFooterActivity(String title)
     {
@@ -50,9 +50,7 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 isGuest = userLoginManager.isGuest();
             }
         }
-
         isGuest = userLoginManager.isGuest();
-
     }
 
     public void setContentView (int layoutResID){
@@ -76,13 +74,22 @@ public class HeaderFooterActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 switch (id){
                     case R.id.createQuiz:
-                        goCreateRoom();
+                        if (userAllowed || !isGuest) {
+                            goCreateRoom();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "You are not allowed to access Edit Page",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(HeaderFooterActivity.this, Login.class);
+                            startActivity(intent);
+                            finish();
+                        }
                         return true;
                     case R.id.searchQuizPublic:
                         goHome();
                         return true;
                     case R.id.searchQuizPrivate:
-
                         if (userAllowed || !isGuest) {
                             goPrivate();
                         } else {
