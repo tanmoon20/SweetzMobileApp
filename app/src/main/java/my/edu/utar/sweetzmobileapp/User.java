@@ -1,5 +1,12 @@
 package my.edu.utar.sweetzmobileapp;
 
+import android.util.Log;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class User {
     private String username;
     private String user_pwd;
@@ -37,4 +44,27 @@ public class User {
     public String getUser_email() { return user_email; }
 
     public void setUser_email(String user_email) { this.user_email = user_email; }
+
+    //update the username from firestore
+    public void fetchUserDataFromFirestore() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String userId = firebaseUser.getUid();
+            DocumentReference userRef = FirebaseFirestore.getInstance().collection("users").document(userId);
+
+            userRef.addSnapshotListener((documentSnapshot, e) -> {
+                if (e != null) {
+                    Log.w("User", "Listen failed.", e);
+                    return;
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    if (user != null) {
+                        this.username = user.getUsername();
+                    }
+                }
+            });
+        }
+    }
 }
