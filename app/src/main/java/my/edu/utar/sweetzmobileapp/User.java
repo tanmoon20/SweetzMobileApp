@@ -45,7 +45,7 @@ public class User {
 
     public void setUser_email(String user_email) { this.user_email = user_email; }
 
-    // Fetch user data from Firestore and update the username
+    //update the username from firestore
     public void fetchUserDataFromFirestore() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
