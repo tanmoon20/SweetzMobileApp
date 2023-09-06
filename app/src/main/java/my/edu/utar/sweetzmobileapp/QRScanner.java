@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,9 @@ import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder;
 
 public class QRScanner extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
+    private UserLoginManager userLoginManager;
+    Boolean isGuest;
+
     private ScannerLiveView camera;
     private TextView tv;
     FirestoreManager fm = new FirestoreManager();
@@ -48,6 +52,9 @@ public class QRScanner extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userLoginManager  = new UserLoginManager(QRScanner.this);
+        isGuest = userLoginManager.isGuest();
+
         if(checkPermission()){
             Toast.makeText(this, "Permission Granted..", Toast.LENGTH_SHORT).show();
         }else{

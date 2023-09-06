@@ -5,7 +5,7 @@
         android:startColor="#58CF88"
         android:centerColor="#6CAACA"
         android:endColor="#6CAACA"
-        android:angle="90" />
+        android:angle="180" />
 
     <stroke
         android:width="2dp"
