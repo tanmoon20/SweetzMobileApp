@@ -81,6 +81,11 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                     {
                         displayRoom(room);
                     }
+
+                    for (Quiz quiz : quizList) {
+                        displayRow(quiz);
+                    }
+
                 } // This is used as if user erases the characters in the search field.
                 else {
                     ll.removeAllViews();
@@ -93,6 +98,13 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                             displayRoom(room);
                         }
                     }
+
+                    for (Quiz quiz : quizList) {
+                        if (quiz.getTitle().toLowerCase().contains(txtSearch)) {
+                            displayRow(quiz);
+                        }
+                    }
+
                 }
             }
 
