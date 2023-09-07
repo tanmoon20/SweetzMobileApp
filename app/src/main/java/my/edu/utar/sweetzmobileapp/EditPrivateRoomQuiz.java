@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -123,7 +124,9 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
         deleteQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 deleteCurrentQuiz();
+                Toast.makeText(EditPrivateRoomQuiz.this, "Current Quiz Deleted!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -169,6 +172,7 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
             @Override
             public void onClick(View view) {
                 deleteThisQuestion(questionID);
+                Toast.makeText(EditPrivateRoomQuiz.this, "Question is deleted!", Toast.LENGTH_SHORT).show();
                 finish();
                 startActivity(getIntent());
             }
