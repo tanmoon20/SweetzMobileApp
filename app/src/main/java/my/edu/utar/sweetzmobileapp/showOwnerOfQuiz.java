@@ -33,8 +33,11 @@ import java.util.Date;
 public class showOwnerOfQuiz extends HeaderFooterActivity {
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
     private ArrayList<Quiz> quizList2 = new ArrayList<Quiz>();
+    public ArrayList<Room> roomList = new ArrayList<Room>();
     private  String [] roomIDList;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private LinearLayout ll2;
+    private LinearLayout ll;
 
     public showOwnerOfQuiz() {
         super("EDIT");
@@ -43,13 +46,24 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("ALERT","NEW SHOW OWNER OF QUIZ IS RUN!");
         setContentView(R.layout.activity_show_owner_of_quiz);
-        getQuizList();
+        ll2 = findViewById(R.id.quiz_title_container);
+        ll = findViewById(R.id.quiz_title_container);
+        quizList.clear(); // Clear the existing data
+        roomList.clear(); // Clear the existing data
+        ll.removeAllViews();
+        ll2.removeAllViews();
+        if (quizList.isEmpty() && roomList.isEmpty()) {
+            getQuizList();
+            roomThread myRoomThread = new roomThread();
+            myRoomThread.start();
+        }
 
     }
 
+
     public void displayRow(Quiz quiz){
-        LinearLayout ll = findViewById(R.id.quiz_title_container);
 
         View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -82,6 +96,7 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
             Log.e("Testing number 100 : ","I am gonig to "+quiz.getTitle());
             intent.putExtra("quiz",quiz);
             startActivity(intent);
+            finish();
         });
 
         ll.addView(cardView);
@@ -179,7 +194,7 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                     });
 
             //===============================================//
-            ArrayList<String> tmp = new ArrayList<>();
+          /*  ArrayList<String> tmp = new ArrayList<>();
                     db.collection("user")
                             .document("user1")
                             .collection("privateRoom")
@@ -197,12 +212,12 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                             processPrivateRoomIds(tmp);
                         }
                     });
-            Log.e("thaslfsdjkf",tmp.toString());
+            Log.e("thaslfsdjkf",tmp.toString());*/
             //===============================================//
 
         }
     }
-    private void processPrivateRoomIds(ArrayList<String> roomIds) {
+/*    private void processPrivateRoomIds(ArrayList<String> roomIds) {
         String[] roomIDList = roomIds.toArray(new String[0]);
         //Extra
         Log.e("showOwner : ","privateRoom ID"+ Arrays.toString(roomIDList));
@@ -285,6 +300,107 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
 
                             } else {
                                 Log.e("Public Quiz's Info : ", "Query fail");
+                            }
+                        }
+                    });
+        }
+    }*/
+
+    public void displayRoom(Room room){
+        Log.i("DisplyRoom","Triggered");
+
+
+        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card, null);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(30,30,30,60);
+        cardView.setLayoutParams(params);
+
+        LinearLayout playCountContatner = cardView.findViewById(R.id.playCountContainer);
+        playCountContatner.setVisibility(View.GONE); //<-- HERE WILL ENSURE THE PLAY COUNT NOT APPEAR
+
+        TextView titleTV = cardView.findViewById(R.id.title);
+        titleTV.setText(room.getTitle());
+
+        TextView descriptionTV = cardView.findViewById(R.id.description);
+        descriptionTV.setText(room.getDesc());
+
+        TextView authorDateTV = cardView.findViewById(R.id.authorDateTV);
+        String authorDate = authorDateTV.getText().toString();
+        authorDate = authorDate.replace("Author\nDate", room.getAuthor());
+        authorDateTV.setText(authorDate);
+
+        ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
+        shareBtn.setOnClickListener((v)->{
+            QR qrGenerator = new QR(getApplicationContext(), room.getRoomCode());
+        });
+
+        cardView.setOnClickListener((v)->{
+            Intent intent = new Intent(this, user_privateRoom_quiz.class);
+            intent.putExtra("room",room);
+            startActivity(intent);
+            finish();
+        });
+
+        ll2.addView(cardView);
+    }
+
+    private class roomThread extends Thread{
+        private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        public void run(){
+            //userIO
+            String userId = "user1";
+
+            CollectionReference privateRoomCollection = db.collection("user")
+                    .document(userId)
+                    .collection("privateRoom");
+
+            privateRoomCollection.orderBy("roomDesc")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    Room roomTemp = new Room();
+                                    roomTemp.setRoomCode(document.getId());
+                                    roomTemp.setDesc(document.getString("roomDesc"));
+                                    roomTemp.setTitle(document.getString("roomName"));
+
+                                    roomList.add(roomTemp);
+                                }
+
+                                //get author
+                                for(Room room:roomList)
+                                {
+                                    privateRoomCollection
+                                            .document(room.getRoomCode())
+                                            .collection("author")
+                                            .document("author")
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()) {
+                                                        room.setAuthor(documentSnapshot.getString("username"));
+                                                        Log.d("display room", "room : "+ room.getRoomCode());
+
+                                                        displayRoom(room);
+                                                    } else {
+                                                        Log.e("Private Room's Author", "NO AUTHOR FOUND!");
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(Exception e) {
+                                                    //query fail
+                                                    Log.e("Private Room's Author", "NO AUTHOR FOUND!");
+                                                }
+                                            });
+                                }
+                            }else {
+                                Log.e("Private Room's Info : ", "Query fail");
                             }
                         }
                     });
