@@ -188,9 +188,10 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
                     myQuiz.getQuizId(),questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
         }
 
-        Intent intent = new Intent(this, user_privateRoom_quiz.class);
+        Intent intent = new Intent(this, showOwnerOfQuiz.class);
         startActivity(intent);
         finish();
+
     }
 
     private class QuestionThread extends Thread implements FirestoreManager.FirestoreCallback{

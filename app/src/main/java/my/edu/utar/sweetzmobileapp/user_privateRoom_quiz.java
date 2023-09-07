@@ -154,7 +154,6 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
 
             intent.putExtra("quiz",quiz);
             startActivityForResult(intent, 0);
-            finish();
         });
 
         ll.addView(cardView);
