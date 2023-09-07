@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,8 +52,8 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         Log.e("ALERT","NEW SHOW OWNER OF QUIZ IS RUN!");
         setContentView(R.layout.activity_show_owner_of_quiz);
-        ll2 = findViewById(R.id.quiz_title_container);
-        ll = findViewById(R.id.quiz_title_container);
+        ll2 = findViewById(R.id.mixed_container);
+        ll = findViewById(R.id.mixed_container);
         quizList.clear(); // Clear the existing data
         roomList.clear(); // Clear the existing data
         ll.removeAllViews();
@@ -61,7 +64,47 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
             myRoomThread.start();
         }
 
+        EditText searchText = findViewById(R.id.search_bar);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                LinearLayout ll = findViewById(R.id.mixed_container);
+                if (charSequence.toString().length() == 0) {
+                    ll.removeAllViews();
+
+                    for(Room room: roomList)
+                    {
+                        displayRoom(room);
+                    }
+                } // This is used as if user erases the characters in the search field.
+                else {
+                    ll.removeAllViews();
+                    String txtSearch = charSequence.toString().trim().toLowerCase();
+
+                    for(Room room: roomList)
+                    {
+                        if(room.getTitle().toLowerCase().contains(txtSearch))
+                        {
+                            displayRoom(room);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
     }
+
+
 
 
     public void displayRow(Quiz quiz){
