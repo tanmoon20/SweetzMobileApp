@@ -3,6 +3,7 @@ package my.edu.utar.sweetzmobileapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -64,8 +65,8 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
 
 
     public void displayRow(Quiz quiz){
-
-        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card, null);
+        //publicOrPrivate
+        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card3, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(30,4,30,4);
         cardView.setLayoutParams(params);
@@ -86,6 +87,12 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
         authorDate = authorDate.replace("Date", quiz.getLastUpdate());
         authorDateTV.setText(authorDate);
 
+
+        TextView publicOrPrivate = cardView.findViewById(R.id.publicOrPrivate);
+        publicOrPrivate.setText("Public Quiz");
+        publicOrPrivate.setTextColor(Color.WHITE);
+        publicOrPrivate.setBackgroundResource(R.drawable.green_settingmusicbutton);
+
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
 
@@ -99,7 +106,9 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
             finish();
         });
 
+
         ll.addView(cardView);
+
 
     }
 
@@ -193,124 +202,16 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                         }
                     });
 
-            //===============================================//
-          /*  ArrayList<String> tmp = new ArrayList<>();
-                    db.collection("user")
-                            .document("user1")
-                            .collection("privateRoom")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                        tmp.add(document.getId()); // get all the privateRoom ID
-                                    Log.e("sdalfkjsd",document.getId());
-                                    }
 
-                                }
-                            processPrivateRoomIds(tmp);
-                        }
-                    });
-            Log.e("thaslfsdjkf",tmp.toString());*/
-            //===============================================//
 
         }
     }
-/*    private void processPrivateRoomIds(ArrayList<String> roomIds) {
-        String[] roomIDList = roomIds.toArray(new String[0]);
-        //Extra
-        Log.e("showOwner : ","privateRoom ID"+ Arrays.toString(roomIDList));
-        for(String roomID : roomIDList){
-
-            db.collection("user")
-                    .document("user1")
-                    .collection("privateRoom")
-                    .document(roomID)
-                    .collection("quiz")
-                    .orderBy("lastUpdate", Query.Direction.DESCENDING)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Quiz quizTemp = new Quiz();
-
-                                    if(document.exists()){
-                                        quizTemp.setQuizId(document.getId());
-                                        quizTemp.setTitle(document.getData().get("title").toString());
-                                        quizTemp.setDesc(document.getData().get("description").toString());
-                                        quizTemp.setNumPlay(document.getData().get("playCount").hashCode());
-
-                                        Log.e("ShowOwnerOfQuiz : ",
-                                                "title : " + document.getData().get("title").toString()
-                                                        +" description : "+document.getData().get("description").toString()
-                                                        + " playCount :" + document.getData().get("playCount").hashCode());
-
-                                        String author;
-
-                                        Timestamp timestamp = (Timestamp) document.getData().get("lastUpdate");
-                                        Date date = timestamp.toDate();
-                                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                                        String lastUpdateDate = formatter.format(date);
-                                        quizTemp.setLastUpdate(lastUpdateDate);
-
-                                        quizList2.add(quizTemp);
-                                    }
-                                    else
-                                    {
-                                        Log.d("Public Quiz's Info", "No such document");
-                                    }
-
-                                }
-
-                                for (Quiz quiz: quizList2){
-                                    db.collection("user")
-                                            .document("user1")
-                                            .collection("privateRoom")
-                                            .document(roomID)
-                                            .collection("quiz")
-                                            .document(quiz.getQuizId())
-                                            .collection("author")
-                                            .document("author")
-                                            .get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    if (documentSnapshot.exists()) {
-                                                        quiz.setAuthor(documentSnapshot.getString("username"));
-                                                        quiz.setRoomCode(roomID);
-                                                        Log.e("Testing number 99",": "+quiz.getQuizId());
-                                                        displayRow(quiz);
-                                                    } else {
-                                                        Log.e("Public Quiz's Author : ", "NO AUTHOR FOUND!");
-                                                    }
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(Exception e) {
-                                                    //query fail
-                                                    Log.e("Public Quiz's Author : ","QUERY FAILED !");
-                                                }
-                                            });
-                                }
-
-
-                            } else {
-                                Log.e("Public Quiz's Info : ", "Query fail");
-                            }
-                        }
-                    });
-        }
-    }*/
 
     public void displayRoom(Room room){
         Log.i("DisplyRoom","Triggered");
 
 
-        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card, null);
+        View cardView = getLayoutInflater().inflate(R.layout.quiz_title_card3, null);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(30,30,30,60);
         cardView.setLayoutParams(params);
@@ -334,6 +235,11 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
             QR qrGenerator = new QR(getApplicationContext(), room.getRoomCode());
         });
 
+        TextView publicOrPrivate = cardView.findViewById(R.id.publicOrPrivate);
+        publicOrPrivate.setText("Private Room");
+        publicOrPrivate.setTextColor(Color.WHITE);
+        publicOrPrivate.setBackgroundResource(R.drawable.red_settingmusicbutton);
+
         cardView.setOnClickListener((v)->{
             Intent intent = new Intent(this, user_privateRoom_quiz.class);
             intent.putExtra("room",room);
@@ -341,7 +247,9 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
             finish();
         });
 
+
         ll2.addView(cardView);
+
     }
 
     private class roomThread extends Thread{

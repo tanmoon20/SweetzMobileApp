@@ -42,15 +42,12 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
     // Upon click it should map to EditPrivateRoomQuiz.java to display all the question
     // This page is a mimic of MainActivity Code
 
-
-    Button createQuizBtn;
-    private MusicManager musicManager;
     private ArrayList<Quiz> quizList = new ArrayList<Quiz>();
-    Room myRoom = new Room();
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private boolean isPublic = true;
-
+    Room myRoom = new Room();
+    private EditText roomName;
+    private EditText roomDesc;
     public user_privateRoom_quiz()
     {
         super("Own Private Room");
@@ -59,12 +56,25 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myRoom = (Room)getIntent().getSerializableExtra("room");
         setContentView(R.layout.activity_user_private_room_quiz);
+        roomName = findViewById(R.id.privateRoomName);
+        roomDesc = findViewById(R.id.privateRoomDescription);
+        roomName.setText(myRoom.getTitle());
+        roomDesc.setText(myRoom.getDesc());
+
+
+
 
         Button backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirestoreManager2 fm2 = new FirestoreManager2();
+                String newRoomName = roomName.getText().toString();
+                String newRoomDesc = roomDesc.getText().toString();
+                fm2.manipulatePrivateRoom("user1",myRoom.getRoomCode(),newRoomName,newRoomDesc);
+
                 Intent intent = new Intent(user_privateRoom_quiz.this, showOwnerOfQuiz.class);
                 startActivity(intent);
                 finish();
@@ -169,7 +179,6 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
 
         public void run(){
             CollectionReference quizes;
-            myRoom = (Room)getIntent().getSerializableExtra("room");
             quizes = db.collection("user")
                     .document("user1")
                     .collection("privateRoom")
