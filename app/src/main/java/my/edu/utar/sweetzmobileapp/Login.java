@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,10 @@ public class Login extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersCollection = db.collection("users");
 
+    //isGuest
+    public static User currentUser = new User(true);
+    public static String currentUserId = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,7 @@ public class Login extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userLoginManager = new UserLoginManager(this);
 
-        User.currentUser = new User("", "", "", userLoginManager.isGuest());
+//        User.currentUser = new User("", "", "", userLoginManager.isGuest());
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +87,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userLoginManager.setLoginMode(true);
-                User.currentUser.setGuest(true);
+//                User.currentUser.setGuest(true);
                 startMainActivity(true);
             }
         });
@@ -110,6 +115,8 @@ public class Login extends AppCompatActivity {
                     if (user != null) {
                         if (user.isEmailVerified()) {
                             if (userLoginManager.isGuest()) {
+                                //is not guest, insert their info
+                                currentUser = new User(user_pwd,user_email,false);
                                 startMainActivity(true);
                             } else {
                                 startMainActivity(false);
@@ -202,6 +209,7 @@ public class Login extends AppCompatActivity {
                     if (user != null) {
                         String userId = user.getUid();
                         User newUser = new User(email, password, username, false);
+                        currentUserId = userId;
                         sendEmailVerification(user);
                         storeUserInfo(userId, email, password, username);
 

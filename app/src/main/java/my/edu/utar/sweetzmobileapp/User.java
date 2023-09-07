@@ -11,9 +11,24 @@ public class User {
     private String username;
     private String user_pwd;
     private String user_email;
-    private boolean isGuest;
+    private boolean isGuest = true;
 
-    public static User currentUser;
+    public User(boolean isGuest)
+    {
+        //isGuest
+        username = null;
+        user_pwd = null;
+        user_email = null;
+        isGuest = true;
+    }
+
+    public User(String user_pwd, String user_email, boolean isGuest)
+    {
+        this.user_pwd = user_pwd;
+        this.user_email = user_email;
+        this.isGuest = isGuest;
+        fetchUserDataFromFirestore();
+    }
 
     public User() {
         this.username = "";
@@ -50,7 +65,9 @@ public class User {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String userId = firebaseUser.getUid();
+            Login.currentUserId = userId;
             DocumentReference userRef = FirebaseFirestore.getInstance().collection("users").document(userId);
+            Log.d("true",userId);
 
             userRef.addSnapshotListener((documentSnapshot, e) -> {
                 if (e != null) {
