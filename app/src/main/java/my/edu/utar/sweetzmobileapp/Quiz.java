@@ -2,8 +2,6 @@ package my.edu.utar.sweetzmobileapp;
 
 import android.util.Log;
 
-import androidx.annotation.Px;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
