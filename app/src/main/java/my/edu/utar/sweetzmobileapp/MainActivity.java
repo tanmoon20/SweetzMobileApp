@@ -79,14 +79,14 @@ public class MainActivity extends HeaderFooterActivity {
         setContentView(R.layout.activity_main);
 
         createQuizBtn = findViewById(R.id.createQuizBtn);
+
         createQuizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateQuizActivity.class);
+                Intent intent;
+                intent = new Intent(MainActivity.this, CreateQuizActivity.class);
                 intent.putExtra("isPublic",isPublic);
-                if(!isPublic){
-                    intent.putExtra("roomCode", myRoom.getRoomCode());
-                }
+
                 startActivity(intent);
             }
         });

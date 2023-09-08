@@ -28,6 +28,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
      Button joinRoomBtn, createRoomBtn;
 
      ArrayList<String> roomList;
+     Room room;
      String roomName, roomCode, roomDesc, roomPwd;
      final private FirestoreManager fm = new FirestoreManager();
 
@@ -56,8 +57,8 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
             public void onClick(View view) {
 /*                QR qr = new QR(CreateRoomActivity.this, "1234 quiz1");
                 qr.createQRDialog();*/
-/*                Intent intent = new Intent(CreateRoomActivity.this, QRScanner.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(CreateRoomActivity.this, QRScanner.class);
+                startActivity(intent);
 
             }
         });
@@ -77,41 +78,48 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
         createRoomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                roomCode = generateRandomCode();
-                roomDesc = editRoomDesc.getText().toString();
-                roomName = editRoomName.getText().toString();
-                roomPwd = editRoomPwd.getText().toString();
-                FirestoreManager.FirestoreCallback firestoreCallback = new FirestoreManager.FirestoreCallback() {
-                    @Override
-                    public void onCallback(String[] result) {
-                        Log.i("####log####","successful" + roomList.toString());
-                        Toast.makeText(CreateRoomActivity.this,"Room "+roomName+" created successful!", Toast.LENGTH_SHORT).show();
-                    }
+                if(isEmpty(editRoomName) || isEmpty(editRoomPwd)){
+                    Toast.makeText(CreateRoomActivity.this, "Please fill in title and password",Toast.LENGTH_LONG).show();
+                }else{
+                    roomCode = generateRandomCode();
+                    roomDesc = isEmpty(editRoomDesc)?"":editRoomDesc.getText().toString();
+                    Toast.makeText(CreateRoomActivity.this, roomDesc,Toast.LENGTH_LONG).show();
+                    roomName = editRoomName.getText().toString();
+                    roomPwd = editRoomPwd.getText().toString();
+                        FirestoreManager.FirestoreCallback firestoreCallback = new FirestoreManager.FirestoreCallback() {
+                            @Override
+                            public void onCallback(String[] result) {
+                                Toast.makeText(CreateRoomActivity.this,"Room "+roomName+" created successful!", Toast.LENGTH_SHORT).show();
+                            }
 
-                    @Override
-                    public void onCallbackError(Exception e) {
+                            @Override
+                            public void onCallbackError(Exception e) {
 
+                            }
+                        };
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                room.setRoomCode(roomCode);
+                                room.setTitle(roomName);
+                                room.setDesc(roomDesc);
+                                //insert author!
+                                fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd);
+                                fm.getPrivateRoomInfo(roomCode, firestoreCallback);
+                                //intent
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                                //
+                            }
+                        }).start();
                     }
-                };
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd);
-                        fm.getPrivateRoomInfo(roomCode, firestoreCallback);
-                        //intent
-                        //
-                        //
-                        //
-                        //
-                        //
-                        //
-                        //
-                        //
-                    }
-                }).start();
-            }
-        });
-
+                }
+            });
     }
 
      @Override
@@ -123,6 +131,12 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
      public void onCallbackError(Exception e) {
 
      }
+    private boolean isEmpty(EditText etText) {
+        if (etText.getText().toString().trim().length() > 0)
+            return false;
+
+        return true;
+    }
 
      //dialog for room not found
      public void createDialog(String title, String message){
