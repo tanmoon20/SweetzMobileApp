@@ -26,10 +26,8 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
      EditText editRoomName, editRoomCode, editRoomDesc, editRoomPwd, joinRoomPwd;
      ImageButton camera_btn;
      Button joinRoomBtn, createRoomBtn;
-
-     ArrayList<String> roomList;
      Room room;
-     String roomName, roomCode, roomDesc, roomPwd;
+     String roomName, roomCode, roomDesc, roomPwd, author="user1";
      final private FirestoreManager fm = new FirestoreManager();
 
      final private FirestoreManager2 fm2 = new FirestoreManager2();
@@ -104,7 +102,7 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                                 room.setTitle(roomName);
                                 room.setDesc(roomDesc);
                                 //insert author!
-                                fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd);
+                                fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd, room.getAuthor());
                                 fm.getPrivateRoomInfo(roomCode, firestoreCallback);
                                 //intent
                                 //
@@ -204,7 +202,8 @@ public class CreateRoomActivity extends HeaderFooterActivity implements Firestor
                         firestoreHandler.post(new Runnable() {
                             @Override
                             public void run() {
-
+                                Intent intent = new Intent(CreateRoomActivity.this, CreateQuizActivity.class);
+                                intent.putExtra("roomCode", roomCode);
                                 //change to intent
                                 //put extra result[0] is the room code
                             }

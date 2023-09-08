@@ -2,6 +2,8 @@ package my.edu.utar.sweetzmobileapp;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FieldValue;
@@ -23,12 +25,13 @@ public class FirestoreManager2 {
     //=====================================================================//
     //
     //
-    public void insertPrivateRoom(String roomID,String roomName, String roomDesc, String roomPwd){
+    public void insertPrivateRoom(String roomID,String roomName, String roomDesc, String roomPwd, String author){
         Map<String, Object> data = new HashMap<>();
         data.put("roomDesc", roomDesc);
         data.put("roomName", roomName);
         data.put("roomPwd", roomPwd);
-
+        Map<String, Object> authorInfo = new HashMap<>();
+        authorInfo.put("username", author);
         db.collection("privateRoom").document(roomID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -37,6 +40,7 @@ public class FirestoreManager2 {
                         //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
                     }
                 });
+        db.collection("privateRoom").document(roomID).collection("author").document("author").set(authorInfo);
     }
 
     //
@@ -55,12 +59,15 @@ public class FirestoreManager2 {
     }
     //
     //
-    public void insertPrivateRoomQuiz(String roomID, String quizID, String quizTitle, String quizDesc){
+    public void insertPrivateRoomQuiz(String roomID, String quizID, String quizTitle, String quizDesc, String author){
         Map<String, Object> data = new HashMap<>();
         data.put("description",quizDesc );
         data.put("lastUpdate", FieldValue.serverTimestamp());
         data.put("playCount", 0);
         data.put("title",quizTitle);
+
+        Map<String, Object> authorInfo = new HashMap<>();
+        authorInfo.put("username", author);
 
         db.collection("privateRoom").document(roomID).collection("quiz").document(quizID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
@@ -70,6 +77,12 @@ public class FirestoreManager2 {
                         Log.e("FIRESTORE 2 : ", "FAILED TO INSERT");
                     }
                 });
+        db.collection("privateRoom").document(roomID).collection("author").document("author").set(authorInfo).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("FIRESTORE 2 : ", "FAILED TO INSERT");
+            }
+        });
 
     }
     //
@@ -111,13 +124,14 @@ public class FirestoreManager2 {
     }
     //
     //
-    public void insertPublicQuiz(String quizID, String quizTitle, String quizDesc){
+    public void insertPublicQuiz(String quizID, String quizTitle, String quizDesc, String author){
         Map<String, Object> data = new HashMap<>();
         data.put("description",quizDesc );
         data.put("lastUpdate", FieldValue.serverTimestamp());
         data.put("playCount", 0);
         data.put("title",quizTitle);
-
+        Map<String, Object> authorInfo = new HashMap<>();
+        authorInfo.put("username", author);
         db.collection("publicRoom").document(quizID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -126,6 +140,12 @@ public class FirestoreManager2 {
                         //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
                     }
                 });
+        db.collection("publicRoom").document(quizID).collection("author").document("author").set(authorInfo).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("FIRESTORE 2 : ", "FAILED TO INSERT");
+            }
+        });
     }
     //
     //
@@ -286,6 +306,49 @@ public class FirestoreManager2 {
             }
         });
 
+    }
+
+    public void deletePrivateRoom(String roomCode){
+        db.collection("privateRoom").document(roomCode).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i("Deleted room code", roomCode);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Deletion failed", "room code: "+roomCode);
+            }
+        });
+
+    }
+
+    public void deletePrivateQuiz(String roomCode, String quizId){
+        db.collection("privateRoom").document(roomCode).collection("quiz").document(quizId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i("Deleted room code", roomCode);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Deletion failed", "room code: "+roomCode);
+            }
+        });
+    }
+
+    public void deletePublicQuiz(String quizId){
+        db.collection("publicRoom").document(quizId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.i("Deleted room code", quizId);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Deletion failed", "room code: "+quizId);
+            }
+        });
     }
 
 

@@ -436,6 +436,8 @@ public class FirestoreManager {
                     });
                 } else {
                     Log.e("Quiz Document Not Found", "No attributes found for the specified quiz ID.");
+                    String[] result={"notFound"};
+                    callback.onCallback(result);
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -524,7 +526,6 @@ public class FirestoreManager {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            //
                             //If any more attribute needed to be retrieve, you just modify here
                             //Add one more line referring to the line below
                             tmpList.add(documentSnapshot.getString("correct"));
@@ -540,6 +541,8 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+                            String[] notFound ={"notFound"};
+                            callback.onCallback(notFound);
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -620,9 +623,10 @@ public class FirestoreManager {
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
+                    if (task.isComplete()) {
+                        Log.i("function", "query success");
                         QuerySnapshot querySnapshot = task.getResult();
-                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        if (querySnapshot != null) {
                             // Retrieve the last document
                             DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
 
@@ -644,10 +648,6 @@ public class FirestoreManager {
                         // Handle errors
                         Log.i("Private", "not successful");
 
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            // Handle the exception
-                        }
                     }
                 }
             });
@@ -660,11 +660,14 @@ public class FirestoreManager {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
+                if (task.isComplete()) {
+                    Log.i("function", "query success");
+
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    if (querySnapshot != null) {
                         // Retrieve the last document
                         DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
+                        Log.i("function", "query success");
 
                         // Access the data in the last document
                         tmplist.add(lastDocument.getId());
@@ -692,8 +695,6 @@ public class FirestoreManager {
             }
         });
     }
-
-
 
     public interface FirestoreCallback {
         void onCallback(String [] result);

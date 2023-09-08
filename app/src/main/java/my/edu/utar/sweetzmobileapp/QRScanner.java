@@ -62,7 +62,6 @@ public class QRScanner extends AppCompatActivity {
         }
         setContentView(R.layout.qr_scanner);
         camera = findViewById(R.id.camera);
-        tv = findViewById(R.id.qr_result_textview);
         handler = new Handler();
 
         camera.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener() {
@@ -247,7 +246,7 @@ public class QRScanner extends AppCompatActivity {
                 room.setTitle(result[1]);
                 room.setDesc(result[2]);
                 room.setAuthor(result[4]);
-                /*fm2.insertPrivateRoomMember(roomCode, "user2","username");*/
+                fm2.insertPrivateRoomMember(roomCode, "user2","username");
 
                 handler.post(new Runnable() {
                     @Override
