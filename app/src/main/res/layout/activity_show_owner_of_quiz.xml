@@ -36,12 +36,13 @@
             android:paddingRight="15sp"/>
 
         <ScrollView
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10sp">
 
             <LinearLayout
-                android:id="@+id/quiz_title_container"
+                android:id="@+id/mixed_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
