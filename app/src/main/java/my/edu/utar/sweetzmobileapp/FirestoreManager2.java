@@ -47,6 +47,8 @@ public class FirestoreManager2 {
         db.collection("users").document(userId).collection("privateRoom").document(roomID).collection("author").document("author").set(authorInfo);
         db.collection("users").document(userId).collection("privateRoom").document(roomID)
                 .set(data);
+        db.collection("users").document(userId).collection("privateRoom").document(roomID).collection("users").document(userId).set(authorInfo);
+
     }
 
     public void insertPrivateRoomQuiz(String userId, String roomID, String quizID, String quizTitle, String quizDesc, String author){
@@ -109,7 +111,7 @@ public class FirestoreManager2 {
         Map<String, Object> data = new HashMap<>();
         data.put("username", username);
 
-        db.collection("privateRoom").document(roomID).collection("user").document(userID)
+        db.collection("privateRoom").document(roomID).collection("users").document(userID)
                 .set(data).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
@@ -117,6 +119,7 @@ public class FirestoreManager2 {
                         //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
                     }
                 });
+        db.collection("users").document(userID).collection("privateRoom").document(roomID).collection("users").document(userID).set(data);
     }
     //
     //
@@ -139,6 +142,7 @@ public class FirestoreManager2 {
         db.collection("publicRoom").document(quizID).collection("author").document("author").set(authorInfo);
         db.collection("users").document(userId).collection("publicRoom").document(quizID).set(data);
         db.collection("users").document(userId).collection("publicRoom").document(quizID).collection("author").document("author").set(authorInfo);
+
     }
     //
     //
@@ -161,25 +165,6 @@ public class FirestoreManager2 {
                 .set(data);
 
     }
-    //
-    //
-    public void insertUser(String userID,String userEmail, String userPwd, String username){
-        Map<String, Object> data = new HashMap<>();
-        data.put("user_email",userEmail);
-        data.put("user_pws",userPwd );
-        data.put("username",username );
-
-        db.collection("user").document(userID)
-                .set(data).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        //Fail to set
-                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-                    }
-                });
-    }
-    //
-    //
 
     public void insertNewPublicQuizPlay(String quizID, int playNum){
         Map<String, Object> data = new HashMap<>();
@@ -333,12 +318,13 @@ public class FirestoreManager2 {
         CollectionReference membersCollectionRef = db.collection("publicRoom").document(quizId).collection("users");
         CollectionReference questionCollectionRef = db.collection("publicRoom").document(quizId).collection("question");
         CollectionReference authorPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("author");
-        CollectionReference quizPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("quiz");
+        CollectionReference questionPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("question");
+
         deleteCollection(authorCollectionRef);
         deleteCollection(membersCollectionRef);
         deleteCollection(questionCollectionRef);
         deleteCollection(authorPublicCollectionRef);
-        deleteCollection(quizPublicCollectionRef);
+        deleteCollection(questionPublicCollectionRef);
 
         db.collection("users").document(userId).collection("publicRoom").document(quizId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
