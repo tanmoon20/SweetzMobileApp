@@ -201,7 +201,7 @@ public class FirestoreManager {
                 });
     }
 
-    public void getPrivateRoomMembers2(String specificRoomID, String username, final FirestoreCallback callback){
+    public void getPrivateRoomMembers2(String specificRoomID, String userId, final FirestoreCallback callback){
         //This method is to get the member's username under privateRoom> roomID, user > username
         //Test case: specificRoomID = 1234, username = user1
         //fm.getPrivateRoomMembers2("1234","user3",this);
@@ -210,13 +210,14 @@ public class FirestoreManager {
         //like this result[0] , result[1], there should be no "[" and "]"
         //
         ArrayList<String> tmpList = new ArrayList<>();
-        db.collection("privateRoom").document(specificRoomID).collection("user").document(username)
+        Log.i("userId", userId);
+        db.collection("privateRoom").document(specificRoomID).collection("user").document(userId)
                 //.whereEqualTo("capital", true)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
+                        if (documentSnapshot.exists()&&documentSnapshot!=null) {
                             //
                             //If any more attribute needed to be retrieve, you just modify here
                             //Add one more line referring to the line below

@@ -15,7 +15,7 @@ public class CreateQuizActivity extends HeaderFooterActivity {
     TextView codeTv;
     EditText editName, editRoomCode, editDesc;
     Button enterBtn;
-    String roomCode, quizName, quizDesc, quizCode, author = "sweetz";
+    String roomCode, quizName, quizDesc, quizCode, author = "sweetz", userId;
     Boolean isPublic;
     Intent goIntent;
     FirestoreManager2 firestoreManager2 = new FirestoreManager2();
@@ -36,8 +36,8 @@ public class CreateQuizActivity extends HeaderFooterActivity {
         editName = findViewById(R.id.edit_quiz_name);
         editDesc = findViewById(R.id.edit_quiz_desc);
         enterBtn = findViewById(R.id.create_quiz_btn);
-        /*author = Login.currentUser.getUsername;*/
-
+        author = Login.currentUser.getUsername();
+        userId = Login.currentUserId;
         Intent intent = getIntent();
         isPublic = getIntent().getBooleanExtra("isPublic", true);
         if(isPublic){
@@ -94,7 +94,7 @@ public class CreateQuizActivity extends HeaderFooterActivity {
             @Override
             public void onCallback(String[] result) {
                 quizCode = "quiz"+(Integer.parseInt(result[0].substring(4))+1);
-                firestoreManager2.insertPrivateRoomQuiz(roomCode,quizCode, quizName, quizDesc, author);
+                firestoreManager2.insertPrivateRoomQuiz(userId, roomCode,quizCode, quizName, quizDesc, author);
 
                 quiz.setQuizId(quizCode);
                 quiz.setAuthor(author);
@@ -132,7 +132,7 @@ public class CreateQuizActivity extends HeaderFooterActivity {
             @Override
             public void onCallback(String[] result) {
                 quizCode = "quiz"+(Integer.parseInt(result[0].substring(4))+1);
-                firestoreManager2.insertPublicQuiz(quizCode,quizName, quizDesc, author);
+                firestoreManager2.insertPublicQuiz(quizCode,quizName, quizDesc, author, userId);
                 quiz.setQuizId(quizCode);
                 quiz.setAuthor(author);
                 quiz.setDesc(quizDesc);

@@ -27,7 +27,7 @@ public class CreateRoomActivity extends HeaderFooterActivity{
      ImageButton camera_btn;
      Button joinRoomBtn, createRoomBtn;
      Room room = new Room();
-     String roomName, roomCode, roomDesc, roomPwd, author="sweetz", username="sweetz", userId="user1";
+     String roomName, roomCode, roomDesc, roomPwd, author="sweetz", username, userId;
      final private FirestoreManager fm = new FirestoreManager();
 
      final private FirestoreManager2 fm2 = new FirestoreManager2();
@@ -49,7 +49,12 @@ public class CreateRoomActivity extends HeaderFooterActivity{
         camera_btn = findViewById(R.id.camera_btn);
         joinRoomBtn = findViewById(R.id.join_room_btn);
         createRoomBtn = findViewById(R.id.create_room_btn);
-
+        author = Login.currentUser.getUsername();
+        userId = Login.currentUserId;
+        username = Login.currentUser.getUsername();
+/*        author = "EnYee";
+        userId = "user5";
+        username = "En Yee";*/
         camera_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +90,8 @@ public class CreateRoomActivity extends HeaderFooterActivity{
                     room.setTitle(roomName);
                     room.setDesc(roomDesc);
                     room.setAuthor(author);
-                    fm2.insertPrivateRoom(roomCode,roomName, roomDesc, roomPwd, room.getAuthor());
+                    fm2.insertPrivateRoom(userId, roomCode,roomName, roomDesc, roomPwd, room.getAuthor());
+                    fm2.insertPrivateRoomMember(roomCode, userId, author);
                     Intent intent = new Intent(CreateRoomActivity.this, MainActivity.class);
                     intent.putExtra("room",room);
                     intent.putExtra("private","Private");
@@ -192,11 +198,10 @@ public class CreateRoomActivity extends HeaderFooterActivity{
                 room.setTitle(result[1]);
                 room.setDesc(result[2]);
                 room.setAuthor(result[4]);
-                fm2.insertPrivateRoomMember(roomCode, "user2","username");
-
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
                         Intent intent = new Intent(CreateRoomActivity.this, MainActivity.class);
                         intent.putExtra("room",room);
                         intent.putExtra("private","Private");

@@ -34,7 +34,7 @@ public class FirestoreManager2 {
     //=====================================================================//
     //
     //
-    public void insertPrivateRoom(String roomID,String roomName, String roomDesc, String roomPwd, String author){
+    public void insertPrivateRoom(String userId, String roomID,String roomName, String roomDesc, String roomPwd, String author){
         Map<String, Object> data = new HashMap<>();
         data.put("roomDesc", roomDesc);
         data.put("roomName", roomName);
@@ -42,33 +42,14 @@ public class FirestoreManager2 {
         Map<String, Object> authorInfo = new HashMap<>();
         authorInfo.put("username", author);
         db.collection("privateRoom").document(roomID)
-                .set(data).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        //Fail to set
-                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-                    }
-                });
+                .set(data);
         db.collection("privateRoom").document(roomID).collection("author").document("author").set(authorInfo);
+        db.collection("users").document(userId).collection("privateRoom").document(roomID).collection("author").document("author").set(authorInfo);
+        db.collection("users").document(userId).collection("privateRoom").document(roomID)
+                .set(data);
     }
 
-    //
-    //
-    public void insertPrivateRoomAuthor(String roomID,String username){
-        Map<String, Object> data = new HashMap<>();
-        data.put("username",username);
-        db.collection("privateRoom").document(roomID).collection("author").document("author")
-                .set(data).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        //Fail to set
-                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-                    }
-                });
-    }
-    //
-    //
-    public void insertPrivateRoomQuiz(String roomID, String quizID, String quizTitle, String quizDesc, String author){
+    public void insertPrivateRoomQuiz(String userId, String roomID, String quizID, String quizTitle, String quizDesc, String author){
         Map<String, Object> data = new HashMap<>();
         data.put("description",quizDesc );
         data.put("lastUpdate", FieldValue.serverTimestamp());
@@ -93,10 +74,13 @@ public class FirestoreManager2 {
             }
         });
 
+        db.collection("users").document(userId).collection("privateRoom").document(roomID).collection("author").document("author").set(authorInfo);
+        db.collection("users").document(userId).collection("privateRoom").document(roomID).collection("quiz").document(quizID).set(data);
+
     }
     //
     //
-    public void insertPrivateRoomQuizQuestion(String roomID, String quizID,String questionID
+    public void insertPrivateRoomQuizQuestion(String userId, String roomID, String quizID,String questionID
             , String correct, String title, String A, String B, String C){
         Map<String, Object> data = new HashMap<>();
         data.put("correct", correct);
@@ -115,6 +99,9 @@ public class FirestoreManager2 {
                         //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
                     }
                 });
+        db.collection("users").document(userId).collection("privateRoom").document(roomID).collection("quiz")
+                .document(quizID).collection("question").document(questionID)
+                .set(data);
     }
     //
     //
@@ -133,7 +120,7 @@ public class FirestoreManager2 {
     }
     //
     //
-    public void insertPublicQuiz(String quizID, String quizTitle, String quizDesc, String author){
+    public void insertPublicQuiz(String quizID, String quizTitle, String quizDesc, String author, String userId){
         Map<String, Object> data = new HashMap<>();
         data.put("description",quizDesc );
         data.put("lastUpdate", FieldValue.serverTimestamp());
@@ -149,16 +136,13 @@ public class FirestoreManager2 {
                         //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
                     }
                 });
-        db.collection("publicRoom").document(quizID).collection("author").document("author").set(authorInfo).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e("FIRESTORE 2 : ", "FAILED TO INSERT");
-            }
-        });
+        db.collection("publicRoom").document(quizID).collection("author").document("author").set(authorInfo);
+        db.collection("users").document(userId).collection("publicRoom").document(quizID).set(data);
+        db.collection("users").document(userId).collection("publicRoom").document(quizID).collection("author").document("author").set(authorInfo);
     }
     //
     //
-    public void insertPublicQuizQuestion(String quizID,String questionID
+    public void insertPublicQuizQuestion(String userId, String quizID,String questionID
             , String correct, String title, String A, String B, String C){
         Map<String, Object> data = new HashMap<>();
         data.put("correct", correct);
@@ -171,13 +155,11 @@ public class FirestoreManager2 {
 
         db.collection("publicRoom")
                 .document(quizID).collection("question").document(questionID)
-                .set(data).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        //Fail to set
-                        //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
-                    }
-                });
+                .set(data);
+        db.collection("users").document(userId).collection("publicRoom")
+                .document(quizID).collection("question").document(questionID)
+                .set(data);
+
     }
     //
     //
@@ -318,31 +300,29 @@ public class FirestoreManager2 {
 
     }
 
-    public void deletePrivateRoom(String roomCode){
-        db.collection("privateRoom").document(roomCode).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+    public void deletePublicQuiz(String userId, String quizId){
+        CollectionReference authorCollectionRef = db.collection("publicRoom").document(quizId).collection("author");
+        CollectionReference membersCollectionRef = db.collection("publicRoom").document(quizId).collection("users");
+        CollectionReference questionCollectionRef = db.collection("publicRoom").document(quizId).collection("question");
+        CollectionReference authorPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("author");
+        CollectionReference quizPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("quiz");
+        deleteCollection(authorCollectionRef);
+        deleteCollection(membersCollectionRef);
+        deleteCollection(questionCollectionRef);
+        deleteCollection(authorPublicCollectionRef);
+        deleteCollection(quizPublicCollectionRef);
+
+        db.collection("users").document(userId).collection("publicRoom").document(quizId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Log.i("Deleted room code", roomCode);
+                Log.i("Deleted room code", quizId);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i("Deletion failed", "room code: "+roomCode);
+                Log.i("Deletion failed", "room code: "+quizId);
             }
         });
-
-    }
-
-    public void deletePublicQuiz(String quizId){
-        CollectionReference authorCollectionRef = db.collection("publicRoom").document(quizId).collection("author");
-        CollectionReference membersCollectionRef = db.collection("publicRoom").document(quizId).collection("members");
-        CollectionReference questionCollectionRef = db.collection("publicRoom").document(quizId).collection("question");
-
-        deleteCollection(authorCollectionRef);
-
-        deleteCollection(membersCollectionRef);
-
-        deleteCollection(questionCollectionRef);
         db.collection("publicRoom").document(quizId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {

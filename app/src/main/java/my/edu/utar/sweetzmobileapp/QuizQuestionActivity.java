@@ -31,7 +31,7 @@ public class QuizQuestionActivity extends HeaderFooterActivity {
     Quiz quiz;
 
     Boolean isPublic, isQuit=false;
-    String question, correct, toastMessage="created";
+    String question, correct, toastMessage="created", userId, username;
     ArrayList<String> wrong = new ArrayList<>();
     FirestoreManager2 fm2 = new FirestoreManager2();
     FirestoreManager fm = new FirestoreManager();
@@ -59,6 +59,8 @@ public class QuizQuestionActivity extends HeaderFooterActivity {
         quiz = (Quiz) intent.getSerializableExtra("quiz");
         isPublic = intent.getBooleanExtra("isPublic", true);
         preBtn.setVisibility(GONE);
+        userId = Login.currentUserId;
+        username = Login.currentUser.getUsername();
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -75,9 +77,9 @@ public class QuizQuestionActivity extends HeaderFooterActivity {
                 }
                 if(!question.isEmpty()&&!correct.isEmpty()&&wrong.size()>=1){
                     if(isPublic){
-                        fm2.insertPublicQuizQuestion(quiz.getQuizId(), "question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString()); //need to use method of checking size to determine how many options has been filled in
+                        fm2.insertPublicQuizQuestion(userId, quiz.getQuizId(), "question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString()); //need to use method of checking size to determine how many options has been filled in
                     }else{
-                        fm2.insertPrivateRoomQuizQuestion(quiz.getRoomCode(),quiz.getQuizId(),"question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString());
+                        fm2.insertPrivateRoomQuizQuestion(userId, quiz.getRoomCode(),quiz.getQuizId(),"question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString());
                     }
                     Toast.makeText(QuizQuestionActivity.this, "Question "+questionNum+" "+toastMessage+" successfully", Toast.LENGTH_SHORT).show();
                     //maybe user input optionA and C, not B
@@ -117,9 +119,9 @@ public class QuizQuestionActivity extends HeaderFooterActivity {
                     }
                     if(!question.isEmpty()&&!correct.isEmpty()&&wrong.size()>=1){
                         if(isPublic){
-                            fm2.insertPublicQuizQuestion(quiz.getQuizId(), "question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString()); //need to use method of checking size to determine how many options has been filled in
+                            fm2.insertPublicQuizQuestion(userId, quiz.getQuizId(), "question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString()); //need to use method of checking size to determine how many options has been filled in
                         }else{
-                            fm2.insertPrivateRoomQuizQuestion(quiz.getRoomCode(),quiz.getQuizId(),"question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString());
+                            fm2.insertPrivateRoomQuizQuestion(userId, quiz.getRoomCode(),quiz.getQuizId(),"question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString());
                         }
                         Toast.makeText(QuizQuestionActivity.this, "Question "+questionNum+" "+toastMessage+" successfully", Toast.LENGTH_SHORT).show();
                     }else {
@@ -154,11 +156,11 @@ public class QuizQuestionActivity extends HeaderFooterActivity {
                         }
                         if(!question.isEmpty()&&!correct.isEmpty()&&wrong.size()>=1){
                             if(isPublic){
-                                fm2.insertPublicQuizQuestion(quiz.getQuizId(), "question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString()); //need to use method of checking size to determine how many options has been filled in
+                                fm2.insertPublicQuizQuestion(userId, quiz.getQuizId(), "question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString()); //need to use method of checking size to determine how many options has been filled in
                             }else{
                                 Log.i("this is first run", "run");
 
-                                fm2.insertPrivateRoomQuizQuestion(quiz.getRoomCode(),quiz.getQuizId(),"question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString());
+                                fm2.insertPrivateRoomQuizQuestion(userId, quiz.getRoomCode(),quiz.getQuizId(),"question"+questionNum, correct, question,editWrongA.getText().toString() , editWrongB.getText().toString(), editWrongC.getText().toString());
                             }
                             handler.post(new Runnable() {
                                 @Override
@@ -344,7 +346,7 @@ public class QuizQuestionActivity extends HeaderFooterActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(isPublic){
-                    fm2.deletePublicQuiz(quiz.getQuizId());
+                    fm2.deletePublicQuiz(userId, quiz.getQuizId());
                     onBackPressed();
 /*                    Intent intent = new Intent(QuizQuestionActivity.this, MainActivity.class);
                     startActivity(intent);*/

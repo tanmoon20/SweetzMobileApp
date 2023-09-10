@@ -50,6 +50,8 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
         setContentView(R.layout.activity_private_class);
         createRoomBtn = findViewById(R.id.createRoomBtn);
         //retrieve data from firestore
+        PrivateRoomActivity.roomThread myRoomThread = new roomThread();
+        myRoomThread.start();
         createRoomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
