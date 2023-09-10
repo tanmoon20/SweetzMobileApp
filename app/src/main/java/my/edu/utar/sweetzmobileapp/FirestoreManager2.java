@@ -315,13 +315,11 @@ public class FirestoreManager2 {
 
     public void deletePublicQuiz(String userId, String quizId){
         CollectionReference authorCollectionRef = db.collection("publicRoom").document(quizId).collection("author");
-        CollectionReference membersCollectionRef = db.collection("publicRoom").document(quizId).collection("users");
         CollectionReference questionCollectionRef = db.collection("publicRoom").document(quizId).collection("question");
         CollectionReference authorPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("author");
         CollectionReference questionPublicCollectionRef = db.collection("users").document(userId).collection("publicRoom").document(quizId).collection("question");
 
         deleteCollection(authorCollectionRef);
-        deleteCollection(membersCollectionRef);
         deleteCollection(questionCollectionRef);
         deleteCollection(authorPublicCollectionRef);
         deleteCollection(questionPublicCollectionRef);
