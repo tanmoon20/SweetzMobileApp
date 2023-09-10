@@ -42,6 +42,7 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private LinearLayout ll2;
     private LinearLayout ll;
+    private String userIDCur = Login.currentUserId;
 
     public showOwnerOfQuiz() {
         super("EDIT");
@@ -182,8 +183,8 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
 
         public void run(){
             // userID is already picked
-            db.collection("user")
-                    .document("user1")
+            db.collection("users")
+                    .document(userIDCur)
                     .collection("publicRoom")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -223,8 +224,8 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
                                 }
 
                                 for (Quiz quiz: quizList){  // remember to have an author or it will not work
-                                    db.collection("user")
-                                            .document("user1")
+                                    db.collection("users")
+                                            .document(userIDCur)
                                             .collection("publicRoom")
                                             .document(quiz.getQuizId())
                                             .collection("author")
@@ -312,9 +313,9 @@ public class showOwnerOfQuiz extends HeaderFooterActivity {
 
         public void run(){
             //userIO
-            String userId = "user1";
+            String userId = userIDCur;
 
-            CollectionReference privateRoomCollection = db.collection("user")
+            CollectionReference privateRoomCollection = db.collection("users")
                     .document(userId)
                     .collection("privateRoom");
 

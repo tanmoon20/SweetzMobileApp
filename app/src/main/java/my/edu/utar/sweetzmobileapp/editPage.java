@@ -33,6 +33,7 @@ public class editPage extends HeaderFooterActivity {
     private ArrayList<EditText> listOfQuestion = new ArrayList<>();
     private Button deleteQuizButton;
     private int listOfQuestionINDEX = 0;
+    private String userIDCur = Login.currentUserId;
     public editPage() {
         super("Edit");
     }
@@ -177,7 +178,7 @@ public class editPage extends HeaderFooterActivity {
                 for(int j = 0; j< 4;j++){
                     tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
                 }
-                fm2.manipulatePublicQuizQuestion("user1", myQuiz.getQuizId(),
+                fm2.manipulatePublicQuizQuestion(userIDCur, myQuiz.getQuizId(),
                         questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
             }
         }else{
@@ -185,7 +186,7 @@ public class editPage extends HeaderFooterActivity {
                 for(int j = 0; j< 4;j++){
                     tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
                 }
-                fm2.manipulatePrivateQuizQuestion("user1", myQuiz.getRoomCode(),
+                fm2.manipulatePrivateQuizQuestion(userIDCur, myQuiz.getRoomCode(),
                         myQuiz.getQuizId(),questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
             }
         }
@@ -205,11 +206,11 @@ public class editPage extends HeaderFooterActivity {
 
         public void run() {
             if(myQuiz.getRoomCode()==null){
-                questionFM.getUserAllPublicQuizQuestion("user1",myQuiz.getQuizId(),QuestionThread.this);
+                questionFM.getUserAllPublicQuizQuestion(userIDCur,myQuiz.getQuizId(),QuestionThread.this);
                 Log.e("testing 103: ","getPublic");
             }
             else {
-                questionFM.getUserAllPrivateQuizQuestion("user1", myQuiz.getRoomCode(), myQuiz.getQuizId(), QuestionThread.this);
+                questionFM.getUserAllPrivateQuizQuestion(userIDCur, myQuiz.getRoomCode(), myQuiz.getQuizId(), QuestionThread.this);
                 Log.e("testing 103: ","getPrivate");
             }
         }
@@ -228,8 +229,8 @@ public class editPage extends HeaderFooterActivity {
 
             if(myQuiz.getRoomCode()==null){
                 for(String question : result){
-                    db.collection("user")
-                            .document("user1")
+                    db.collection("users")
+                            .document(userIDCur)
                             .collection(checking)
                             .document(myQuiz.getQuizId())
                             .collection("question")
@@ -264,8 +265,8 @@ public class editPage extends HeaderFooterActivity {
                 }
             }else{
                 for(String question : result){
-                    db.collection("user")
-                            .document("user1")
+                    db.collection("users")
+                            .document(userIDCur)
                             .collection(checking) // the list return will get private/public room string at the first index of the array list
                             .document(myQuiz.getRoomCode())
                             .collection("quiz")
@@ -308,14 +309,14 @@ public class editPage extends HeaderFooterActivity {
     public void deleteCurrentQuiz(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(myQuiz.getRoomCode()==null) {
-            db.collection("user")
-                    .document("user1")
+            db.collection("users")
+                    .document(userIDCur)
                     .collection("publicRoom")
                     .document(myQuiz.getQuizId())
                     .delete();
         }else{
-            db.collection("user")
-                    .document("user1")
+            db.collection("users")
+                    .document(userIDCur)
                     .collection("privateRoom")
                     .document(myQuiz.getRoomCode())
                     .collection("quiz")
@@ -330,16 +331,16 @@ public class editPage extends HeaderFooterActivity {
     public void deleteThisQuestion(String questionID){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         if(myQuiz.getRoomCode()==null) {
-            db.collection("user")
-                    .document("user1")
+            db.collection("users")
+                    .document(userIDCur)
                     .collection("publicRoom")
                     .document(myQuiz.getQuizId())
                     .collection("question")
                     .document(questionID)
                     .delete();
         }else{
-            db.collection("user")
-                    .document("user1")
+            db.collection("users")
+                    .document(userIDCur)
                     .collection("privateRoom")
                     .document(myQuiz.getRoomCode())
                     .collection("quiz")

@@ -48,6 +48,7 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
     Room myRoom = new Room();
     private EditText roomName;
     private EditText roomDesc;
+    private String userIDCur = Login.currentUserId;
     public user_privateRoom_quiz()
     {
         super("Own Private Room");
@@ -73,7 +74,7 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
                 FirestoreManager2 fm2 = new FirestoreManager2();
                 String newRoomName = roomName.getText().toString();
                 String newRoomDesc = roomDesc.getText().toString();
-                fm2.manipulatePrivateRoom("user1",myRoom.getRoomCode(),newRoomName,newRoomDesc);
+                fm2.manipulatePrivateRoom(userIDCur,myRoom.getRoomCode(),newRoomName,newRoomDesc);
 
                 Intent intent = new Intent(user_privateRoom_quiz.this, showOwnerOfQuiz.class);
                 startActivity(intent);
@@ -179,8 +180,8 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
 
         public void run(){
             CollectionReference quizes;
-            quizes = db.collection("user")
-                    .document("user1")
+            quizes = db.collection("users")
+                    .document(userIDCur)
                     .collection("privateRoom")
                         .document(myRoom.getRoomCode())
                         .collection("quiz");
@@ -261,8 +262,8 @@ public class user_privateRoom_quiz extends HeaderFooterActivity {
 
     private void deleteRoom() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user")
-                .document("user1")
+        db.collection("users")
+                .document(userIDCur)
                 .collection("privateRoom")
                 .document(myRoom.getRoomCode())
                 .delete()
