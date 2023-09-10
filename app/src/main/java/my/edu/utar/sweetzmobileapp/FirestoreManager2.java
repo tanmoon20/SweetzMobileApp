@@ -225,6 +225,9 @@ public class FirestoreManager2 {
     public void manipulatePublicQuizQuestion(String userID, String quizID, String questionID
             , String correct, String title, String A, String B, String C){
 
+        //This method is used to change the public quiz question under the user collection
+        //in the firestore firebase collection
+
         Map<String, Object> data = new HashMap<>();
         data.put("correct", correct);
         data.put("title", title);
@@ -262,6 +265,9 @@ public class FirestoreManager2 {
     public void manipulatePrivateQuizQuestion(String userID,String roomID, String quizID, String questionID
             , String correct, String title, String A, String B, String C){
 
+        //This method is used to change the private quiz question under the user collection
+        //in the firestore firebase collection
+
         Map<String, Object> data = new HashMap<>();
         data.put("correct", correct);
         data.put("title", title);
@@ -298,6 +304,28 @@ public class FirestoreManager2 {
             }
         });
 
+    }
+    //
+    //
+    public void manipulatePrivateRoom(String userID,String roomID,String roomName, String roomDesc){
+        //
+        //This method is used to change the roomName and the room Description in the firestore firebase
+        //
+        Map<String, Object> data = new HashMap<>();
+        data.put("roomName",roomName);
+        data.put("roomDesc",roomDesc);
+        db.collection("user")
+                .document(userID)
+                .collection("privateRoom")
+                .document(roomID)
+                .set(data)
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                //Fail to set
+                //Log.e("FIRESTORE 2 : ", "FAILED TO INSERT")
+            }
+        });
     }
 
     public void deletePublicQuiz(String userId, String quizId){
