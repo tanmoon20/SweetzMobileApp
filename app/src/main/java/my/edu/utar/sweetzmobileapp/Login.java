@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import my.edu.utar.sweetzmobileapp.User;
 
 
 public class Login extends AppCompatActivity {
@@ -40,6 +42,10 @@ public class Login extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersCollection = db.collection("users");
+
+    //isGuest
+    public static User currentUser = new User(true);
+    public static String currentUserId = null;
 
 
     @Override
@@ -61,6 +67,7 @@ public class Login extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         userLoginManager = new UserLoginManager(this);
 
+//        User.currentUser = new User("", "", "", userLoginManager.isGuest());
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +87,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userLoginManager.setLoginMode(true);
+//                User.currentUser.setGuest(true);
                 startMainActivity(true);
             }
         });
-
     }
 
     private void loginUser() {
@@ -108,6 +115,8 @@ public class Login extends AppCompatActivity {
                     if (user != null) {
                         if (user.isEmailVerified()) {
                             if (userLoginManager.isGuest()) {
+                                //is not guest, insert their info
+                                currentUser = new User(user_pwd,user_email,false);
                                 startMainActivity(true);
                             } else {
                                 startMainActivity(false);
@@ -199,7 +208,8 @@ public class Login extends AppCompatActivity {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
                         String userId = user.getUid();
-                        User newUser = new User(email, password, username);
+                        User newUser = new User(email, password, username, false);
+                        currentUserId = userId;
                         sendEmailVerification(user);
                         storeUserInfo(userId, email, password, username);
 
@@ -236,7 +246,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void storeUserInfo(String userId, String user_email, String user_pwd, String username) {
-        User newUser = new User(user_email, user_pwd, username); // Include the username
+        User newUser = new User(user_email, user_pwd, username, false);
 
         DocumentReference userDocument = usersCollection.document(userId);
         userDocument.set(newUser)

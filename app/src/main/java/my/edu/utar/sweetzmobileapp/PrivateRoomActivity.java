@@ -42,6 +42,10 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
     Button createRoomBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        User.currentUser.fetchUserDataFromFirestore();
+//        String username = User.currentUser.getUsername();
+//        Log.d("name",username);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_class);
         createRoomBtn = findViewById(R.id.createRoomBtn);
@@ -138,9 +142,9 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
 
         public void run(){
             //userIO
-            String userId = "user1";
+            String userId = Login.currentUserId;
 
-            CollectionReference privateRoomCollection = db.collection("user")
+            CollectionReference privateRoomCollection = db.collection("users")
                     .document(userId)
                     .collection("privateRoom");
 
