@@ -577,7 +577,7 @@ public class FirestoreManager {
         //
         ArrayList<String> tmpList = new ArrayList<>();
         tmpList.add("publicRoom"); // <-to indicate what list is this
-        db.collection("user")
+        db.collection("users")
                 .document(userID)
                 .collection("publicRoom")
                 .document(quizID)
@@ -608,7 +608,7 @@ public class FirestoreManager {
         //
         ArrayList<String> tmpList = new ArrayList<>();
         tmpList.add("privateRoom"); // <-to indicate what list is this
-        db.collection("user")
+        db.collection("users")
                 .document(userID)
                 .collection("privateRoom")
                 .document(roomID)
