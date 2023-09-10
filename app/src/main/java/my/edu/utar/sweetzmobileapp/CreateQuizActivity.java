@@ -15,8 +15,9 @@ public class CreateQuizActivity extends HeaderFooterActivity {
     TextView codeTv;
     EditText editName, editRoomCode, editDesc;
     Button enterBtn;
-    String roomCode, quizName, quizDesc, quizCode, author = "user1";
+    String roomCode, quizName, quizDesc, quizCode, author = "sweetz";
     Boolean isPublic;
+    Intent goIntent;
     FirestoreManager2 firestoreManager2 = new FirestoreManager2();
     FirestoreManager fm = new FirestoreManager();
     Quiz quiz = new Quiz();
@@ -52,7 +53,8 @@ public class CreateQuizActivity extends HeaderFooterActivity {
 
         }else{
             roomCode = intent.getStringExtra("roomCode");
-            editRoomCode.setText(roomCode);
+            editRoomCode.setHint(roomCode);
+            editRoomCode.setTextColor(getResources().getColor(R.color.grey));
             //save it to firestore and set the quizId
         }
         enterBtn.setOnClickListener(new View.OnClickListener() {
@@ -73,10 +75,6 @@ public class CreateQuizActivity extends HeaderFooterActivity {
                         //save it to firestore and set the quizId
                         new IDPublicThread().start();
                     }
-
-                    Intent goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
-                    goIntent.putExtra("quiz",quiz);
-                    startActivity(goIntent);
 
                 }else{
                     Toast.makeText(CreateQuizActivity.this, "Please specify the quiz name", Toast.LENGTH_LONG).show();
@@ -106,11 +104,12 @@ public class CreateQuizActivity extends HeaderFooterActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Intent goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
+                        goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
                         goIntent.putExtra("quiz", quiz);
                         goIntent.putExtra("isPublic", isPublic);
                         goIntent.putExtra("roomCode", roomCode);
                         startActivity(goIntent);
+
                     }
                 });
             }
@@ -143,7 +142,7 @@ public class CreateQuizActivity extends HeaderFooterActivity {
                     public void run() {
                         Log.i("quizCode", "hello3");
 
-                        Intent goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
+                        goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
                         goIntent.putExtra("quiz", quiz);
                         goIntent.putExtra("roomCode", roomCode);
                         startActivity(goIntent);

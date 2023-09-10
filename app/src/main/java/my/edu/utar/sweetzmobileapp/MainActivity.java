@@ -86,7 +86,7 @@ public class MainActivity extends HeaderFooterActivity {
                 Intent intent;
                 intent = new Intent(MainActivity.this, CreateQuizActivity.class);
                 intent.putExtra("isPublic",isPublic);
-
+                intent.putExtra("roomCode", myRoom.getRoomCode());
                 startActivity(intent);
             }
         });

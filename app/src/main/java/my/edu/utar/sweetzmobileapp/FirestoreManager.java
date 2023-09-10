@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -18,6 +19,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 
@@ -118,6 +120,9 @@ public class FirestoreManager {
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot.exists()){
                                         tmpList.add(documentSnapshot.getString("username"));
+                                        callback.onCallback(tmpList.toArray(new String[0]));
+                                    }else{
+                                        tmpList.add("anonymous");
                                         callback.onCallback(tmpList.toArray(new String[0]));
                                     }
                                 }
@@ -287,8 +292,17 @@ public class FirestoreManager {
                             tmpList.add(documentSnapshot.getTimestamp("lastUpdate").toDate().toString()); //note this guy is timestamp data type
                             tmpList.add(documentSnapshot.getLong("playCount").toString()); // note this guy is int, long data type should do the job
                             tmpList.add(documentSnapshot.getString("title"));
-                            callback.onCallback(tmpList.toArray(new String[0]));
-                            Log.i("Timestamp", "Hi");
+                            db.collection("privateRoom").document(specificRoomID).collection("author").document("author").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()&&documentSnapshot!=null){
+                                        tmpList.add(documentSnapshot.getString("username"));
+                                    }else{
+                                        tmpList.add("anonymous");
+                                    }
+                                    callback.onCallback(tmpList.toArray(new String[0]));
+                                }
+                            });
 
                             //
                             //For Debugging, uncomment the bellow line
@@ -367,6 +381,8 @@ public class FirestoreManager {
                             //
                         } else {
                             Log.e("FIREMANAGER : ", "NO ATTRIBUTE FOUND!");
+                            String[] result = {"notFound"};
+                            callback.onCallback(result);
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -626,7 +642,7 @@ public class FirestoreManager {
                     if (task.isComplete()) {
                         Log.i("function", "query success");
                         QuerySnapshot querySnapshot = task.getResult();
-                        if (querySnapshot != null) {
+                        if (querySnapshot != null&&!querySnapshot.isEmpty()) {
                             // Retrieve the last document
                             DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
 
@@ -661,13 +677,10 @@ public class FirestoreManager {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isComplete()) {
-                    Log.i("function", "query success");
-
                     QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null) {
+                    if (querySnapshot != null&&!querySnapshot.isEmpty()) {
                         // Retrieve the last document
                         DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
-                        Log.i("function", "query success");
 
                         // Access the data in the last document
                         tmplist.add(lastDocument.getId());
@@ -686,11 +699,65 @@ public class FirestoreManager {
                 } else {
                     // Handle errors
                     Log.i("Public room", "last index not successful");
+                }
+            }
+        });
+    }
 
-                    Exception exception = task.getException();
-                    if (exception != null) {
-                        // Handle the exception
+
+    public void getLastPrivateQuestion(String roomCode, String quizId, FirestoreCallback callback){
+        ArrayList<String> tmpList = new ArrayList<>();
+        Query query = db.collection("privateRoom").document(roomCode).collection("quiz").document(quizId).collection("question").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<QuerySnapshot> task) {
+                if(task.isComplete()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if(querySnapshot!=null&&!querySnapshot.isEmpty()){
+                        DocumentSnapshot lastDocument = querySnapshot.getDocuments().get(0);
+
+                        // Access the data in the last document
+                        tmpList.add(lastDocument.getId());
+                        tmpList.add(lastDocument.getString("correct"));
+                        tmpList.add(lastDocument.getString("title")); //note this guy is timestamp data type
+                        tmpList.add(lastDocument.getString("wrongA")); // note this guy is int, long data type should do the job
+                        tmpList.add(lastDocument.getString("wrongB"));
+                        tmpList.add(lastDocument.getString("wrongC"));
+                        callback.onCallback(tmpList.toArray(new String[0]));
+                    }else{
+                        String[] result = {"notFound"};
+                        callback.onCallback(result);
                     }
+                }
+            }
+        });
+    }
+
+    public void getLastPublicQuestion(String quizId, FirestoreCallback callback){
+        ArrayList<String> tmpList = new ArrayList<>();
+        CollectionReference publicRoomRef = db.collection("publicRoom");
+        publicRoomRef.document(quizId).collection("question").orderBy("lastUpdate", Query.Direction.DESCENDING).limit(1).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    // Get the last question document
+                    DocumentSnapshot lastDocument = queryDocumentSnapshots.getDocuments().get(0);
+
+                    // Access the data fields of the last question
+                    tmpList.add(lastDocument.getId());
+                    tmpList.add(lastDocument.getString("correct"));
+                    tmpList.add(lastDocument.getString("title")); //note this guy is timestamp data type
+                    tmpList.add(lastDocument.getString("wrongA")); // note this guy is int, long data type should do the job
+                    tmpList.add(lastDocument.getString("wrongB"));
+                    tmpList.add(lastDocument.getString("wrongC"));
+                    callback.onCallback(tmpList.toArray(new String[0]));
+                    // Access other data fields as needed
+
+                    // Do something with the last question data
+                } else{
+                    Log.i("function", "not found run");
+                    String[] result = {"notFound"};
+                    callback.onCallback(result);
                 }
             }
         });
