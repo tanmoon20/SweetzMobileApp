@@ -45,6 +45,7 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
     public EditPrivateRoomQuiz() {
         super("Edit");
     }
+    private String userIDCur = Login.currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +189,7 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
             for(int j = 0; j< 4;j++){
                 tmp4[j] = listOfQuestion.get(listOfQuestionINDEX++).getText().toString();
             }
-            fm2.manipulatePrivateQuizQuestion("user1", myQuiz.getRoomCode(),
+            fm2.manipulatePrivateQuizQuestion(userIDCur, myQuiz.getRoomCode(),
                     myQuiz.getQuizId(),questionIDArrayList.get(i),tmp4[0],titleList.get(i).getText().toString(),tmp4[1],tmp4[2],tmp4[3]);
         }
 
@@ -208,7 +209,7 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
         }
 
         public void run() {
-            questionFM.getUserAllPrivateQuizQuestion("user1", myQuiz.getRoomCode(), myQuiz.getQuizId(), QuestionThread.this);
+            questionFM.getUserAllPrivateQuizQuestion(userIDCur, myQuiz.getRoomCode(), myQuiz.getQuizId(), QuestionThread.this);
         }
 
         @Override
@@ -224,8 +225,8 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             for(String question : result){
-                db.collection("user")
-                        .document("user1")
+                db.collection("users")
+                        .document(userIDCur)
                         .collection(checking) // the list return will get private/public room string at the first index of the array list
                         .document(myQuiz.getRoomCode())
                         .collection("quiz")
@@ -266,8 +267,8 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
     //remove firestore to increase play count here
     public void deleteCurrentQuiz(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user")
-                .document("user1")
+        db.collection("users")
+                .document(userIDCur)
                 .collection("privateRoom")
                 .document(myQuiz.getRoomCode())
                 .collection("quiz")
@@ -280,8 +281,8 @@ public class EditPrivateRoomQuiz extends HeaderFooterActivity {
 
     public void deleteThisQuestion(String questionID){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user")
-                .document("user1")
+        db.collection("users")
+                .document(userIDCur)
                 .collection("privateRoom")
                 .document(myQuiz.getRoomCode())
                 .collection("quiz")
