@@ -79,14 +79,14 @@ public class MainActivity extends HeaderFooterActivity {
         setContentView(R.layout.activity_main);
 
         createQuizBtn = findViewById(R.id.createQuizBtn);
+
         createQuizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateQuizActivity.class);
+                Intent intent;
+                intent = new Intent(MainActivity.this, CreateQuizActivity.class);
                 intent.putExtra("isPublic",isPublic);
-                if(!isPublic){
-                    intent.putExtra("roomCode", myRoom.getRoomCode());
-                }
+                intent.putExtra("roomCode", myRoom.getRoomCode());
                 startActivity(intent);
             }
         });
@@ -169,7 +169,13 @@ public class MainActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
-
+            if(isPublic){
+                QR qrGenerator = new QR(MainActivity.this, quiz.getQuizId());
+                qrGenerator.createQRDialog();
+            }else{
+                QR qrGenerator = new QR(MainActivity.this, myRoom.getRoomCode() +" "+ quiz.getQuizId());
+                qrGenerator.createQRDialog();
+            }
         });
 
         cardView.setOnClickListener((v)->{

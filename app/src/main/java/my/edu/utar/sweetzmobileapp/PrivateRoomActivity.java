@@ -52,6 +52,13 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
         //retrieve data from firestore
         PrivateRoomActivity.roomThread myRoomThread = new roomThread();
         myRoomThread.start();
+        createRoomBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent nextIntent = new Intent(PrivateRoomActivity.this, CreateRoomActivity.class);
+                startActivity(nextIntent);
+            }
+        });
 
         //search function
         EditText searchText = findViewById(R.id.search_bar);
@@ -118,7 +125,8 @@ public class PrivateRoomActivity extends HeaderFooterActivity {
 
         ImageButton shareBtn = cardView.findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener((v)->{
-            QR qrGenerator = new QR(getApplicationContext(), room.getRoomCode());
+            QR qrGenerator = new QR(PrivateRoomActivity.this, room.getRoomCode());
+            qrGenerator.createQRDialog();
         });
 
         cardView.setOnClickListener((v)->{

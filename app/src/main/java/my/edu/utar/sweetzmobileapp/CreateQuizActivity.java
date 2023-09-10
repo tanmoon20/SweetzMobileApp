@@ -2,22 +2,26 @@ package my.edu.utar.sweetzmobileapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CreateQuizActivity extends HeaderFooterActivity {
-    TextView editName, editRoomCode, editDesc;
+    TextView codeTv;
+    EditText editName, editRoomCode, editDesc;
     Button enterBtn;
-    String roomCode, quizName, quizDesc, quizCode, author = "user1";
-    Integer numPlay = 0;
+    String roomCode, quizName, quizDesc, quizCode, author = "sweetz", userId;
     Boolean isPublic;
+    Intent goIntent;
     FirestoreManager2 firestoreManager2 = new FirestoreManager2();
     FirestoreManager fm = new FirestoreManager();
-
-    Quiz quiz;
+    Quiz quiz = new Quiz();
+    Handler handler = new Handler();
 
     public CreateQuizActivity() {
         super("Create Quiz");
@@ -28,21 +32,29 @@ public class CreateQuizActivity extends HeaderFooterActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_quiz);
         editRoomCode = findViewById(R.id.edit_enter_code);
+        codeTv = findViewById(R.id.enter_code_textview);
         editName = findViewById(R.id.edit_quiz_name);
         editDesc = findViewById(R.id.edit_quiz_desc);
         enterBtn = findViewById(R.id.create_quiz_btn);
-
+        author = Login.currentUser.getUsername();
+        userId = Login.currentUserId;
         Intent intent = getIntent();
         isPublic = getIntent().getBooleanExtra("isPublic", true);
         if(isPublic){
             roomCode = null;
-            Log.i("room:", "Public");
-            Log.i("room:", "000");
-            editRoomCode.setHint("No code is needed for public");
+            editRoomCode.setHint("No code is needed");
+            editRoomCode.setBackgroundColor(getResources().getColor(R.color.grey));
+            codeTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(CreateQuizActivity.this, "No code is needed for public quiz", Toast.LENGTH_LONG).show();
+                }
+            });
+
         }else{
             roomCode = intent.getStringExtra("roomCode");
-            editRoomCode.setText(roomCode);
-            Log.i("room:", "Private");
+            editRoomCode.setHint(roomCode);
+            editRoomCode.setTextColor(getResources().getColor(R.color.grey));
             //save it to firestore and set the quizId
         }
         enterBtn.setOnClickListener(new View.OnClickListener() {
@@ -50,29 +62,23 @@ public class CreateQuizActivity extends HeaderFooterActivity {
             public void onClick(View view) {
                 quizName = editName.getText().toString();
                 quizDesc = editDesc.getText().toString();
+                if(!quizName.isEmpty()){
+                    quiz.setRoomCode(roomCode);
+                    //disable user input in both public and private(private will get roomCode from intent)
+                    if(!isPublic){
+                        new IDPrivateThread().start();
+                        //create the new quiz object
+                        //should intent to the activity that create question, but which is it
 
-                //disable user input in both public and private(private will get roomCode from intent)
-                if(isPublic){
-                    new IDPublicThread().start();
+                    }else{
+                        Log.i("quizCode", "hello");
+                        //save it to firestore and set the quizId
+                        new IDPublicThread().start();
+                    }
+
                 }else{
-                    //save it to firestore and set the quizId
-                    new IDPrivateThread().start();
+                    Toast.makeText(CreateQuizActivity.this, "Please specify the quiz name", Toast.LENGTH_LONG).show();
                 }
-
-
-                //create the new question object
-                quiz = new Quiz();
-                quiz.setQuizId(quizCode);
-                quiz.setAuthor(author);
-                quiz.setDesc(quizDesc);
-                quiz.setTitle(quizName);
-                quiz.setNumPlay(numPlay);
-
-                //should intent to the activity that create question, but which is it
-
-                Intent goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
-                intent.putExtra("quiz",quiz);
-                startActivity(goIntent);
             }
         });
     }
@@ -88,7 +94,24 @@ public class CreateQuizActivity extends HeaderFooterActivity {
             @Override
             public void onCallback(String[] result) {
                 quizCode = "quiz"+(Integer.parseInt(result[0].substring(4))+1);
-                firestoreManager2.insertPrivateRoomQuiz(roomCode,quizCode, quizName, quizDesc);
+                firestoreManager2.insertPrivateRoomQuiz(userId, roomCode,quizCode, quizName, quizDesc, author);
+
+                quiz.setQuizId(quizCode);
+                quiz.setAuthor(author);
+                quiz.setDesc(quizDesc);
+                quiz.setTitle(quizName);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
+                        goIntent.putExtra("quiz", quiz);
+                        goIntent.putExtra("isPublic", isPublic);
+                        goIntent.putExtra("roomCode", roomCode);
+                        startActivity(goIntent);
+
+                    }
+                });
             }
 
             @Override
@@ -109,7 +132,22 @@ public class CreateQuizActivity extends HeaderFooterActivity {
             @Override
             public void onCallback(String[] result) {
                 quizCode = "quiz"+(Integer.parseInt(result[0].substring(4))+1);
-                firestoreManager2.insertPublicQuiz(quizCode,quizName, quizDesc);
+                firestoreManager2.insertPublicQuiz(quizCode,quizName, quizDesc, author, userId);
+                quiz.setQuizId(quizCode);
+                quiz.setAuthor(author);
+                quiz.setDesc(quizDesc);
+                quiz.setTitle(quizName);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.i("quizCode", "hello3");
+
+                        goIntent = new Intent(CreateQuizActivity.this, QuizQuestionActivity.class);
+                        goIntent.putExtra("quiz", quiz);
+                        goIntent.putExtra("roomCode", roomCode);
+                        startActivity(goIntent);
+                    }
+                });
             }
 
             @Override

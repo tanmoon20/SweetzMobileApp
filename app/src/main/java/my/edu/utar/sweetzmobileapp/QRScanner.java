@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ import eu.livotov.labs.android.camview.scanner.decoder.zxing.ZXDecoder;
 
 public class QRScanner extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
+
+    String userId, username;
     private ScannerLiveView camera;
     private TextView tv;
     FirestoreManager fm = new FirestoreManager();
@@ -48,6 +51,7 @@ public class QRScanner extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if(checkPermission()){
             Toast.makeText(this, "Permission Granted..", Toast.LENGTH_SHORT).show();
         }else{
@@ -55,8 +59,12 @@ public class QRScanner extends AppCompatActivity {
         }
         setContentView(R.layout.qr_scanner);
         camera = findViewById(R.id.camera);
-        tv = findViewById(R.id.qr_result_textview);
         handler = new Handler();
+
+        userId = Login.currentUserId;
+        username = Login.currentUser.getUsername();
+/*        userId = "user5";
+        username = "En Yee";*/
 
         camera.setScannerViewEventListener(new ScannerLiveView.ScannerViewEventListener() {
             @Override
@@ -78,25 +86,20 @@ public class QRScanner extends AppCompatActivity {
             //intent, the roomCode is data
             @Override
             public void onCodeScanned(String data) {
-                Toast.makeText(QRScanner.this, data.substring(0,4), Toast.LENGTH_LONG).show();  //roomCode no need password
-
                 if(data.length()==4 && !data.contains(" ")){
                     Toast.makeText(QRScanner.this, "Private", Toast.LENGTH_LONG).show();
-
+                    JoinPrivateRoomThread joinPrivateRoomThread = new JoinPrivateRoomThread(data);
+                    joinPrivateRoomThread.start();
                     //start private room activity
                 } else if (data.substring(0,4).equals("quiz")) {
                     JoinPublicQuizThread joinPublicQuizThread = new JoinPublicQuizThread(data);
                     joinPublicQuizThread.start();
-                    intent = new Intent(QRScanner.this, PlayActivity.class);
-                    intent.putExtra("quiz",quiz);
-
-                } else{
+                } else if(data.contains(" ")){
                     String[] dataArray = data.split("\\s+");
-                    Toast.makeText(QRScanner.this, dataArray[0], Toast.LENGTH_LONG).show();
-                    Toast.makeText(QRScanner.this, dataArray[1], Toast.LENGTH_LONG).show();
-
                     JoinQuizThread joinQuizThread = new JoinQuizThread(dataArray[0], dataArray[1]);
                     joinQuizThread.start();
+                }else{
+                    Toast.makeText(QRScanner.this, "Invalid QR", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -158,7 +161,7 @@ public class QRScanner extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-    public void createPwdDialog(String roomCode){
+    public void createPwdDialog(String roomCode, String quizId){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.password_dialog, null);
@@ -171,7 +174,7 @@ public class QRScanner extends AppCompatActivity {
                 // Handle OK button click here
                 EditText passwordEditText = dialogView.findViewById(R.id.join_room_pwd_qr);
                 String roomPwd = passwordEditText.getText().toString();
-                JoinThread joinThread = new JoinThread(roomCode, roomPwd);
+                JoinThread joinThread = new JoinThread(roomCode, roomPwd, quizId);
                 joinThread.start();
             }
         });
@@ -189,12 +192,11 @@ public class QRScanner extends AppCompatActivity {
 
     //for joining room
     private class JoinThread extends Thread {
-        public ArrayList<Room> roomList = new ArrayList<Room>();
         FirestoreManager fm = new FirestoreManager();
-        private String roomCode, roomPwd;
+        private String roomCode, roomPwd, quizId;
 
-        public JoinThread(String roomCode, String roomPwd) {
-
+        public JoinThread(String roomCode, String roomPwd, String quizId) {
+            this.quizId = quizId;
             this.roomCode = roomCode;
             this.roomPwd = roomPwd;
         }
@@ -221,7 +223,8 @@ public class QRScanner extends AppCompatActivity {
                     });
                 } else {  //else check the password
                     if (roomPwd.equals(result[3])) {
-                        fm.getPrivateRoomInfo(roomCode, new JoinFirestoreCallback2());
+                        fm2.insertPrivateRoomMember(roomCode,userId, username);
+                        fm.getPrivateRoomQuizInfo(roomCode, quizId, new JoinFirestoreCallback2());
                     } else { //if password is incorrect
                         firestoreHandler.post(new Runnable() {
                             @Override
@@ -239,23 +242,23 @@ public class QRScanner extends AppCompatActivity {
         };
 
         private class JoinFirestoreCallback2 implements FirestoreManager.FirestoreCallback {
-            Room room = new Room();
-            Handler handler = new Handler();
+
 
             @Override
             public void onCallback(String[] result) {
-                room.setRoomCode(result[0]);
-                room.setTitle(result[1]);
-                room.setDesc(result[2]);
-                room.setAuthor(result[4]);
-                fm2.insertPrivateRoomMember(roomCode, "user2","username");
-
+                quiz.setRoomCode(roomCode);
+                quiz.setQuizId(quizId);
+                quiz.setDesc(result[1]);
+                quiz.setLastUpdate(result[2]);
+                quiz.setNumPlay(Integer.parseInt(result[3]));
+                quiz.setTitle(result[4]);
+                quiz.setAuthor(result[5]);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = new Intent(QRScanner.this, MainActivity.class);
-                        intent.putExtra("room",room);
-                        intent.putExtra("private","Private");
+                        intent = new Intent(QRScanner.this, PlayActivity.class);
+                        intent.putExtra("quiz", quiz);
+                        intent.putExtra("private", "private");
                         startActivity(intent);
                     }
                 });
@@ -295,7 +298,8 @@ public class QRScanner extends AppCompatActivity {
                         if(result[0].equals("not found")){
                             createDialog("Invalid QR", "Room or Quiz not found");
                         }else{
-                            fm.getPrivateRoomMembers2(roomCode, "user1", new JoinQuizFirestoreCallback2("user1", roomCode));
+                            Log.i("usserId1", userId);
+                            fm.getPrivateRoomMembers2(roomCode, userId, new JoinQuizFirestoreCallback2(roomCode));
                             //check if members, if no, createDialogPwd
                             //need get the current user
                         }
@@ -310,9 +314,8 @@ public class QRScanner extends AppCompatActivity {
         }
 
         private class JoinQuizFirestoreCallback2 implements FirestoreManager.FirestoreCallback {
-            String userId, roomCode;
-            public JoinQuizFirestoreCallback2(String userId, String roomCode){
-                this.userId = userId;
+            String roomCode;
+            public JoinQuizFirestoreCallback2(String roomCode){
                 this.roomCode = roomCode;
             }
 
@@ -320,10 +323,9 @@ public class QRScanner extends AppCompatActivity {
             @Override
             public void onCallback(String[] result) {
                 if(result[0].equals("not found")){
-                    createPwdDialog(roomCode);
+                    createPwdDialog(roomCode, quizId);
                 }else{
                     //intent
-                    createDialog("Successful", "You are the user!");
                     fm.getPrivateRoomQuizInfo(roomCode, quizId, new JoinQuizFirestoreCallback3());
                 }
             }
@@ -344,10 +346,16 @@ public class QRScanner extends AppCompatActivity {
                 quiz.setLastUpdate(result[2]);
                 quiz.setNumPlay(Integer.parseInt(result[3]));
                 quiz.setTitle(result[4]);
-                intent = new Intent(QRScanner.this, PlayActivity.class);
-                intent.putExtra("quiz", quiz);
-                intent.putExtra("private", "private");
-                startActivity(intent);
+                quiz.setAuthor(result[5]);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        intent = new Intent(QRScanner.this, PlayActivity.class);
+                        intent.putExtra("quiz", quiz);
+                        intent.putExtra("private", "private");
+                        startActivity(intent);
+                    }
+                });
             }
 
             @Override
@@ -355,14 +363,11 @@ public class QRScanner extends AppCompatActivity {
 
             }
         }
-        private class QuizThread extends Thread{
-
-
-        }
     }
 
     private class JoinPublicQuizThread extends Thread{
         String quizId;
+        Handler handler = new Handler();
 
         public JoinPublicQuizThread(String quizId){
             this.quizId = quizId;
@@ -397,6 +402,96 @@ public class QRScanner extends AppCompatActivity {
             public void onCallbackError(Exception e) {
 
             }
+        }
+    }
+    private class JoinPrivateRoomThread extends Thread {
+        FirestoreManager fm = new FirestoreManager();
+        private String roomCode;
+
+        Room room;
+        public JoinPrivateRoomThread(String roomCode) {
+            this.roomCode = roomCode;
+            handler = new Handler();
+        }
+
+        //after detect is private, check if room is found
+        @Override
+        public void run() {
+            fm.getPrivateRoomInfo(roomCode, new JoinFirestoreCallback());
+        }
+
+        //try to get the roomInfo from firebase
+        private class JoinFirestoreCallback implements FirestoreManager.FirestoreCallback {
+
+            @Override
+            public void onCallback(String[] result) {
+
+                Handler firestoreHandler = new Handler();
+                if (result == null) { //if no info can be get
+                    firestoreHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            createDialog("Room not found!", "The room " + roomCode + " is not found!");
+                        }
+                    });
+                } else {  //else check the password
+                    fm.getPrivateRoomMembers2(roomCode, userId, new JoinPrivateRoomFirestoreCallback2(roomCode));
+                }
+            }
+
+            @Override
+            public void onCallbackError(Exception e) {
+            }
+        };
+    }
+    private class JoinPrivateRoomFirestoreCallback2 implements FirestoreManager.FirestoreCallback {
+        Room room;
+        String roomCode;
+        public JoinPrivateRoomFirestoreCallback2(String roomCode){
+            this.roomCode = roomCode;
+            room = new Room();
+        }
+
+
+        @Override
+        public void onCallback(String[] result) {
+            if(result[0].equals("not found")){
+                fm2.insertPrivateRoomMember(roomCode, userId, username);
+            }
+
+            fm.getPrivateRoomInfo(roomCode,new JoinPrivateRoomFirestoreCallback3());
+        }
+
+        @Override
+        public void onCallbackError(Exception e) {
+
+        }
+    }
+
+    private class JoinPrivateRoomFirestoreCallback3 implements FirestoreManager.FirestoreCallback {
+
+        Room room = new Room();
+        @Override
+        public void onCallback(String[] result) {
+
+            room.setRoomCode(result[0]);
+            room.setTitle(result[1]);
+            room.setDesc(result[2]);
+            room.setAuthor(result[4]);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(QRScanner.this, MainActivity.class);
+                    intent.putExtra("room",room);
+                    intent.putExtra("private","Private");
+                    startActivity(intent);
+                }
+            });
+        }
+
+        @Override
+        public void onCallbackError(Exception e) {
+
         }
     }
 }

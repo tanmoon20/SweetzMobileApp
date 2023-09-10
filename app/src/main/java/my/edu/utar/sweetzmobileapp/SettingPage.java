@@ -132,6 +132,7 @@ public class SettingPage extends HeaderFooterActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SettingPage.this, QRScanner.class);
                 startActivity(intent);
+
             }
         });
     }
